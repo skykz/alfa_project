@@ -1,4 +1,5 @@
 import 'package:alfa_project/components/styles/app_style.dart';
+import 'package:alfa_project/screens/home/select_template.dart';
 import 'package:flutter/material.dart';
 
 class SelectTypeTemplate extends StatefulWidget {
@@ -145,7 +146,12 @@ class _SelectTypeTemplateState extends State<SelectTypeTemplate> {
                         horizontal: 40, vertical: 20),
                     child: FlatButton(
                       color: AppStyle.colorRed,
-                      onPressed: () {},
+                      onPressed: () => Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => SelectTemplateScreen(),
+                        ),
+                      ),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(4),
                       ),

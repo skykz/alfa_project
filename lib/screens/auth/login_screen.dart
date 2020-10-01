@@ -1,7 +1,9 @@
 import 'package:alfa_project/components/styles/app_style.dart';
-import 'package:alfa_project/screens/home/select_type.dart';
+import 'package:alfa_project/provider/auth_bloc.dart';
+import 'package:alfa_project/utils/common_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:provider/provider.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({Key key}) : super(key: key);
@@ -12,6 +14,8 @@ class LoginScreen extends StatefulWidget {
 
 class _LoginScreenState extends State<LoginScreen> {
   bool _isChecked = false;
+  final emailTextController = TextEditingController();
+  final passwordTextController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -36,7 +40,6 @@ class _LoginScreenState extends State<LoginScreen> {
             child: SingleChildScrollView(
               child: Column(
                 mainAxisSize: MainAxisSize.max,
-                // mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   Padding(
@@ -68,8 +71,9 @@ class _LoginScreenState extends State<LoginScreen> {
                         padding: const EdgeInsets.symmetric(horizontal: 40),
                         child: Column(
                           children: [
-                            TextField(
+                            TextFormField(
                               cursorColor: AppStyle.colorDark,
+                              controller: emailTextController,
                               decoration: InputDecoration(
                                 hintText: "Введи почту",
                                 labelText: "Почта",
@@ -95,8 +99,10 @@ class _LoginScreenState extends State<LoginScreen> {
                             const SizedBox(
                               height: 10,
                             ),
-                            TextField(
+                            TextFormField(
                               cursorColor: AppStyle.colorDark,
+                              obscureText: true,
+                              controller: passwordTextController,
                               decoration: InputDecoration(
                                 hintText: "Введи пароль",
                                 labelText: "Пароль",
@@ -134,6 +140,9 @@ class _LoginScreenState extends State<LoginScreen> {
                                 setState(() {
                                   _isChecked = val;
                                 });
+                                final authBloc = Provider.of<AuthBloc>(context,
+                                    listen: false);
+                                authBloc.authReminder(val);
                               },
                               activeColor: Colors.red,
                               checkColor: Colors.white,
@@ -149,33 +158,45 @@ class _LoginScreenState extends State<LoginScreen> {
                       ),
                     ],
                   ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 40, vertical: 30),
-                    child: FlatButton(
-                      color: AppStyle.colorRed,
-                      onPressed: () => Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => SelectTypeTemplate(),
-                        ),
-                      ),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(4),
-                      ),
-                      child: Center(
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 14),
-                          child: Text(
-                            'Войти',
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 22,
-                              fontWeight: FontWeight.w300,
+                  Builder(
+                    builder: (ctx) => Padding(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 40, vertical: 30),
+                      child:
+                          Consumer<AuthBloc>(builder: (context, bloc, child) {
+                        return FlatButton(
+                          color: AppStyle.colorRed,
+                          onPressed: () => login(ctx),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(4),
+                          ),
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 14),
+                            child: SizedBox(
+                              height: 25,
+                              width: double.infinity,
+                              child: Center(
+                                child: bloc.isLoading
+                                    ? SizedBox(
+                                        width: 25,
+                                        child: CircularProgressIndicator(
+                                          strokeWidth: 1,
+                                          backgroundColor: Colors.white,
+                                        ),
+                                      )
+                                    : Text(
+                                        'Войти',
+                                        style: TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 22,
+                                          fontWeight: FontWeight.w300,
+                                        ),
+                                      ),
+                              ),
                             ),
                           ),
-                        ),
-                      ),
+                        );
+                      }),
                     ),
                   ),
                 ],
@@ -186,31 +207,21 @@ class _LoginScreenState extends State<LoginScreen> {
       ),
     );
   }
-  // double _scaleFactor = 1.0;
-  // double _baseScaleFactor = 1.0;
-  // @override
-  // Widget build(BuildContext context) {
-  //   return Center(
-  //       child: GestureDetector(
-  //     onScaleStart: (details) {
-  //       _baseScaleFactor = _scaleFactor;
-  //     },
-  //     onScaleUpdate: (details) {
-  //       setState(() {
-  //         _scaleFactor = _baseScaleFactor * details.scale;
-  //       });
-  //     },
-  //     child: Container(
-  //       height: MediaQuery.of(context).size.height,
-  //       width: MediaQuery.of(context).size.width,
-  //       color: Colors.red,
-  //       child: Center(
-  //         child: Text(
-  //           'Test',
-  //           textScaleFactor: _scaleFactor,
-  //         ),
-  //       ),
-  //     ),
-  //   ));
-  // }
+
+  login(BuildContext context) {
+    if (emailTextController.text.length > 0 &&
+        passwordTextController.text.length > 0) {
+      bool emailValid = RegExp(
+              r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
+          .hasMatch(emailTextController.text);
+      if (emailValid) {
+        final authBloc = Provider.of<AuthBloc>(context, listen: false);
+        authBloc.authLogin(emailTextController.text.trim(),
+            passwordTextController.text.trim(), context);
+      } else {
+        showCustomSnackBar(context, 'Неверный формат почты', AppStyle.colorRed,
+            Icons.info_outline);
+      }
+    }
+  }
 }
