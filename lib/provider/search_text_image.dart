@@ -32,8 +32,13 @@ class SearchTextImageBloc extends ChangeNotifier {
 
   searchText(String query, BuildContext context) async {
     setLoadingState(true);
-    _alfaApi.getSearchText(query, context).then((value) {
+    _alfaApi.getSearchText(query.trim(), context).then((value) {
       if (value != null) setSearchedData(value);
     }).whenComplete(() => setLoadingState(false));
+  }
+
+  setClearData() {
+    this._textList = List();
+    notifyListeners();
   }
 }

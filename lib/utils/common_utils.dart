@@ -1,3 +1,5 @@
+import 'package:alfa_project/components/widgets/custom_dialog.dart';
+import 'package:alfa_project/core/data/models/dialog_type.dart';
 import 'package:flutter/material.dart';
 
 void printWrapped(String text) {
@@ -35,4 +37,26 @@ void showCustomSnackBar(
         ),
       ),
     );
+}
+
+Future<bool> displayCustomDialog(
+  BuildContext context,
+  String _title,
+  DialogType dialogType,
+  bool barrierDismissible,
+  Function dofunc, [
+  String negativeText,
+  String positiveText,
+]) {
+  return showDialog(
+    context: context,
+    barrierDismissible: barrierDismissible,
+    builder: (context) => CustomActionDialog(
+      title: _title,
+      dialogType: dialogType,
+      onPressed: dofunc,
+      cancelOptionText: negativeText,
+      confirmOptionText: positiveText,
+    ),
+  );
 }

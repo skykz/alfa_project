@@ -14,7 +14,7 @@ class NetworkCall {
   NetworkCall.internal();
   factory NetworkCall() => _instance;
 
-  Future<String> doRequestAuth(
+  Future<dynamic> doRequestAuth(
       {@required String path,
       @required String method,
       @required BuildContext context,

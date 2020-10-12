@@ -49,11 +49,9 @@ class _SelectTypeTemplateState extends State<SelectTypeTemplate> {
                         isFirstContainerSelected = true;
                       });
                   },
-                  child: AnimatedContainer(
-                    duration: const Duration(milliseconds: 200),
-                    height: isFirstContainerSelected ? 245 : 180,
+                  child: Container(
+                    height: 245,
                     width: withContainer,
-                    curve: Curves.easeIn,
                     decoration: BoxDecoration(
                       color: Colors.white,
                       boxShadow: isFirstContainerSelected
@@ -94,10 +92,8 @@ class _SelectTypeTemplateState extends State<SelectTypeTemplate> {
                         isFirstContainerSelected = false;
                       });
                   },
-                  child: AnimatedContainer(
-                    duration: const Duration(milliseconds: 200),
-                    height: !isFirstContainerSelected ? 245 : 180,
-                    curve: Curves.easeIn,
+                  child: Container(
+                    height: 180,
                     width: withContainer,
                     decoration: BoxDecoration(
                       color: Colors.white,

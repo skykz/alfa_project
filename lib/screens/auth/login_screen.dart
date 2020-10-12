@@ -104,7 +104,7 @@ class _LoginScreenState extends State<LoginScreen> {
                               obscureText: true,
                               controller: passwordTextController,
                               decoration: InputDecoration(
-                                hintText: "Введи пароль",
+                                hintText: "Введите пароль",
                                 labelText: "Пароль",
                                 hintStyle: TextStyle(
                                   color: Colors.grey,

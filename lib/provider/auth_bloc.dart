@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:alfa_project/core/repository/api_repository.dart';
 import 'package:alfa_project/screens/home/select_type.dart';
 import 'package:flutter/material.dart';

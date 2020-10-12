@@ -2,7 +2,9 @@ import 'dart:developer';
 
 import 'package:alfa_project/components/styles/app_style.dart';
 import 'package:alfa_project/provider/auth_bloc.dart';
+import 'package:alfa_project/provider/filter_bloc.dart';
 import 'package:alfa_project/provider/search_text_image.dart';
+import 'package:alfa_project/provider/story_bloc.dart';
 import 'package:alfa_project/screens/auth/login_screen.dart';
 import 'package:alfa_project/screens/home/select_type.dart';
 import 'package:flutter/material.dart';
@@ -20,9 +22,16 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider<SearchTextImageBloc>(
           create: (context) => SearchTextImageBloc(),
         ),
+        ChangeNotifierProvider<StoryBloc>(
+          create: (context) => StoryBloc(),
+        ),
+        ChangeNotifierProvider<FilterBloc>(
+          create: (context) => FilterBloc(),
+        ),
       ],
       child: MaterialApp(
         title: 'Flutter Demo',
+        debugShowCheckedModeBanner: false,
         theme: ThemeData(
           primarySwatch: Colors.red,
           platform: TargetPlatform.iOS,

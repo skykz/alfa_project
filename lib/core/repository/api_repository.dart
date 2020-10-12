@@ -52,7 +52,7 @@ class AlfaApi {
       path: GET_IMAGE,
       method: 'GET',
       context: context,
-      body: {
+      requestParams: {
         "category": "${categoryId.toString()}",
       },
     );

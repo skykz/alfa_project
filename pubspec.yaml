@@ -4,7 +4,7 @@ description: Demo Alfa bank bussiness project
 version: 1.0.0+1
 
 environment:
-  sdk: ">=2.7.0 <3.0.0"
+  sdk: ">=2.8.0 <3.0.0"
 
 dependencies:
   flutter:
@@ -22,9 +22,20 @@ dependencies:
   dio: 3.0.9
   #for store local values
   shared_preferences: 0.5.12
-
   #provider package for state management
   provider: 4.3.2
+  #to download and cache images
+  cached_network_image: 2.3.0
+  #for gesture
+  matrix_gesture_detector: 0.1.0
+  #for filter photos
+  photofilters: 2.0.1
+  #to save image to device gallery
+  gallery_saver: 2.0.1
+  path_provider: 1.6.18
+  #file picker
+  file_picker: 2.0.6
+  image_editor_pro: 1.0.6
 
 dev_dependencies:
   flutter_test:
@@ -44,6 +55,7 @@ flutter:
   assets:
     - assets/images/svg/
     - assets/images/png/
+    - assets/images/svg/custom_icons/
 
   # To add custom fonts to your application, add a fonts section here,
   # in this "flutter" section. Each entry in this list should have a

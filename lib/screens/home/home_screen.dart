@@ -1,3 +1,5 @@
+import 'package:alfa_project/components/icons/custom_icons.dart';
+import 'package:alfa_project/components/widgets/bounce_button.dart';
 import 'package:alfa_project/screens/search/search_picker.dart';
 import 'package:flutter/material.dart';
 
@@ -13,6 +15,7 @@ class HomeMainScreen extends StatelessWidget {
           children: [
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 IconButton(
                   icon: Icon(Icons.arrow_back_ios),
@@ -20,26 +23,70 @@ class HomeMainScreen extends StatelessWidget {
                 ),
                 Row(
                   children: [
-                    IconButton(
-                      icon: Icon(Icons.ac_unit),
-                      onPressed: () => Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => SearchPickerScreen(
-                            isText: true,
+                    Padding(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 10, vertical: 5),
+                      child: Column(
+                        children: [
+                          SizedBox(
+                            height: 40,
+                            width: 40,
+                            child: BounceButton(
+                              onPressed: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => SearchPickerScreen(
+                                      isText: true,
+                                    ),
+                                  ),
+                                );
+                              },
+                              iconImagePath: SvgIconsClass.textSizeIcon,
+                            ),
                           ),
-                        ),
+                          Text(
+                            'Текст',
+                            style: TextStyle(
+                              height: 1.1,
+                              fontSize: 12,
+                              fontWeight: FontWeight.w300,
+                            ),
+                          )
+                        ],
                       ),
                     ),
-                    IconButton(
-                      icon: Icon(Icons.assessment),
-                      onPressed: () => Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => SearchPickerScreen(
-                            isText: false,
+                    Padding(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 10, vertical: 5),
+                      child: Column(
+                        children: [
+                          SizedBox(
+                            height: 40,
+                            width: 40,
+                            child: BounceButton(
+                              onPressed: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => SearchPickerScreen(
+                                      isText: false,
+                                    ),
+                                  ),
+                                );
+                              },
+                              iconImagePath: SvgIconsClass.stickerIcon,
+                            ),
                           ),
-                        ),
+                          Text(
+                            'Стикеры',
+                            style: TextStyle(
+                              fontSize: 12,
+                              height: 1.1,
+                              fontWeight: FontWeight.w300,
+                            ),
+                          )
+                        ],
                       ),
                     ),
                   ],
@@ -49,7 +96,30 @@ class HomeMainScreen extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
-                IconButton(icon: Icon(Icons.arrow_downward), onPressed: () {}),
+                Padding(
+                  padding:
+                      const EdgeInsets.symmetric(vertical: 15, horizontal: 10),
+                  child: Column(
+                    children: [
+                      SizedBox(
+                        height: 30,
+                        width: 30,
+                        child: BounceButton(
+                          onPressed: () {},
+                          iconImagePath: SvgIconsClass.saveIcon,
+                        ),
+                      ),
+                      Text(
+                        'Сохранить',
+                        style: TextStyle(
+                          height: 1.5,
+                          fontSize: 11,
+                          fontWeight: FontWeight.w300,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
               ],
             )
           ],
