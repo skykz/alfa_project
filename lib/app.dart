@@ -34,6 +34,7 @@ class MyApp extends StatelessWidget {
         debugShowCheckedModeBanner: false,
         theme: ThemeData(
           primarySwatch: Colors.red,
+          fontFamily: 'Styrene A LC',
           platform: TargetPlatform.iOS,
           scaffoldBackgroundColor: AppStyle.mainbgColor,
           visualDensity: VisualDensity.adaptivePlatformDensity,

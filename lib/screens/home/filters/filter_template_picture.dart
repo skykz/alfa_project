@@ -67,8 +67,8 @@ class _FilterImageScreenState extends State<FilterImageScreen> {
                     ? Expanded(
                         child: Center(
                           child: SizedBox(
-                            height: 30,
-                            width: 30,
+                            height: 35,
+                            width: 35,
                             child: CircularProgressIndicator(
                               strokeWidth: 2,
                               backgroundColor: Colors.white,
@@ -105,7 +105,8 @@ class _FilterImageScreenState extends State<FilterImageScreen> {
                           horizontal: 40, vertical: 30),
                       child: FlatButton(
                         color: AppStyle.colorRed,
-                        onPressed: () => _showSelectFile(bloc),
+                        onPressed: () =>
+                            _showSelectFile(bloc, Platform.isAndroid, context),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(4),
                         ),
@@ -115,14 +116,35 @@ class _FilterImageScreenState extends State<FilterImageScreen> {
                             height: 25,
                             width: double.infinity,
                             child: Center(
-                              child: Text(
-                                'Выбрать',
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 22,
-                                  fontWeight: FontWeight.w300,
-                                ),
-                              ),
+                              child: Consumer<FilterBloc>(
+                                  builder: (context, bloc, child) {
+                                return bloc.getImageLoading
+                                    ? CircularProgressIndicator()
+                                    : Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.center,
+                                        children: [
+                                          const Text(
+                                            'Выбрать',
+                                            style: TextStyle(
+                                              fontSize: 20,
+                                              color: Colors.white,
+                                              fontWeight: FontWeight.w300,
+                                            ),
+                                          ),
+                                          const SizedBox(
+                                            width: 5,
+                                          ),
+                                          const Icon(
+                                            Icons.arrow_forward,
+                                            size: 25,
+                                            color: Colors.white,
+                                          ),
+                                        ],
+                                      );
+                              }),
                             ),
                           ),
                         ),
@@ -200,60 +222,89 @@ class _FilterImageScreenState extends State<FilterImageScreen> {
     );
   }
 
-  _showSelectFile(val) {
+  _showSelectFile(val, bool isAndroid, BuildContext context) {
     final filterBloc = Provider.of<FilterBloc>(context, listen: false);
 
-    showCupertinoModalPopup(
-      context: context,
-      builder: (BuildContext context) => CupertinoActionSheet(
-        title: Text(
-          'Выберите путь',
-          style: TextStyle(
-            fontSize: 18,
+    if (isAndroid)
+      showModalBottomSheet(
+        context: context,
+        isScrollControlled: true,
+        builder: (context) => Padding(
+          padding: const EdgeInsets.symmetric(vertical: 10),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              ListTile(
+                leading: Icon(Icons.camera, color: AppStyle.colorRed),
+                title: Text('Камера'),
+                onTap: () => filterBloc.getImage(context,
+                    filterBloc.getListTemplates['data'][currentpage]['url']),
+              ),
+              ListTile(
+                leading: Icon(Icons.image_outlined, color: AppStyle.colorRed),
+                title: Text('Галлерея'),
+                onTap: () {
+                  filterBloc.pickFileFrom(context,
+                      filterBloc.getListTemplates['data'][currentpage]['url']);
+                },
+              ),
+            ],
           ),
         ),
-        actions: <Widget>[
-          CupertinoActionSheetAction(
-            child: Text(
-              'Галерея',
-              style: TextStyle(
-                color: Colors.blue,
-              ),
+      );
+    else
+      showCupertinoModalPopup(
+        context: context,
+        builder: (BuildContext context) => CupertinoActionSheet(
+          title: Text(
+            'Выберите путь',
+            style: TextStyle(
+              fontSize: 18,
             ),
+          ),
+          actions: <Widget>[
+            CupertinoActionSheetAction(
+              child: Text(
+                'Галлерея',
+                style: TextStyle(
+                  color: Colors.blue,
+                ),
+              ),
+              onPressed: () {
+                filterBloc.pickFileFrom(context,
+                    filterBloc.getListTemplates['data'][currentpage]['url']);
+              },
+            ),
+            CupertinoActionSheetAction(
+              child: Text(
+                'iCloud Драйф',
+                style: TextStyle(
+                  color: Colors.blue,
+                ),
+              ),
+              onPressed: () {
+                print('pressed');
+              },
+            ),
+            CupertinoActionSheetAction(
+              child: Text(
+                'Камера',
+                style: TextStyle(
+                  color: Colors.blue,
+                ),
+              ),
+              onPressed: () => filterBloc.getImage(context,
+                  filterBloc.getListTemplates['data'][currentpage]['url']),
+            )
+          ],
+          cancelButton: CupertinoActionSheetAction(
+            child: Text('Отменить'),
             onPressed: () {
-              filterBloc.pickFileFrom(context);
+              Navigator.pop(context);
             },
           ),
-          CupertinoActionSheetAction(
-            child: Text(
-              'iCloud Drive',
-              style: TextStyle(
-                color: Colors.blue,
-              ),
-            ),
-            onPressed: () {
-              print('pressed');
-            },
-          ),
-          CupertinoActionSheetAction(
-            child: Text(
-              'Camera',
-              style: TextStyle(
-                color: Colors.blue,
-              ),
-            ),
-            onPressed: () {
-              print('pressed');
-            },
-          )
-        ],
-        cancelButton: CupertinoActionSheetAction(
-          child: Text('Отменить'),
-          onPressed: () {
-            Navigator.pop(context);
-          },
         ),
-      ),
-    );
+      );
   }
 }

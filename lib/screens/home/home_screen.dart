@@ -1,15 +1,17 @@
 import 'package:alfa_project/components/icons/custom_icons.dart';
 import 'package:alfa_project/components/widgets/bounce_button.dart';
-import 'package:alfa_project/screens/search/search_picker.dart';
+import 'package:alfa_project/screens/search/search_image_text.dart';
 import 'package:flutter/material.dart';
 
 class HomeMainScreen extends StatelessWidget {
-  const HomeMainScreen({Key key}) : super(key: key);
+  final Color mainColor;
+  const HomeMainScreen({Key key, this.mainColor}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
+        backgroundColor: mainColor,
         body: Column(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [

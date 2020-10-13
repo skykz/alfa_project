@@ -15,131 +15,140 @@ class _SelectTypeTemplateState extends State<SelectTypeTemplate> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: AppStyle.mainbgColor,
-      resizeToAvoidBottomPadding: false,
-      appBar: AppBar(
-        backgroundColor: Colors.white,
-        centerTitle: true,
-        title: const Text(
-          'Выберите размер',
-          style: TextStyle(
-            fontSize: 22,
-            color: Colors.black,
-          ),
-        ),
-        elevation: 10,
-        shadowColor: Colors.grey[300],
-      ),
-      body: Column(
-        children: [
-          const Spacer(
-            flex: 2,
-          ),
-          Expanded(
-            flex: 6,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                GestureDetector(
-                  onTap: () {
-                    if (!isFirstContainerSelected)
-                      setState(() {
-                        isFirstContainerSelected = true;
-                      });
-                  },
-                  child: Container(
-                    height: 245,
-                    width: withContainer,
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      boxShadow: isFirstContainerSelected
-                          ? [
-                              BoxShadow(
-                                color: Colors.red[200],
-                                blurRadius: 10,
-                                offset: Offset(0, 10),
-                              )
-                            ]
-                          : [
-                              BoxShadow(
-                                color: Colors.grey[300],
-                                blurRadius: 10,
-                                offset: Offset(0, 10),
-                              ),
-                            ],
-                      borderRadius: BorderRadius.circular(4),
-                    ),
-                    child: Center(
-                      child: Text(
-                        'Для сторис',
-                        style: TextStyle(
-                          fontSize: 22,
-                          fontWeight: FontWeight.bold,
-                          color: isFirstContainerSelected
-                              ? AppStyle.colorRed
-                              : Colors.grey,
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-                GestureDetector(
-                  onTap: () {
-                    if (isFirstContainerSelected)
-                      setState(() {
-                        isFirstContainerSelected = false;
-                      });
-                  },
-                  child: Container(
-                    height: 180,
-                    width: withContainer,
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      boxShadow: !isFirstContainerSelected
-                          ? [
-                              BoxShadow(
-                                color: Colors.red[200],
-                                blurRadius: 10,
-                                offset: Offset(0, 10),
-                              )
-                            ]
-                          : [
-                              BoxShadow(
-                                color: Colors.grey[300],
-                                blurRadius: 10,
-                                offset: Offset(0, 10),
-                              ),
-                            ],
-                      borderRadius: BorderRadius.circular(4),
-                    ),
-                    child: Center(
-                      child: Text(
-                        'Для постов',
-                        style: TextStyle(
-                          fontSize: 22,
-                          fontWeight: FontWeight.bold,
-                          color: isFirstContainerSelected
-                              ? Colors.grey
-                              : AppStyle.colorRed,
-                        ),
-                      ),
-                    ),
-                  ),
-                )
-              ],
+    return SafeArea(
+      child: Scaffold(
+        backgroundColor: AppStyle.mainbgColor,
+        resizeToAvoidBottomPadding: false,
+        appBar: AppBar(
+          backgroundColor: Colors.white,
+          centerTitle: true,
+          title: const Text(
+            'Выберите размер',
+            style: TextStyle(
+              fontSize: 20,
+              color: Colors.black,
             ),
           ),
-          Row(
-            mainAxisSize: MainAxisSize.max,
-            children: [
-              Expanded(
-                child: FlatButton(
-                  onPressed: () {},
+          elevation: 10,
+          shadowColor: Colors.grey[300],
+        ),
+        body: Column(
+          children: [
+            const Spacer(
+              flex: 2,
+            ),
+            Expanded(
+              flex: 6,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  GestureDetector(
+                    onTap: () {
+                      if (!isFirstContainerSelected)
+                        setState(() {
+                          isFirstContainerSelected = true;
+                        });
+                    },
+                    child: Container(
+                      height: 245,
+                      width: withContainer,
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        boxShadow: isFirstContainerSelected
+                            ? [
+                                BoxShadow(
+                                  color: Colors.red[200],
+                                  blurRadius: 10,
+                                  offset: Offset(0, 10),
+                                )
+                              ]
+                            : [
+                                BoxShadow(
+                                  color: Colors.grey[300],
+                                  blurRadius: 10,
+                                  offset: Offset(0, 10),
+                                ),
+                              ],
+                        borderRadius: BorderRadius.circular(4),
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.all(12),
+                        child: FittedBox(
+                          child: Center(
+                            child: Text(
+                              'Для сторис',
+                              style: TextStyle(
+                                fontSize: 22,
+                                fontWeight: FontWeight.bold,
+                                color: isFirstContainerSelected
+                                    ? AppStyle.colorRed
+                                    : Colors.grey,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                  GestureDetector(
+                    onTap: () {
+                      if (isFirstContainerSelected)
+                        setState(() {
+                          isFirstContainerSelected = false;
+                        });
+                    },
+                    child: Container(
+                      height: 180,
+                      width: withContainer,
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        boxShadow: !isFirstContainerSelected
+                            ? [
+                                BoxShadow(
+                                  color: Colors.red[200],
+                                  blurRadius: 10,
+                                  offset: Offset(0, 10),
+                                )
+                              ]
+                            : [
+                                BoxShadow(
+                                  color: Colors.grey[300],
+                                  blurRadius: 10,
+                                  offset: Offset(0, 10),
+                                ),
+                              ],
+                        borderRadius: BorderRadius.circular(4),
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.all(12),
+                        child: FittedBox(
+                          child: Center(
+                            child: Text(
+                              'Для постов',
+                              style: TextStyle(
+                                fontSize: 22,
+                                fontWeight: FontWeight.bold,
+                                color: isFirstContainerSelected
+                                    ? Colors.grey
+                                    : AppStyle.colorRed,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  )
+                ],
+              ),
+            ),
+            Row(
+              mainAxisSize: MainAxisSize.max,
+              children: [
+                Expanded(
                   child: Padding(
                     padding: const EdgeInsets.symmetric(
-                        horizontal: 40, vertical: 20),
+                        horizontal: 40, vertical: 40),
                     child: FlatButton(
                       color: AppStyle.colorRed,
                       onPressed: () => Navigator.push(
@@ -178,10 +187,10 @@ class _SelectTypeTemplateState extends State<SelectTypeTemplate> {
                     ),
                   ),
                 ),
-              ),
-            ],
-          )
-        ],
+              ],
+            )
+          ],
+        ),
       ),
     );
   }

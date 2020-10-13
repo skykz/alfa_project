@@ -5,10 +5,12 @@ import 'dart:typed_data';
 import 'package:alfa_project/components/icons/custom_icons.dart';
 import 'package:alfa_project/components/styles/app_style.dart';
 import 'package:alfa_project/components/widgets/bounce_button.dart';
+import 'package:alfa_project/core/data/consts/app_const.dart';
 import 'package:alfa_project/core/data/models/dialog_type.dart';
 import 'package:alfa_project/provider/story_bloc.dart';
 import 'package:alfa_project/screens/search/search_image_text.dart';
 import 'package:alfa_project/utils/common_utils.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:gallery_saver/gallery_saver.dart';
@@ -17,22 +19,22 @@ import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
 import 'dart:ui' as ui;
 
-class CreateEditTemplateScreen extends StatefulWidget {
-  final ImageProvider<dynamic> imageProvider;
-  final String title;
-  final String text;
-  CreateEditTemplateScreen({
-    this.imageProvider,
-    this.title,
-    this.text,
+class CreateEditFilterTemplateScreen extends StatefulWidget {
+  final String templateImageId;
+  final File filteredImage;
+
+  CreateEditFilterTemplateScreen({
+    this.templateImageId,
+    this.filteredImage,
   });
 
   @override
-  _CreateEditTemplateScreenState createState() =>
-      _CreateEditTemplateScreenState();
+  _CreateEditFilterTemplateScreenState createState() =>
+      _CreateEditFilterTemplateScreenState();
 }
 
-class _CreateEditTemplateScreenState extends State<CreateEditTemplateScreen> {
+class _CreateEditFilterTemplateScreenState
+    extends State<CreateEditFilterTemplateScreen> {
   _goBack() {
     final storyBloc = Provider.of<StoryBloc>(context, listen: false);
     storyBloc.setClearStoryData();
@@ -81,7 +83,9 @@ class _CreateEditTemplateScreenState extends State<CreateEditTemplateScreen> {
                                     child: Stack(
                                       fit: StackFit.expand,
                                       children: <Widget>[
-                                        Image(image: widget.imageProvider),
+                                        Image(
+                                            image: FileImage(
+                                                widget.filteredImage)),
                                       ],
                                     ),
                                   );
@@ -96,12 +100,42 @@ class _CreateEditTemplateScreenState extends State<CreateEditTemplateScreen> {
                                     child: Stack(
                                       fit: StackFit.expand,
                                       children: <Widget>[
-                                        Image(image: widget.imageProvider),
+                                        Image(
+                                          image:
+                                              FileImage(widget.filteredImage),
+                                        ),
                                       ],
                                     ),
                                   );
                                 },
                               ),
+                      ),
+                      IgnorePointer(
+                        ignoring: true,
+                        child: CachedNetworkImage(
+                          imageUrl: BASE_URL_IMAGE + widget.templateImageId,
+                          imageBuilder: (context, imageProvider) => InkWell(
+                            borderRadius: BorderRadius.circular(8),
+                            onTap: () => {},
+                            child: Container(
+                              width: 500,
+                              decoration: BoxDecoration(
+                                image: DecorationImage(
+                                  image: imageProvider,
+                                  fit: BoxFit.fill,
+                                ),
+                              ),
+                            ),
+                          ),
+                          placeholder: (context, url) => Center(
+                            child: const CircularProgressIndicator(
+                              strokeWidth: 2,
+                              backgroundColor: Colors.white,
+                            ),
+                          ),
+                          errorWidget: (context, url, error) =>
+                              const Icon(Icons.error),
+                        ),
                       ),
                       storyBloc.getTextEnabled
                           ? Padding(
@@ -122,12 +156,11 @@ class _CreateEditTemplateScreenState extends State<CreateEditTemplateScreen> {
                                           child: Stack(
                                             children: [
                                               Positioned(
-                                                top: 30,
+                                                top: 150,
                                                 left: 50,
                                                 right: 50,
                                                 child: Container(
                                                   color: Colors.orange,
-                                                  // height: 150,
                                                   child: Column(
                                                       mainAxisAlignment:
                                                           MainAxisAlignment
@@ -143,9 +176,15 @@ class _CreateEditTemplateScreenState extends State<CreateEditTemplateScreen> {
                                                           maxLines: 1,
                                                           textAlign: storyBloc
                                                               .getAlign,
+                                                          autocorrect: false,
+                                                          enableSuggestions:
+                                                              false,
                                                           style: TextStyle(
                                                             color: storyBloc
                                                                 .getTextColor,
+                                                            decoration:
+                                                                TextDecoration
+                                                                    .none,
                                                             fontSize: 22,
                                                           ),
                                                           cursorColor:
@@ -358,7 +397,7 @@ class _CreateEditTemplateScreenState extends State<CreateEditTemplateScreen> {
                               children: [
                                 SizedBox(
                                   height: 35,
-                                  width: 32,
+                                  width: 35,
                                   child: BounceButton(
                                     isShadow: true,
                                     onPressed: () => displayCustomDialog(
@@ -374,7 +413,6 @@ class _CreateEditTemplateScreenState extends State<CreateEditTemplateScreen> {
                                   'Удалить',
                                   style: TextStyle(
                                     fontSize: 10,
-                                    height: 2,
                                     fontWeight: FontWeight.w300,
                                     color: AppStyle.colorDark,
                                   ),
@@ -383,7 +421,7 @@ class _CreateEditTemplateScreenState extends State<CreateEditTemplateScreen> {
                             ),
                           ],
                         )
-                      : const SizedBox(),
+                      : SizedBox(),
                 ),
               ),
               storyBloc.getTextEnabled
@@ -644,91 +682,3 @@ class _CreateEditTemplateScreenState extends State<CreateEditTemplateScreen> {
     GallerySaver.saveImage(file.path);
   }
 }
-
-// class DashRectPainter extends CustomPainter {
-//   double strokeWidth;
-//   Color color;
-//   double gap;
-
-//   DashRectPainter(
-//       {this.strokeWidth = 5.0, this.color = Colors.red, this.gap = 5.0});
-
-//   @override
-//   void paint(Canvas canvas, Size size) {
-//     Paint dashedPaint = Paint()
-//       ..color = color
-//       ..strokeWidth = strokeWidth
-//       ..style = PaintingStyle.stroke;
-
-//     double x = size.width;
-//     double y = size.height;
-
-//     Path _topPath = getDashedPath(
-//       a: math.Point(0, 0),
-//       b: math.Point(x, 0),
-//       gap: gap,
-//     );
-
-//     Path _rightPath = getDashedPath(
-//       a: math.Point(x, 0),
-//       b: math.Point(x, y),
-//       gap: gap,
-//     );
-
-//     Path _bottomPath = getDashedPath(
-//       a: math.Point(0, y),
-//       b: math.Point(x, y),
-//       gap: gap,
-//     );
-
-//     Path _leftPath = getDashedPath(
-//       a: math.Point(0, 0),
-//       b: math.Point(0.001, y),
-//       gap: gap,
-//     );
-
-//     canvas.drawPath(_topPath, dashedPaint);
-//     canvas.drawPath(_rightPath, dashedPaint);
-//     canvas.drawPath(_bottomPath, dashedPaint);
-//     canvas.drawPath(_leftPath, dashedPaint);
-//   }
-
-//   Path getDashedPath({
-//     @required math.Point<double> a,
-//     @required math.Point<double> b,
-//     @required gap,
-//   }) {
-//     Size size = Size(b.x - a.x, b.y - a.y);
-//     Path path = Path();
-//     path.moveTo(a.x, a.y);
-//     bool shouldDraw = true;
-//     math.Point currentPoint = math.Point(a.x, a.y);
-
-//     num radians = math.atan(size.height / size.width);
-
-//     num dx = math.cos(radians) * gap < 0
-//         ? math.cos(radians) * gap * -1
-//         : math.cos(radians) * gap;
-
-//     num dy = math.sin(radians) * gap < 0
-//         ? math.sin(radians) * gap * -1
-//         : math.sin(radians) * gap;
-
-//     while (currentPoint.x <= b.x && currentPoint.y <= b.y) {
-//       shouldDraw
-//           ? path.lineTo(currentPoint.x, currentPoint.y)
-//           : path.moveTo(currentPoint.x, currentPoint.y);
-//       shouldDraw = !shouldDraw;
-//       currentPoint = math.Point(
-//         currentPoint.x + dx,
-//         currentPoint.y + dy,
-//       );
-//     }
-//     return path;
-//   }
-
-//   @override
-//   bool shouldRepaint(CustomPainter oldDelegate) {
-//     return true;
-//   }
-// }

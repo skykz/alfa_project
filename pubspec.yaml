@@ -35,14 +35,10 @@ dependencies:
   path_provider: 1.6.18
   #file picker
   file_picker: 2.0.6
-  image_editor_pro: 1.0.6
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
-
-# For information on the generic Dart part of this file, see the
-# following page: https://dart.dev/tools/pub/pubspec
 
 # The following section is specific to Flutter.
 flutter:
@@ -62,17 +58,18 @@ flutter:
   # "family" key with the font family name, and a "fonts" key with a
   # list giving the asset and other descriptors for the font. For
   # example:
-  # fonts:
-  #   - family: Schyler
-  #     fonts:
-  #       - asset: fonts/Schyler-Regular.ttf
-  #       - asset: fonts/Schyler-Italic.ttf
-  #         style: italic
-  #   - family: Trajan Pro
-  #     fonts:
-  #       - asset: fonts/TrajanPro.ttf
-  #       - asset: fonts/TrajanPro_Bold.ttf
-  #         weight: 700
-  #
-  # For details regarding fonts from package dependencies,
-  # see https://flutter.dev/custom-fonts/#from-packages
+  fonts:
+    - family: Styrene A LC
+      fonts:
+        - asset: assets/alfa_fonts/Styrene A LC-Black Italic.otf
+        - asset: assets/alfa_fonts/Styrene A LC-Black.otf
+        - asset: assets/alfa_fonts/Styrene A LC-Bold Italic.otf
+        - asset: assets/alfa_fonts/Styrene A LC-Bold.otf
+        - asset: assets/alfa_fonts/Styrene A LC-Light Italic.otf
+        - asset: assets/alfa_fonts/Styrene A LC-Light.otf
+        - asset: assets/alfa_fonts/Styrene A LC-Medium Italic.otf
+        - asset: assets/alfa_fonts/Styrene A LC-Medium.otf
+        - asset: assets/alfa_fonts/Styrene A LC-Regular Italic.otf
+        - asset: assets/alfa_fonts/Styrene A LC-Regular.otf
+        - asset: assets/alfa_fonts/Styrene A LC-Thin Italic.otf
+        - asset: assets/alfa_fonts/Styrene A LC-Thin.otf

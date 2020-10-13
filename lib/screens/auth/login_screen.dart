@@ -56,7 +56,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             'льфа Дизайн',
                             style: TextStyle(
                               letterSpacing: 1.5,
-                              fontSize: 30,
+                              fontSize: 26,
                               color: AppStyle.colorRed,
                               fontWeight: FontWeight.bold,
                             ),

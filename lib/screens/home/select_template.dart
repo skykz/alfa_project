@@ -1,6 +1,6 @@
 import 'package:alfa_project/components/styles/app_style.dart';
 import 'package:alfa_project/components/widgets/custom_card_general.dart';
-import 'package:alfa_project/screens/home/filter_template_picture.dart';
+import 'package:alfa_project/screens/home/filters/filter_template_picture.dart';
 import 'package:alfa_project/screens/home/home_screen.dart';
 import 'package:flutter/material.dart';
 
@@ -41,7 +41,9 @@ class SelectTemplateScreen extends StatelessWidget {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => HomeMainScreen(),
+                        builder: (context) => HomeMainScreen(
+                          mainColor: AppStyle.colorRed,
+                        ),
                       ),
                     );
                   },
@@ -53,15 +55,17 @@ class SelectTemplateScreen extends StatelessWidget {
                     title: 'Красный фон',
                   ),
                 ),
-                Divider(
-                  height: 30,
+                const SizedBox(
+                  height: 21,
                 ),
                 InkWell(
                   onTap: () {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => HomeMainScreen(),
+                        builder: (context) => HomeMainScreen(
+                          mainColor: Colors.grey,
+                        ),
                       ),
                     );
                   },
@@ -74,7 +78,7 @@ class SelectTemplateScreen extends StatelessWidget {
                   ),
                 ),
                 Divider(
-                  height: 30,
+                  height: 42,
                 ),
                 InkWell(
                   onTap: () {
@@ -92,58 +96,6 @@ class SelectTemplateScreen extends StatelessWidget {
                     title: 'Готовые Рамки',
                     colorText: Colors.white,
                   ),
-                ),
-                SizedBox(
-                  height: 50,
-                ),
-                Row(
-                  children: [
-                    Expanded(
-                      child: FlatButton(
-                        onPressed: () {},
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 20),
-                          child: FlatButton(
-                            color: AppStyle.colorRed,
-                            onPressed: () => Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => HomeMainScreen(),
-                              ),
-                            ),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(4),
-                            ),
-                            child: Center(
-                              child: Padding(
-                                padding:
-                                    const EdgeInsets.symmetric(vertical: 14),
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
-                                    const Text(
-                                      'Дальше',
-                                      style: TextStyle(
-                                        fontSize: 22,
-                                        color: Colors.white,
-                                        fontWeight: FontWeight.w300,
-                                      ),
-                                    ),
-                                    const Icon(
-                                      Icons.arrow_forward,
-                                      size: 25,
-                                      color: Colors.white,
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
                 ),
               ],
             ),

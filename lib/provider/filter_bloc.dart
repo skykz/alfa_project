@@ -3,10 +3,11 @@ import 'dart:io';
 
 import 'package:alfa_project/components/styles/app_style.dart';
 import 'package:alfa_project/core/repository/api_repository.dart';
-import 'package:alfa_project/screens/home/filter_image_color.dart';
+import 'package:alfa_project/screens/home/filters/filter_image_color.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:photofilters/filters/filters.dart';
 import 'package:photofilters/filters/preset_filters.dart';
 import 'package:path/path.dart';
@@ -58,9 +59,8 @@ class FilterBloc extends ChangeNotifier {
     notifyListeners();
   }
 
-  pickFileFrom(BuildContext context) async {
+  pickFileFrom(BuildContext context, String templateStringUrl) async {
     String fileName;
-
     FilePickerResult result;
     result = await FilePicker.platform.pickFiles(
       type: FileType.custom,
@@ -68,58 +68,17 @@ class FilterBloc extends ChangeNotifier {
     );
 
     if (result != null) {
-      setImageLoading(true);
+      Navigator.pop(context);
+
       File file;
       file = File(result.files.single.path);
-      Navigator.pop(context);
 
       log("${file.path}");
       if (file.path != null) {
         fileName = basename(file.path);
         final imageMain = imageLib.decodeImage(file.readAsBytesSync());
-        // final imagePreview = imageLib.copyResize(imageMain,
-        //     height: MediaQuery.of(context).size.height.toInt(),
-        //     width: MediaQuery.of(context).size.width.toInt());
-
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => PhotoFilterSelector(
-              title: Text("Photo Filter Example"),
-              image: imageMain,
-              filters: _filters,
-              // imagePreview: imagePreview,
-              appBarColor: AppStyle.colorRed,
-              filename: fileName,
-              loader: Center(
-                child: Platform.isAndroid
-                    ? SizedBox(
-                        height: 25,
-                        width: 25,
-                        child: CircularProgressIndicator(
-                          strokeWidth: 2,
-                        ),
-                      )
-                    : CupertinoActivityIndicator(
-                        radius: 15,
-                      ),
-              ),
-              fit: BoxFit.contain,
-            ),
-          ),
-        );
-        setImageLoading(false);
+        _goToFilterScreen(context, imageMain, templateStringUrl, fileName);
       }
-      setImageLoading(false);
-
-      // Navigator.push(
-      //   context,
-      //   MaterialPageRoute(
-      //     builder: (context) => FilterImageEditor(
-      //       file: file,
-      //     ),
-      //   ),
-      // );
     }
   }
 
@@ -129,10 +88,66 @@ class FilterBloc extends ChangeNotifier {
   }
 
   List<Filter> _filters = [
+    NoFilter(),
     BrannanFilter(),
     F1977Filter(),
     XProIIFilter(),
     ReyesFilter(),
     SkylineFilter(),
   ];
+
+  Future getImage(BuildContext context, String templateStringUrl) async {
+    File _image;
+    String fileName;
+    final picker = ImagePicker();
+    final pickedFile = await picker.getImage(source: ImageSource.camera);
+
+    if (pickedFile != null) {
+      _image = File(pickedFile.path);
+
+      File file;
+      file = File(_image.path);
+
+      log("${file.path}");
+      if (file.path != null) {
+        fileName = basename(file.path);
+        final imageMain = imageLib.decodeImage(file.readAsBytesSync());
+        _goToFilterScreen(context, imageMain, templateStringUrl, fileName);
+      }
+    } else {
+      print('No image selected.');
+    }
+    return _image;
+  }
+
+  _goToFilterScreen(BuildContext context, imageMain, String templateStringUrl,
+      String fileName) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => PhotoFilterSelector(
+          image: imageMain,
+          filters: _filters,
+          templateId: templateStringUrl,
+          // imagePreview: imagePreview,
+          appBarColor: AppStyle.colorRed,
+          filename: fileName,
+          loader: Center(
+            child: Platform.isAndroid
+                ? SizedBox(
+                    height: 25,
+                    width: 25,
+                    child: CircularProgressIndicator(
+                      strokeWidth: 2,
+                    ),
+                  )
+                : CupertinoActivityIndicator(
+                    radius: 15,
+                  ),
+          ),
+          fit: BoxFit.contain,
+        ),
+      ),
+    );
+  }
 }

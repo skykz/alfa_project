@@ -32,24 +32,33 @@ class CardGeneralWidget extends StatelessWidget {
               color: shadowColor,
             ),
           ]),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
+      child: Stack(
         children: [
-          SizedBox(
-            width: MediaQuery.of(context).size.width * 0.4,
-            child: Text(
-              title,
-              style: TextStyle(
-                color: colorText,
-                fontSize: 30,
-                fontWeight: FontWeight.bold,
-              ),
+          Positioned(
+            right: 0,
+            bottom: 0,
+            child: Image.asset(
+              imageAsset,
+              width: 260,
+              fit: BoxFit.contain,
+              // height: 100,
             ),
           ),
-          Image.asset(
-            imageAsset,
-            width: 100,
-            height: 100,
+          Positioned(
+            top: 40,
+            left: 18,
+            bottom: 0,
+            child: SizedBox(
+              width: MediaQuery.of(context).size.width * 0.4,
+              child: Text(
+                title,
+                style: TextStyle(
+                  color: colorText,
+                  fontSize: 25,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
           ),
         ],
       ),

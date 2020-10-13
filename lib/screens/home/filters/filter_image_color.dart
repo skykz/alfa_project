@@ -1,12 +1,15 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'package:alfa_project/components/styles/app_style.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:image/image.dart' as imageLib;
 import 'package:path_provider/path_provider.dart';
 import 'package:photofilters/filters/filters.dart';
 import 'package:flutter/cupertino.dart';
+
+import 'create_edit_filters_template.dart';
 
 class PhotoFilter extends StatelessWidget {
   final imageLib.Image image;
@@ -54,9 +57,9 @@ class PhotoFilter extends StatelessWidget {
 
 ///The PhotoFilterSelector Widget for apply filter from a selected set of filters
 class PhotoFilterSelector extends StatefulWidget {
-  final Widget title;
   final Color appBarColor;
   final List<Filter> filters;
+  final String templateId;
   final imageLib.Image image;
   // final imageLib.Image imagePreview;
 
@@ -67,9 +70,9 @@ class PhotoFilterSelector extends StatefulWidget {
 
   const PhotoFilterSelector({
     Key key,
-    @required this.title,
     @required this.filters,
     @required this.image,
+    this.templateId,
     // @required this.imagePreview,
     this.appBarColor = Colors.blue,
     this.loader = const Center(child: CircularProgressIndicator()),
@@ -111,29 +114,49 @@ class _PhotoFilterSelectorState extends State<PhotoFilterSelector> {
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
-          title: widget.title,
-          backgroundColor: widget.appBarColor,
+          title: Text(
+            "Выберите фильтр",
+            style: TextStyle(
+              color: AppStyle.colorDark,
+            ),
+          ),
           actions: <Widget>[
             loading
-                ? Platform.isIOS
-                    ? CircularProgressIndicator(
-                        strokeWidth: 2,
+                ? !Platform.isIOS
+                    ? SizedBox(
+                        width: 15,
+                        height: 15,
+                        child: CircularProgressIndicator(
+                          strokeWidth: 2,
+                          backgroundColor: Colors.white,
+                        ),
                       )
                     : CupertinoActivityIndicator(
-                        radius: 20,
+                        radius: 10,
                       )
                 : IconButton(
-                    icon: Icon(Icons.check),
+                    icon: Icon(
+                      Icons.check,
+                      size: 32,
+                      color: AppStyle.colorRed,
+                    ),
                     onPressed: () async {
                       setState(() {
                         loading = true;
                       });
-                      var imageFile = await saveFilteredImage();
+                      await saveFilteredImage();
 
-                      Navigator.pop(context, {'image_filtered': imageFile});
+                      // Navigator.pop(context, {'image_filtered': imageFile});
                     },
                   )
           ],
+          elevation: 10,
+          shadowColor: Colors.grey[300],
+          centerTitle: true,
+          backgroundColor: Colors.white,
+          iconTheme: IconThemeData(
+            color: AppStyle.colorDark,
+          ),
         ),
         body: Container(
           width: double.infinity,
@@ -149,10 +172,13 @@ class _PhotoFilterSelectorState extends State<PhotoFilterSelector> {
                         width: double.infinity,
                         height: double.infinity,
                         padding: EdgeInsets.all(12.0),
-                        child: _buildFilteredImage(
-                          _filter,
-                          image,
-                          filename,
+                        child: Padding(
+                          padding: const EdgeInsets.only(top: 8),
+                          child: _buildFilteredImage(
+                            _filter,
+                            image,
+                            filename,
+                          ),
                         ),
                       ),
                     ),
@@ -166,7 +192,7 @@ class _PhotoFilterSelectorState extends State<PhotoFilterSelector> {
                           itemBuilder: (BuildContext context, int index) {
                             return InkWell(
                               child: Padding(
-                                padding: EdgeInsets.all(10),
+                                padding: EdgeInsets.all(8),
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.center,
                                   children: <Widget>[
@@ -272,6 +298,17 @@ class _PhotoFilterSelectorState extends State<PhotoFilterSelector> {
   Future<File> saveFilteredImage() async {
     var imageFile = await _localFile;
     await imageFile.writeAsBytes(cachedFilters[_filter?.name ?? "_"]);
+    // GallerySaver.saveImage(imageFile.path);
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(
+        builder: (context) => CreateEditFilterTemplateScreen(
+          templateImageId: widget.templateId,
+          filteredImage: imageFile,
+        ),
+      ),
+    );
+
     return imageFile;
   }
 

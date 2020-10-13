@@ -42,7 +42,7 @@ class _SearchPickerScreenState extends State<SearchPickerScreen> {
   Widget build(BuildContext context) {
     final mainTextStyle = TextStyle(
       color: Colors.white,
-      fontSize: 20,
+      fontSize: 17,
       fontWeight: FontWeight.w300,
     );
     final bloc = Provider.of<SearchTextImageBloc>(context, listen: true);
@@ -56,14 +56,14 @@ class _SearchPickerScreenState extends State<SearchPickerScreen> {
           body: Column(
             children: [
               Padding(
-                padding: const EdgeInsets.only(left: 15),
+                padding: const EdgeInsets.only(left: 19, top: 10),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
                       widget.isText ? 'База текстов' : 'Стикеры',
                       style: TextStyle(
-                        fontSize: 28,
+                        fontSize: 24,
                         color: Colors.white,
                         fontWeight: FontWeight.bold,
                       ),
@@ -91,7 +91,7 @@ class _SearchPickerScreenState extends State<SearchPickerScreen> {
               widget.isText
                   ? Padding(
                       padding: const EdgeInsets.symmetric(
-                          horizontal: 15, vertical: 15),
+                          horizontal: 18, vertical: 16),
                       child: Container(
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(4),
@@ -117,7 +117,7 @@ class _SearchPickerScreenState extends State<SearchPickerScreen> {
                               ),
                               hintStyle: TextStyle(
                                 color: Colors.grey[200],
-                                fontSize: 18,
+                                fontSize: 16,
                               ),
                             ),
                             onEditingComplete: () {},
@@ -146,19 +146,21 @@ class _SearchPickerScreenState extends State<SearchPickerScreen> {
                             ),
                           );
                         return Expanded(
-                          child: ListView.separated(
+                          child: ListView.builder(
                               shrinkWrap: true,
-                              separatorBuilder: (_, index) => Divider(
-                                    thickness: 1,
-                                    color: const Color.fromRGBO(
-                                        255, 255, 255, 0.1),
-                                    height: 1,
-                                  ),
                               itemCount: snapshot.data.length,
                               itemBuilder: (_, index) {
                                 if (snapshot.data[index]['id'] == 115)
                                   return null;
-
+                                if (index.isOdd)
+                                  return Divider(
+                                    indent: 20,
+                                    endIndent: 20,
+                                    thickness: 0.5,
+                                    color: const Color.fromRGBO(
+                                        255, 255, 255, 0.1),
+                                    height: 0.5,
+                                  );
                                 return ListTile(
                                   onTap: () => Navigator.push(
                                     context,
