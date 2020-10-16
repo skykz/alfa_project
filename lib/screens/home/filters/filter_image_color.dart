@@ -101,7 +101,6 @@ class _PhotoFilterSelectorState extends State<PhotoFilterSelector> {
     _filter = widget.filters[0];
     filename = widget.filename;
     image = widget.image;
-    // imagePreview = widget.imagePreview;
   }
 
   @override
@@ -123,15 +122,17 @@ class _PhotoFilterSelectorState extends State<PhotoFilterSelector> {
           actions: <Widget>[
             loading
                 ? !Platform.isIOS
-                    ? SizedBox(
+                    ? const SizedBox(
                         width: 15,
                         height: 15,
-                        child: CircularProgressIndicator(
-                          strokeWidth: 2,
-                          backgroundColor: Colors.white,
+                        child: Center(
+                          child: CircularProgressIndicator(
+                            strokeWidth: 2,
+                            backgroundColor: Colors.white,
+                          ),
                         ),
                       )
-                    : CupertinoActivityIndicator(
+                    : const CupertinoActivityIndicator(
                         radius: 10,
                       )
                 : IconButton(
@@ -145,8 +146,6 @@ class _PhotoFilterSelectorState extends State<PhotoFilterSelector> {
                         loading = true;
                       });
                       await saveFilteredImage();
-
-                      // Navigator.pop(context, {'image_filtered': imageFile});
                     },
                   )
           ],
@@ -171,7 +170,7 @@ class _PhotoFilterSelectorState extends State<PhotoFilterSelector> {
                       child: Container(
                         width: double.infinity,
                         height: double.infinity,
-                        padding: EdgeInsets.all(12.0),
+                        padding: const EdgeInsets.all(12.0),
                         child: Padding(
                           padding: const EdgeInsets.only(top: 8),
                           child: _buildFilteredImage(
@@ -192,7 +191,7 @@ class _PhotoFilterSelectorState extends State<PhotoFilterSelector> {
                           itemBuilder: (BuildContext context, int index) {
                             return InkWell(
                               child: Padding(
-                                padding: EdgeInsets.all(8),
+                                padding: const EdgeInsets.all(8),
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.center,
                                   children: <Widget>[

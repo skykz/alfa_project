@@ -20,7 +20,7 @@ class HomeMainScreen extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 IconButton(
-                  icon: Icon(Icons.arrow_back_ios),
+                  icon: Icon(Icons.arrow_back_ios_rounded),
                   onPressed: () => Navigator.pop(context),
                 ),
                 Row(
@@ -35,7 +35,7 @@ class HomeMainScreen extends StatelessWidget {
                             width: 40,
                             child: BounceButton(
                               onPressed: () {
-                                Navigator.push(
+                                Navigator.pushReplacement(
                                   context,
                                   MaterialPageRoute(
                                     builder: (context) => SearchPickerScreen(
@@ -68,7 +68,7 @@ class HomeMainScreen extends StatelessWidget {
                             width: 40,
                             child: BounceButton(
                               onPressed: () {
-                                Navigator.push(
+                                Navigator.pushReplacement(
                                   context,
                                   MaterialPageRoute(
                                     builder: (context) => SearchPickerScreen(

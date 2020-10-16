@@ -1,4 +1,5 @@
 import 'package:alfa_project/core/data/models/dialog_type.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class CustomActionDialog extends StatelessWidget {
@@ -6,6 +7,8 @@ class CustomActionDialog extends StatelessWidget {
   final Function onPressed;
   final String cancelOptionText;
   final DialogType dialogType;
+  final bool isIos;
+  final bool isSuccess;
   final Color color;
   final String confirmOptionText;
 
@@ -15,23 +18,38 @@ class CustomActionDialog extends StatelessWidget {
     @required this.dialogType,
     this.color,
     this.cancelOptionText,
+    this.isSuccess,
+    this.isIos,
     this.confirmOptionText,
   });
 
   @override
   Widget build(BuildContext context) {
-    return Dialog(
-      insetPadding: EdgeInsets.symmetric(horizontal: 10),
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.all(
-          Radius.circular(10),
-        ),
-      ),
-      child: _setDialogType(dialogType, context),
-    );
+    return _setWidgetDialog(isIos, context, dialogType);
   }
 
-  Widget _setDialogType(DialogType val, BuildContext context) {
+  Widget _setWidgetDialog(bool isIo, BuildContext context, DialogType val) {
+    switch (isIos) {
+      case true:
+        return _setCupertinoDialogType(val, context);
+        break;
+      case false:
+        return Dialog(
+          insetPadding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+          shape: const RoundedRectangleBorder(
+            borderRadius: BorderRadius.all(
+              Radius.circular(8),
+            ),
+          ),
+          child: _setMaterialDialogType(val, context),
+        );
+        break;
+      default:
+        return null;
+    }
+  }
+
+  Widget _setMaterialDialogType(DialogType val, BuildContext context) {
     switch (val) {
       case DialogType.AlertDialog:
         return Column(
@@ -57,12 +75,12 @@ class CustomActionDialog extends StatelessWidget {
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(10),
                     ),
-                    color: Colors.red[300],
+                    color: Colors.red[100],
                     onPressed: onPressed,
                     child: Text(
                       'Да',
                       style: TextStyle(
-                        color: Colors.white,
+                        color: Colors.red,
                       ),
                     ),
                   ),
@@ -70,14 +88,14 @@ class CustomActionDialog extends StatelessWidget {
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(10),
                     ),
-                    color: Colors.green[300],
+                    color: Colors.green[100],
                     onPressed: () {
                       Navigator.pop(context);
                     },
                     child: Text(
                       'Нет',
                       style: TextStyle(
-                        color: Colors.white,
+                        color: Colors.green,
                       ),
                     ),
                   ),
@@ -88,68 +106,90 @@ class CustomActionDialog extends StatelessWidget {
         );
         break;
       case DialogType.InfoDialog:
-        return Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Padding(
-              padding: const EdgeInsets.all(16),
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    this.title,
+        return Padding(
+          padding: const EdgeInsets.all(15),
+          child: Column(mainAxisSize: MainAxisSize.min, children: [
+            Text(
+              isSuccess
+                  ? "Картинка успешно сохранена!"
+                  : "Ошибка при сохранении картинки!",
+              textAlign: TextAlign.center,
+            ),
+            Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 10),
+                  child: Text(
+                    isSuccess
+                        ? "Можете посмотреть в галереи."
+                        : "Повторите попытку еще раз, проверьте еще раз доступ.",
+                    textAlign: TextAlign.center,
+                  ),
+                ),
+                FlatButton(
+                  color: Colors.red[100],
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: Text(
+                    'Ok',
                     style: TextStyle(
-                      fontSize: 24,
-                      fontWeight: FontWeight.bold,
+                      color: Colors.red,
                     ),
                   ),
-                ],
-              ),
+                  onPressed: () => Navigator.of(context).pop(true),
+                ),
+              ],
             ),
-            ListView.builder(
-              itemCount: 4,
-              shrinkWrap: true,
-              physics: NeverScrollableScrollPhysics(),
-              itemBuilder: (context, index) {
-                return Theme(
-                  data: ThemeData(
-                    highlightColor: Colors.grey[300],
-                  ),
-                  child: Container(
-                    color: (index % 2 == 0) ? Colors.white : Colors.grey[100],
-                    child: Material(
-                      color: Colors.transparent,
-                      child: ListTile(
-                        onTap: () {},
-                        title: Text(
-                          "${index + 1}. название",
-                          style: TextStyle(),
-                        ),
-                        trailing: const SizedBox(
-                          width: 10,
-                          child: Center(
-                            child: Icon(
-                              Icons.arrow_forward_ios,
-                              color: Colors.black54,
-                              size: 13,
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                );
-              },
+          ]),
+        );
+        break;
+
+      default:
+        return const SizedBox();
+    }
+  }
+
+  Widget _setCupertinoDialogType(DialogType val, BuildContext context) {
+    switch (val) {
+      case DialogType.AlertDialog:
+        return CupertinoAlertDialog(
+          title: Text(this.title),
+          actions: <Widget>[
+            CupertinoDialogAction(
+              isDefaultAction: true,
+              isDestructiveAction: true,
+              child: Text("Да"),
+              onPressed: onPressed,
             ),
-            const SizedBox(
-              height: 20,
+            CupertinoDialogAction(
+              isDefaultAction: true,
+              child: Text("Нет"),
+              onPressed: () => Navigator.pop(context),
+            ),
+          ],
+        );
+        break;
+      case DialogType.InfoDialog:
+        return CupertinoAlertDialog(
+          title: Text(isSuccess
+              ? "Картинка успешно сохранена!"
+              : "Ошибка при сохранении картинки!"),
+          content: Text(isSuccess
+              ? "Можете посмотреть в галереи."
+              : "Повторите попытку еще раз, проверьте еще раз доступ."),
+          actions: <Widget>[
+            CupertinoDialogAction(
+              isDefaultAction: true,
+              child: Text("Ок"),
+              onPressed: onPressed,
             ),
           ],
         );
         break;
       default:
-        return const SizedBox();
+        return null;
     }
   }
 }

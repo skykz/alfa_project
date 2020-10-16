@@ -5,13 +5,32 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 
 class StoryBloc extends ChangeNotifier {
+  StoryBloc() {
+    notifierPicture.addListener(() {
+      this._currentImagePosition = notifierPicture.value;
+    });
+    notifierText.addListener(() {
+      this._currentTextPosition = notifierText.value;
+    });
+  }
+
   bool _isImagePositionSaved = false;
+  bool _isTextPositionSaved = false;
+
+  Color _backgColor = Colors.white;
+  Color get getBackColor => _backgColor;
+
   bool get getImagePositionState => _isImagePositionSaved;
+  bool get getTextPositionSaved => _isTextPositionSaved;
+
   bool _isTextEnabled = false;
   bool get getTextEnabled => _isTextEnabled;
 
   Matrix4 _currentImagePosition = Matrix4.identity();
   Matrix4 get getCurrenImagePosition => _currentImagePosition;
+
+  Matrix4 _currentTextPosition = Matrix4.identity();
+  Matrix4 get getCurrenTextPosition => _currentTextPosition;
 
   ValueNotifier<Matrix4> notifierPicture = ValueNotifier(Matrix4.identity());
   ValueNotifier<Matrix4> notifierText = ValueNotifier(Matrix4.identity());
@@ -34,20 +53,27 @@ class StoryBloc extends ChangeNotifier {
   bool _isBorderEnabled = false;
   bool get getBorderEnabled => _isBorderEnabled;
 
-  StoryBloc() {
-    notifierPicture.addListener(() {
-      this._currentImagePosition = notifierPicture.value;
-    });
-  }
+  double _textWidthContainer = 150;
+  double get textWidthContainer => _textWidthContainer;
 
   setImagePositionState(bool val) {
     this._isImagePositionSaved = val;
     notifyListeners();
   }
 
+  setTextPosition(bool val) {
+    this._isTextPositionSaved = val;
+    notifyListeners();
+  }
+
   setUndoState(bool val) {
     this._isImagePositionSaved = val;
     this._currentImagePosition = Matrix4.identity();
+    notifyListeners();
+  }
+
+  setStoryBackgroundColor(Color valueColor) {
+    this._backgColor = valueColor;
     notifyListeners();
   }
 
@@ -107,6 +133,11 @@ class StoryBloc extends ChangeNotifier {
 
   setBorderDisabled() {
     this._isBorderEnabled = false;
+    notifyListeners();
+  }
+
+  setTextWidthContainer(double val) {
+    this._textWidthContainer = val;
     notifyListeners();
   }
 

@@ -43,7 +43,7 @@ class MyApp extends StatelessWidget {
             future: SharedPreferences.getInstance(),
             builder: (BuildContext context, snapshot) {
               if (snapshot.data == null)
-                return Scaffold(
+                return const Scaffold(
                   body: Center(
                     child: CircularProgressIndicator(),
                   ),

@@ -147,7 +147,7 @@ class _LoginScreenState extends State<LoginScreen> {
                               activeColor: Colors.red,
                               checkColor: Colors.white,
                             ),
-                            Text(
+                            const Text(
                               'Запомнить меня',
                               style: TextStyle(
                                 color: Colors.black45,
@@ -177,14 +177,14 @@ class _LoginScreenState extends State<LoginScreen> {
                               width: double.infinity,
                               child: Center(
                                 child: bloc.isLoading
-                                    ? SizedBox(
+                                    ? const SizedBox(
                                         width: 25,
                                         child: CircularProgressIndicator(
                                           strokeWidth: 1,
                                           backgroundColor: Colors.white,
                                         ),
                                       )
-                                    : Text(
+                                    : const Text(
                                         'Войти',
                                         style: TextStyle(
                                           color: Colors.white,

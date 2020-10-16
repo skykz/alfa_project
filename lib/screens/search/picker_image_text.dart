@@ -45,7 +45,7 @@ class StickerTextPicker extends StatelessWidget {
                     child: Row(
                       children: [
                         const Icon(
-                          Icons.arrow_back_ios,
+                          Icons.arrow_back_ios_rounded,
                           color: Colors.white,
                         ),
                         const Text(
@@ -152,7 +152,7 @@ class StickerTextPicker extends StatelessWidget {
                                 snapshot.data['data'][index]['url'],
                             imageBuilder: (context, imageProvider) => InkWell(
                               borderRadius: BorderRadius.circular(5),
-                              onTap: () => Navigator.push(
+                              onTap: () => Navigator.pushReplacement(
                                 context,
                                 MaterialPageRoute(
                                   builder: (context) =>

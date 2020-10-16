@@ -129,19 +129,18 @@ class FilterBloc extends ChangeNotifier {
           image: imageMain,
           filters: _filters,
           templateId: templateStringUrl,
-          // imagePreview: imagePreview,
           appBarColor: AppStyle.colorRed,
           filename: fileName,
           loader: Center(
             child: Platform.isAndroid
-                ? SizedBox(
+                ? const SizedBox(
                     height: 25,
                     width: 25,
                     child: CircularProgressIndicator(
                       strokeWidth: 2,
                     ),
                   )
-                : CupertinoActivityIndicator(
+                : const CupertinoActivityIndicator(
                     radius: 15,
                   ),
           ),

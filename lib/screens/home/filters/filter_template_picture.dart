@@ -46,7 +46,7 @@ class _FilterImageScreenState extends State<FilterImageScreen> {
             color: AppStyle.colorDark,
           ),
           leading: IconButton(
-            icon: Icon(Icons.arrow_back_ios),
+            icon: const Icon(Icons.arrow_back_ios_rounded),
             onPressed: () => Navigator.pop(context),
           ),
           title: Text(
@@ -64,7 +64,7 @@ class _FilterImageScreenState extends State<FilterImageScreen> {
             return Column(
               children: [
                 bloc.getLoading
-                    ? Expanded(
+                    ? const Expanded(
                         child: Center(
                           child: SizedBox(
                             height: 35,
@@ -119,7 +119,7 @@ class _FilterImageScreenState extends State<FilterImageScreen> {
                               child: Consumer<FilterBloc>(
                                   builder: (context, bloc, child) {
                                 return bloc.getImageLoading
-                                    ? CircularProgressIndicator()
+                                    ? const CircularProgressIndicator()
                                     : Row(
                                         mainAxisAlignment:
                                             MainAxisAlignment.center,
@@ -210,8 +210,8 @@ class _FilterImageScreenState extends State<FilterImageScreen> {
               ),
             ),
           ),
-          placeholder: (context, url) => Center(
-            child: const CircularProgressIndicator(
+          placeholder: (context, url) => const Center(
+            child: CircularProgressIndicator(
               strokeWidth: 2,
               backgroundColor: Colors.white,
             ),
@@ -237,13 +237,13 @@ class _FilterImageScreenState extends State<FilterImageScreen> {
             children: [
               ListTile(
                 leading: Icon(Icons.camera, color: AppStyle.colorRed),
-                title: Text('Камера'),
+                title: const Text('Камера'),
                 onTap: () => filterBloc.getImage(context,
                     filterBloc.getListTemplates['data'][currentpage]['url']),
               ),
               ListTile(
                 leading: Icon(Icons.image_outlined, color: AppStyle.colorRed),
-                title: Text('Галлерея'),
+                title: const Text('Галлерея'),
                 onTap: () {
                   filterBloc.pickFileFrom(context,
                       filterBloc.getListTemplates['data'][currentpage]['url']);
@@ -257,15 +257,15 @@ class _FilterImageScreenState extends State<FilterImageScreen> {
       showCupertinoModalPopup(
         context: context,
         builder: (BuildContext context) => CupertinoActionSheet(
-          title: Text(
-            'Выберите путь',
+          title: const Text(
+            'Выберите вариант',
             style: TextStyle(
               fontSize: 18,
             ),
           ),
           actions: <Widget>[
             CupertinoActionSheetAction(
-              child: Text(
+              child: const Text(
                 'Галлерея',
                 style: TextStyle(
                   color: Colors.blue,
@@ -277,7 +277,7 @@ class _FilterImageScreenState extends State<FilterImageScreen> {
               },
             ),
             CupertinoActionSheetAction(
-              child: Text(
+              child: const Text(
                 'iCloud Драйф',
                 style: TextStyle(
                   color: Colors.blue,
@@ -288,7 +288,7 @@ class _FilterImageScreenState extends State<FilterImageScreen> {
               },
             ),
             CupertinoActionSheetAction(
-              child: Text(
+              child: const Text(
                 'Камера',
                 style: TextStyle(
                   color: Colors.blue,
@@ -299,7 +299,7 @@ class _FilterImageScreenState extends State<FilterImageScreen> {
             )
           ],
           cancelButton: CupertinoActionSheetAction(
-            child: Text('Отменить'),
+            child: const Text('Отменить'),
             onPressed: () {
               Navigator.pop(context);
             },

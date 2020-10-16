@@ -35,6 +35,8 @@ dependencies:
   path_provider: 1.6.18
   #file picker
   file_picker: 2.0.6
+  #dotted border
+  dotted_border: 1.0.6
 
 dev_dependencies:
   flutter_test:

@@ -1,5 +1,8 @@
+import 'dart:io';
+
 import 'package:alfa_project/components/widgets/custom_dialog.dart';
 import 'package:alfa_project/core/data/models/dialog_type.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 void printWrapped(String text) {
@@ -44,19 +47,35 @@ Future<bool> displayCustomDialog(
   String _title,
   DialogType dialogType,
   bool barrierDismissible,
+  bool isSuccess,
   Function dofunc, [
   String negativeText,
   String positiveText,
 ]) {
-  return showDialog(
-    context: context,
-    barrierDismissible: barrierDismissible,
-    builder: (context) => CustomActionDialog(
-      title: _title,
-      dialogType: dialogType,
-      onPressed: dofunc,
-      cancelOptionText: negativeText,
-      confirmOptionText: positiveText,
-    ),
-  );
+  return !Platform.isAndroid == true
+      ? showDialog(
+          context: context,
+          barrierDismissible: barrierDismissible,
+          builder: (context) => CustomActionDialog(
+            title: _title,
+            dialogType: dialogType,
+            onPressed: dofunc,
+            isSuccess: isSuccess,
+            isIos: false,
+            cancelOptionText: negativeText,
+            confirmOptionText: positiveText,
+          ),
+        )
+      : showCupertinoDialog(
+          context: context,
+          barrierDismissible: barrierDismissible,
+          builder: (context) => CustomActionDialog(
+                title: _title,
+                dialogType: dialogType,
+                isSuccess: isSuccess,
+                onPressed: dofunc,
+                isIos: true,
+                cancelOptionText: negativeText,
+                confirmOptionText: positiveText,
+              ));
 }

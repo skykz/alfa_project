@@ -19,6 +19,8 @@ import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
 import 'dart:ui' as ui;
 
+import '../../../app.dart';
+
 class CreateEditFilterTemplateScreen extends StatefulWidget {
   final String templateImageId;
   final File filteredImage;
@@ -54,6 +56,7 @@ class _CreateEditFilterTemplateScreenState
           "Вы точно хотите покинуть эту страницу?\n",
           DialogType.AlertDialog,
           true,
+          null,
           _goBack),
       child: SafeArea(
         child: Scaffold(
@@ -405,6 +408,7 @@ class _CreateEditFilterTemplateScreenState
                                         "Вы точно хотите покинуть эту страницу?\n",
                                         DialogType.AlertDialog,
                                         true,
+                                        null,
                                         _goBack),
                                     iconImagePath: SvgIconsClass.closeIcon,
                                   ),
@@ -442,6 +446,7 @@ class _CreateEditFilterTemplateScreenState
                                       "Вы точно хотите покинуть эту страницу?\n",
                                       DialogType.AlertDialog,
                                       true,
+                                      null,
                                       _goBack),
                                   iconImagePath: SvgIconsClass.closeIcon,
                                 ),
@@ -574,7 +579,7 @@ class _CreateEditFilterTemplateScreenState
                             width: 35,
                             child: BounceButton(
                               isShadow: true,
-                              onPressed: takeScreen,
+                              onPressed: _capturePng,
                               iconImagePath: SvgIconsClass.saveIcon,
                             ),
                           ),
@@ -648,37 +653,53 @@ class _CreateEditFilterTemplateScreenState
     );
   }
 
-  Future<Uint8List> _capturePng() async {
-    RenderRepaintBoundary boundary =
-        globalKey.currentContext.findRenderObject();
+  Future<void> _capturePng() {
+    return new Future.delayed(const Duration(milliseconds: 25), () async {
+      RenderRepaintBoundary boundary =
+          globalKey.currentContext.findRenderObject();
+      ui.Image image = await boundary.toImage(pixelRatio: 3);
+      ByteData byteData =
+          await image.toByteData(format: ui.ImageByteFormat.png);
+      Uint8List pngBytes = byteData.buffer.asUint8List();
+      // print(pngBytes);
+      String dir = (await getApplicationDocumentsDirectory()).path;
+      File file = File("$dir/" +
+          'AlfaStory' +
+          "${DateTime.now().millisecondsSinceEpoch}" +
+          ".png");
+      await file.writeAsBytes(pngBytes);
+      log('${file.path}');
 
-    if (boundary.debugNeedsPaint) {
-      print("Waiting for boundary to be painted.");
-      await Future.delayed(const Duration(milliseconds: 20));
-      return _capturePng();
-    }
-
-    var image = await boundary.toImage(pixelRatio: 3);
-    var byteData = await image.toByteData(format: ui.ImageByteFormat.png);
-    return byteData.buffer.asUint8List();
+      GallerySaver.saveImage(file.path).then((value) => displayCustomDialog(
+            context,
+            null,
+            DialogType.InfoDialog,
+            false,
+            value,
+            _goToInitialHome,
+          ));
+    });
   }
 
-  takeScreen() async {
-    var pngBytes = await _capturePng();
-    // var bs64 = base64Encode(pngBytes);
-    // print(pngBytes);
-    // printWrapped(bs64);
-    String dir = (await getApplicationDocumentsDirectory()).path;
-    File file = File("$dir/" +
-        'AlfaStory' +
-        "${DateTime.now().millisecondsSinceEpoch}" +
-        ".png");
-    await file.writeAsBytes(pngBytes);
-    log('${file.path}');
-
-    // final result = await ImageGallerySaver.saveImage(pngBytes);
-
-    // return file.path;
-    GallerySaver.saveImage(file.path);
+  _goToInitialHome() {
+    Navigator.of(context, rootNavigator: true).pop();
+    Navigator.pushAndRemoveUntil(
+        context,
+        PageRouteBuilder(pageBuilder: (BuildContext context,
+            Animation animation, Animation secondaryAnimation) {
+          return MyApp();
+        }, transitionsBuilder: (BuildContext context,
+            Animation<double> animation,
+            Animation<double> secondaryAnimation,
+            Widget child) {
+          return SlideTransition(
+            position: Tween<Offset>(
+              begin: const Offset(1.0, 0.0),
+              end: Offset.zero,
+            ).animate(animation),
+            child: child,
+          );
+        }),
+        (Route route) => false);
   }
 }

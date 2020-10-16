@@ -1,8 +1,10 @@
 import 'package:alfa_project/components/styles/app_style.dart';
 import 'package:alfa_project/components/widgets/custom_card_general.dart';
+import 'package:alfa_project/provider/story_bloc.dart';
 import 'package:alfa_project/screens/home/filters/filter_template_picture.dart';
 import 'package:alfa_project/screens/home/home_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class SelectTemplateScreen extends StatelessWidget {
   const SelectTemplateScreen({Key key}) : super(key: key);
@@ -17,7 +19,7 @@ class SelectTemplateScreen extends StatelessWidget {
             color: AppStyle.colorDark,
           ),
           leading: IconButton(
-            icon: Icon(Icons.arrow_back_ios),
+            icon: Icon(Icons.arrow_back_ios_rounded),
             onPressed: () => Navigator.pop(context),
           ),
           title: Text(
@@ -38,6 +40,9 @@ class SelectTemplateScreen extends StatelessWidget {
               children: [
                 InkWell(
                   onTap: () {
+                    final storyBloc =
+                        Provider.of<StoryBloc>(context, listen: false);
+                    storyBloc.setStoryBackgroundColor(AppStyle.colorRed);
                     Navigator.push(
                       context,
                       MaterialPageRoute(
@@ -60,6 +65,9 @@ class SelectTemplateScreen extends StatelessWidget {
                 ),
                 InkWell(
                   onTap: () {
+                    final storyBloc =
+                        Provider.of<StoryBloc>(context, listen: false);
+                    storyBloc.setStoryBackgroundColor(Colors.grey);
                     Navigator.push(
                       context,
                       MaterialPageRoute(
