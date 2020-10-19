@@ -119,6 +119,10 @@ class _PhotoFilterSelectorState extends State<PhotoFilterSelector> {
               color: AppStyle.colorDark,
             ),
           ),
+          leading: IconButton(
+            icon: Icon(Icons.arrow_back_ios_rounded),
+            onPressed: () => Navigator.pop(context),
+          ),
           actions: <Widget>[
             loading
                 ? !Platform.isIOS

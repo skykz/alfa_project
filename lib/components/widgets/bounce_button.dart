@@ -71,7 +71,7 @@ class _BounceButton extends State<BounceButton>
                 boxShadow: isShadow
                     ? [
                         BoxShadow(
-                          color: Colors.white54,
+                          color: Colors.black26,
                           blurRadius: 5,
                           spreadRadius: 1,
                         ),

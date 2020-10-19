@@ -67,12 +67,14 @@ class SelectTemplateScreen extends StatelessWidget {
                   onTap: () {
                     final storyBloc =
                         Provider.of<StoryBloc>(context, listen: false);
-                    storyBloc.setStoryBackgroundColor(Colors.grey);
+                    storyBloc.setStoryBackgroundColor(
+                      Color.fromRGBO(237, 237, 237, 1),
+                    );
                     Navigator.push(
                       context,
                       MaterialPageRoute(
                         builder: (context) => HomeMainScreen(
-                          mainColor: Colors.grey,
+                          mainColor: Color.fromRGBO(237, 237, 237, 1),
                         ),
                       ),
                     );

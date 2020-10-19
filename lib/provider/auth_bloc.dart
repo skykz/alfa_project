@@ -1,5 +1,5 @@
 import 'package:alfa_project/core/repository/api_repository.dart';
-import 'package:alfa_project/screens/home/select_type.dart';
+import 'package:alfa_project/screens/home/select_story_type.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 

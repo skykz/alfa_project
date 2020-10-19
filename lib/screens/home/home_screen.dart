@@ -20,7 +20,7 @@ class HomeMainScreen extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 IconButton(
-                  icon: Icon(Icons.arrow_back_ios_rounded),
+                  icon: const Icon(Icons.arrow_back_ios_rounded),
                   onPressed: () => Navigator.pop(context),
                 ),
                 Row(
@@ -34,6 +34,7 @@ class HomeMainScreen extends StatelessWidget {
                             height: 40,
                             width: 40,
                             child: BounceButton(
+                              isShadow: true,
                               onPressed: () {
                                 Navigator.pushReplacement(
                                   context,
@@ -47,7 +48,7 @@ class HomeMainScreen extends StatelessWidget {
                               iconImagePath: SvgIconsClass.textSizeIcon,
                             ),
                           ),
-                          Text(
+                          const Text(
                             'Текст',
                             style: TextStyle(
                               height: 1.1,
@@ -67,6 +68,7 @@ class HomeMainScreen extends StatelessWidget {
                             height: 40,
                             width: 40,
                             child: BounceButton(
+                              isShadow: true,
                               onPressed: () {
                                 Navigator.pushReplacement(
                                   context,
@@ -80,7 +82,7 @@ class HomeMainScreen extends StatelessWidget {
                               iconImagePath: SvgIconsClass.stickerIcon,
                             ),
                           ),
-                          Text(
+                          const Text(
                             'Стикеры',
                             style: TextStyle(
                               fontSize: 12,
@@ -104,14 +106,15 @@ class HomeMainScreen extends StatelessWidget {
                   child: Column(
                     children: [
                       SizedBox(
-                        height: 30,
-                        width: 30,
+                        height: 40,
+                        width: 40,
                         child: BounceButton(
+                          isShadow: true,
                           onPressed: () {},
                           iconImagePath: SvgIconsClass.saveIcon,
                         ),
                       ),
-                      Text(
+                      const Text(
                         'Сохранить',
                         style: TextStyle(
                           height: 1.5,

@@ -3,7 +3,8 @@ import 'package:alfa_project/provider/search_text_image.dart';
 import 'package:alfa_project/screens/search/picker_image_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_svg/svg.dart';
+
+import 'package:alfa_project/components/icons/custom_icons.dart';
 import 'package:provider/provider.dart';
 
 class SearchPickerScreen extends StatefulWidget {
@@ -56,7 +57,7 @@ class _SearchPickerScreenState extends State<SearchPickerScreen> {
           body: Column(
             children: [
               Padding(
-                padding: const EdgeInsets.only(left: 19, top: 10),
+                padding: const EdgeInsets.only(left: 19, top: 5),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -71,17 +72,14 @@ class _SearchPickerScreenState extends State<SearchPickerScreen> {
                     Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: SizedBox(
-                        height: 30,
-                        width: 30,
+                        height: 35,
+                        width: 35,
                         child: BounceButton(
                           onPressed: () {
                             bloc.setClearData();
                             Navigator.pop(context);
                           },
-                          iconImagePath: SvgPicture.asset(
-                            'assets/images/svg/custom_icons/close.svg',
-                            color: Colors.white,
-                          ),
+                          iconImagePath: SvgIconsClass.closeIcon,
                         ),
                       ),
                     ),
@@ -110,14 +108,15 @@ class _SearchPickerScreenState extends State<SearchPickerScreen> {
                               hintText: 'Поиск',
                               icon: Padding(
                                 padding: const EdgeInsets.only(left: 5),
-                                child: Icon(
+                                child: const Icon(
                                   Icons.search,
                                   color: Colors.grey,
                                 ),
                               ),
                               hintStyle: TextStyle(
                                 color: Colors.grey[200],
-                                fontSize: 16,
+                                fontSize: 15,
+                                fontWeight: FontWeight.w300,
                               ),
                             ),
                             onEditingComplete: () {},
@@ -139,7 +138,7 @@ class _SearchPickerScreenState extends State<SearchPickerScreen> {
                       future: widget.isText ? getTextBase : getCategory,
                       builder: (BuildContext context, AsyncSnapshot snapshot) {
                         if (snapshot.data == null)
-                          return Center(
+                          return const Center(
                             child: CircularProgressIndicator(
                               strokeWidth: 2,
                               backgroundColor: Colors.white,
@@ -182,11 +181,11 @@ class _SearchPickerScreenState extends State<SearchPickerScreen> {
                                         : '${snapshot.data[index]['text']}',
                                     style: mainTextStyle,
                                   ),
-                                  trailing: SizedBox(
+                                  trailing: const SizedBox(
                                     width: 20,
                                     child: Center(
                                       child: Icon(
-                                        Icons.arrow_forward_ios,
+                                        Icons.arrow_forward_ios_rounded,
                                         color: Colors.white,
                                         size: 20,
                                       ),
@@ -244,23 +243,6 @@ class _SearchPickerScreenState extends State<SearchPickerScreen> {
                                   ),
                                 ),
                               ),
-                              // trailing: SizedBox(
-                              //   width: 20,
-                              //   child: Column(
-                              //     mainAxisSize: MainAxisSize.max,
-                              //     children: [
-                              //       Expanded(
-                              //         child: Center(
-                              //           child: Icon(
-                              //             Icons.arrow_forward_ios,
-                              //             color: Colors.white,
-                              //             size: 20,
-                              //           ),
-                              //         ),
-                              //       ),
-                              //     ],
-                              //   ),
-                              // ),
                             );
                           }),
                     ),

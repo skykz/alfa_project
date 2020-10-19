@@ -6,7 +6,7 @@ import 'package:alfa_project/provider/filter_bloc.dart';
 import 'package:alfa_project/provider/search_text_image.dart';
 import 'package:alfa_project/provider/story_bloc.dart';
 import 'package:alfa_project/screens/auth/login_screen.dart';
-import 'package:alfa_project/screens/home/select_type.dart';
+import 'package:alfa_project/screens/home/select_story_type.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';

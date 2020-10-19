@@ -183,7 +183,7 @@ class _FilterImageScreenState extends State<FilterImageScreen> {
           vertical: 15,
         ),
         child: CachedNetworkImage(
-          imageUrl: BASE_URL_IMAGE + filterImageData['data'][index]['url'],
+          imageUrl: BASE_URL_IMAGE + filterImageData['data'][index]['icon'],
           imageBuilder: (context, imageProvider) => InkWell(
             borderRadius: BorderRadius.circular(8),
             onTap: () => {},

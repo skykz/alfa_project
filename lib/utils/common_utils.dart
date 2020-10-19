@@ -32,7 +32,7 @@ void showCustomSnackBar(
                 padding: const EdgeInsets.only(left: 16),
                 child: Text(
                   "$text",
-                  style: TextStyle(color: Colors.white, fontFamily: 'Rubik'),
+                  style: TextStyle(color: Colors.white),
                 ),
               ),
             ),

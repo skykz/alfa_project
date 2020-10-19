@@ -7,7 +7,7 @@ import 'package:alfa_project/screens/home/create_edit_template.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
+import 'package:alfa_project/components/icons/custom_icons.dart';
 import 'package:provider/provider.dart';
 
 class StickerTextPicker extends StatelessWidget {
@@ -51,7 +51,8 @@ class StickerTextPicker extends StatelessWidget {
                         const Text(
                           'Назад',
                           style: TextStyle(
-                            fontSize: 16,
+                            fontSize: 15,
+                            fontWeight: FontWeight.w300,
                             color: Colors.white,
                           ),
                         ),
@@ -75,17 +76,14 @@ class StickerTextPicker extends StatelessWidget {
                 Padding(
                   padding: const EdgeInsets.all(8),
                   child: SizedBox(
-                    height: 30,
-                    width: 30,
+                    height: 35,
+                    width: 35,
                     child: BounceButton(
                       onPressed: () {
                         bloc.setClearData();
                         Navigator.pop(context);
                       },
-                      iconImagePath: SvgPicture.asset(
-                        'assets/images/svg/custom_icons/close.svg',
-                        color: Colors.white,
-                      ),
+                      iconImagePath: SvgIconsClass.closeIcon,
                     ),
                   ),
                 ),
@@ -139,6 +137,19 @@ class StickerTextPicker extends StatelessWidget {
                             ),
                           ],
                         );
+                      if (snapshot.data['data'].length == 0)
+                        return Center(
+                          child: Padding(
+                            padding: const EdgeInsets.all(20),
+                            child: Text(
+                              'пусто',
+                              style: TextStyle(
+                                fontSize: 17,
+                                color: Colors.white,
+                              ),
+                            ),
+                          ),
+                        );
                       return GridView.builder(
                         shrinkWrap: true,
                         itemCount: snapshot.data['data'].length,
@@ -149,7 +160,7 @@ class StickerTextPicker extends StatelessWidget {
                           padding: const EdgeInsets.all(5),
                           child: CachedNetworkImage(
                             imageUrl: BASE_URL_IMAGE +
-                                snapshot.data['data'][index]['url'],
+                                snapshot.data['data'][index]['icon'],
                             imageBuilder: (context, imageProvider) => InkWell(
                               borderRadius: BorderRadius.circular(5),
                               onTap: () => Navigator.pushReplacement(
@@ -157,7 +168,8 @@ class StickerTextPicker extends StatelessWidget {
                                 MaterialPageRoute(
                                   builder: (context) =>
                                       CreateEditTemplateScreen(
-                                    imageProvider: imageProvider,
+                                    imageUrl: snapshot.data['data'][index]
+                                        ['url'],
                                   ),
                                 ),
                               ),
