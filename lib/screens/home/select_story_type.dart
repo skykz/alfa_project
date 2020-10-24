@@ -1,6 +1,10 @@
 import 'package:alfa_project/components/styles/app_style.dart';
+import 'package:alfa_project/provider/home_bloc.dart';
 import 'package:alfa_project/screens/home/select_template.dart';
 import 'package:flutter/material.dart';
+import 'package:gallery_saver/gallery_saver.dart';
+import 'package:permission_handler/permission_handler.dart';
+import 'package:provider/provider.dart';
 
 class SelectTypeTemplate extends StatefulWidget {
   const SelectTypeTemplate({Key key}) : super(key: key);
@@ -12,6 +16,24 @@ class SelectTypeTemplate extends StatefulWidget {
 class _SelectTypeTemplateState extends State<SelectTypeTemplate> {
   double withContainer = 145;
   bool isFirstContainerSelected = true;
+  bool isGranted = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _permissionFileWrite();
+  }
+
+  _permissionFileWrite() async {
+    var status = await Permission.storage.status;
+    if (!status.isGranted) {
+      await Permission.storage.request();
+    } else {
+      setState(() {
+        isGranted = true;
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -151,12 +173,21 @@ class _SelectTypeTemplateState extends State<SelectTypeTemplate> {
                         horizontal: 40, vertical: 40),
                     child: FlatButton(
                       color: AppStyle.colorRed,
-                      onPressed: () => Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => SelectTemplateScreen(),
-                        ),
-                      ),
+                      onPressed: () {
+                        if (isGranted) {
+                          final homeModel =
+                              Provider.of<HomeBloc>(context, listen: false);
+                          homeModel.setTypeOfAlfa(isFirstContainerSelected);
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => SelectTemplateScreen(),
+                            ),
+                          );
+                        } else {
+                          _permissionFileWrite();
+                        }
+                      },
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(4),
                       ),

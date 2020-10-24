@@ -629,7 +629,7 @@ class _CreateEditFilterTemplateScreenState
                             child: BounceButton(
                               isShadow: true,
                               onPressed: () {
-                                storyBloc.setUndoState(false);
+                                storyBloc.setUndoImageState(false);
                               },
                               iconImagePath: SvgIconsClass.undoIcon,
                             ),

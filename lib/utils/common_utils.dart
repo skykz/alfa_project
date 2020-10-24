@@ -19,7 +19,7 @@ void showCustomSnackBar(
         duration: const Duration(seconds: 7),
         backgroundColor: color,
         action: SnackBarAction(
-          label: 'Ok',
+          label: 'ok',
           textColor: Colors.white,
           onPressed: () {},
         ),

@@ -147,50 +147,57 @@ class _SearchPickerScreenState extends State<SearchPickerScreen> {
                         return Expanded(
                           child: ListView.builder(
                               shrinkWrap: true,
+                              addAutomaticKeepAlives: true,
                               itemCount: snapshot.data.length,
                               itemBuilder: (_, index) {
                                 if (snapshot.data[index]['id'] == 115)
-                                  return null;
-                                if (index.isOdd)
-                                  return Divider(
-                                    indent: 20,
-                                    endIndent: 20,
-                                    thickness: 0.5,
-                                    color: const Color.fromRGBO(
-                                        255, 255, 255, 0.1),
-                                    height: 0.5,
-                                  );
-                                return ListTile(
-                                  onTap: () => Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) => StickerTextPicker(
-                                        id: snapshot.data[index]['id'],
-                                        title: widget.isText
-                                            ? snapshot.data[index]['title']
-                                            : snapshot.data[index]['text'],
-                                        isTextBase:
-                                            widget.isText ? true : false,
-                                        text: snapshot.data[index]['text'],
+                                  return SizedBox();
+                                if (snapshot.data[index]['id'] == 118)
+                                  return SizedBox();
+                                return Column(
+                                  children: [
+                                    ListTile(
+                                      onTap: () => Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) =>
+                                              StickerTextPicker(
+                                            id: snapshot.data[index]['id'],
+                                            title: widget.isText
+                                                ? snapshot.data[index]['title']
+                                                : snapshot.data[index]['text'],
+                                            isTextBase:
+                                                widget.isText ? true : false,
+                                            text: snapshot.data[index]['text'],
+                                          ),
+                                        ),
+                                      ),
+                                      title: Text(
+                                        widget.isText
+                                            ? '${snapshot.data[index]['title']}'
+                                            : '${snapshot.data[index]['text']}',
+                                        style: mainTextStyle,
+                                      ),
+                                      trailing: const SizedBox(
+                                        width: 20,
+                                        child: Center(
+                                          child: Icon(
+                                            Icons.arrow_forward_ios_rounded,
+                                            color: Colors.white,
+                                            size: 20,
+                                          ),
+                                        ),
                                       ),
                                     ),
-                                  ),
-                                  title: Text(
-                                    widget.isText
-                                        ? '${snapshot.data[index]['title']}'
-                                        : '${snapshot.data[index]['text']}',
-                                    style: mainTextStyle,
-                                  ),
-                                  trailing: const SizedBox(
-                                    width: 20,
-                                    child: Center(
-                                      child: Icon(
-                                        Icons.arrow_forward_ios_rounded,
-                                        color: Colors.white,
-                                        size: 20,
-                                      ),
-                                    ),
-                                  ),
+                                    const Divider(
+                                      indent: 20,
+                                      endIndent: 20,
+                                      thickness: 0.5,
+                                      color: const Color.fromRGBO(
+                                          255, 255, 255, 0.1),
+                                      height: 0.5,
+                                    )
+                                  ],
                                 );
                               }),
                         );

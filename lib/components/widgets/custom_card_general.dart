@@ -25,13 +25,15 @@ class CardGeneralWidget extends StatelessWidget {
       decoration: BoxDecoration(
           color: colorMain,
           borderRadius: BorderRadius.circular(4),
-          boxShadow: [
-            BoxShadow(
-              offset: Offset(0, 0),
-              blurRadius: 10,
-              color: shadowColor,
-            ),
-          ]),
+          boxShadow: shadowColor != null
+              ? [
+                  BoxShadow(
+                    offset: Offset(0, 0),
+                    blurRadius: 10,
+                    color: shadowColor,
+                  ),
+                ]
+              : null),
       child: Stack(
         children: [
           Positioned(

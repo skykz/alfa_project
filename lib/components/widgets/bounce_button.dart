@@ -16,23 +16,11 @@ class BounceButton extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  State<StatefulWidget> createState() => _BounceButton(
-      this.iconImagePath, this.icon, this.onPressed, this.isShadow);
+  State<StatefulWidget> createState() => _BounceButton();
 }
 
 class _BounceButton extends State<BounceButton>
     with TickerProviderStateMixin<BounceButton> {
-  SvgPicture imagePath;
-  double shadowLevel;
-  Icon icon;
-  bool isShadow;
-
-  _BounceButton(
-      SvgPicture imagePath, Icon icon, Function story, bool isShadow) {
-    this.imagePath = imagePath;
-    this.icon = icon;
-    this.isShadow = isShadow;
-  }
   double _scale;
   AnimationController _controller;
 
@@ -68,7 +56,7 @@ class _BounceButton extends State<BounceButton>
             padding: const EdgeInsets.all(5),
             decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(50),
-                boxShadow: isShadow
+                boxShadow: widget.isShadow
                     ? [
                         BoxShadow(
                           color: Colors.black26,
@@ -77,7 +65,7 @@ class _BounceButton extends State<BounceButton>
                         ),
                       ]
                     : []),
-            child: imagePath),
+            child: widget.iconImagePath),
       ),
     );
   }

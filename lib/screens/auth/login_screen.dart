@@ -75,7 +75,7 @@ class _LoginScreenState extends State<LoginScreen> {
                               cursorColor: AppStyle.colorDark,
                               controller: emailTextController,
                               decoration: InputDecoration(
-                                hintText: "Введи почту",
+                                hintText: "Введите почту",
                                 labelText: "Почта",
                                 hintStyle: TextStyle(
                                   color: Colors.grey,
