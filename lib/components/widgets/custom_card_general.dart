@@ -5,13 +5,14 @@ class CardGeneralWidget extends StatelessWidget {
   final String title;
   final Color colorMain;
   final Color colorText;
-
+  final double height;
   final Color shadowColor;
 
   const CardGeneralWidget(
       {Key key,
       this.imageAsset,
       this.title,
+      this.height,
       this.colorMain,
       this.shadowColor,
       this.colorText})
@@ -20,7 +21,7 @@ class CardGeneralWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 150,
+      height: height,
       width: double.infinity,
       decoration: BoxDecoration(
           color: colorMain,

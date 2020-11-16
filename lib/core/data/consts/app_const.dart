@@ -1,2 +1,2 @@
-const BASE_URL = 'http://52.14.180.52/api/';
-const BASE_URL_IMAGE = 'http://52.14.180.52/storage/';
+const BASE_URL = 'http://3.138.186.174/api/';
+const BASE_URL_IMAGE = 'http://3.138.186.174/storage/';

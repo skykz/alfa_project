@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:alfa_project/components/widgets/bounce_button.dart';
 import 'package:alfa_project/provider/search_text_image.dart';
 import 'package:alfa_project/screens/search/picker_image_text.dart';
@@ -9,7 +11,9 @@ import 'package:provider/provider.dart';
 
 class SearchPickerScreen extends StatefulWidget {
   final bool isText;
-  SearchPickerScreen({Key key, this.isText}) : super(key: key);
+  final bool isTextToImage;
+  SearchPickerScreen({Key key, this.isText, this.isTextToImage})
+      : super(key: key);
 
   @override
   _SearchPickerScreenState createState() => _SearchPickerScreenState();
@@ -139,20 +143,23 @@ class _SearchPickerScreenState extends State<SearchPickerScreen> {
                       builder: (BuildContext context, AsyncSnapshot snapshot) {
                         if (snapshot.data == null)
                           return const Center(
-                            child: CircularProgressIndicator(
-                              strokeWidth: 2,
-                              backgroundColor: Colors.white,
+                            child: SizedBox(
+                              height: 25,
+                              width: 25,
+                              child: CircularProgressIndicator(
+                                strokeWidth: 2,
+                                backgroundColor: Colors.white,
+                              ),
                             ),
                           );
+                        // log('${snapshot.data}');
                         return Expanded(
                           child: ListView.builder(
                               shrinkWrap: true,
                               addAutomaticKeepAlives: true,
                               itemCount: snapshot.data.length,
                               itemBuilder: (_, index) {
-                                if (snapshot.data[index]['id'] == 115)
-                                  return SizedBox();
-                                if (snapshot.data[index]['id'] == 118)
+                                if (snapshot.data[index]['id'] == 116)
                                   return SizedBox();
                                 return Column(
                                   children: [
@@ -162,6 +169,7 @@ class _SearchPickerScreenState extends State<SearchPickerScreen> {
                                         MaterialPageRoute(
                                           builder: (context) =>
                                               StickerTextPicker(
+                                            isTextToImage: widget.isTextToImage,
                                             id: snapshot.data[index]['id'],
                                             title: widget.isText
                                                 ? snapshot.data[index]['title']
@@ -220,6 +228,7 @@ class _SearchPickerScreenState extends State<SearchPickerScreen> {
                                   context,
                                   MaterialPageRoute(
                                     builder: (context) => StickerTextPicker(
+                                      isTextToImage: widget.isTextToImage,
                                       isTextBase: true,
                                       id: bloc.getSearchText['data'][i]['id'],
                                       title: bloc.getSearchText['data'][i]

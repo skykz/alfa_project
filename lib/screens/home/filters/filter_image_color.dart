@@ -121,15 +121,17 @@ class _PhotoFilterSelectorState extends State<PhotoFilterSelector> {
           ),
           leading: IconButton(
             icon: Icon(Icons.arrow_back_ios_rounded),
-            onPressed: () => Navigator.pop(context),
+            onPressed: () {
+              Navigator.pop(context);
+            },
           ),
           actions: <Widget>[
             loading
                 ? !Platform.isIOS
-                    ? const SizedBox(
-                        width: 15,
-                        height: 15,
-                        child: Center(
+                    ? Center(
+                        child: const SizedBox(
+                          width: 15,
+                          height: 15,
                           child: CircularProgressIndicator(
                             strokeWidth: 2,
                             backgroundColor: Colors.white,
@@ -141,7 +143,7 @@ class _PhotoFilterSelectorState extends State<PhotoFilterSelector> {
                       )
                 : IconButton(
                     icon: Icon(
-                      Icons.check,
+                      Icons.check_rounded,
                       size: 32,
                       color: AppStyle.colorRed,
                     ),

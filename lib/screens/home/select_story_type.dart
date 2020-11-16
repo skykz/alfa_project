@@ -37,6 +37,9 @@ class _SelectTypeTemplateState extends State<SelectTypeTemplate> {
 
   @override
   Widget build(BuildContext context) {
+    final height = MediaQuery.of(context).size.height;
+    final width = MediaQuery.of(context).size.width;
+
     return SafeArea(
       child: Scaffold(
         backgroundColor: AppStyle.mainbgColor,
@@ -73,7 +76,7 @@ class _SelectTypeTemplateState extends State<SelectTypeTemplate> {
                         });
                     },
                     child: Container(
-                      height: 245,
+                      height: height * 0.35,
                       width: withContainer,
                       decoration: BoxDecoration(
                         color: Colors.white,
@@ -121,7 +124,7 @@ class _SelectTypeTemplateState extends State<SelectTypeTemplate> {
                         });
                     },
                     child: Container(
-                      height: 180,
+                      height: height * 0.28,
                       width: withContainer,
                       decoration: BoxDecoration(
                         color: Colors.white,
@@ -206,10 +209,14 @@ class _SelectTypeTemplateState extends State<SelectTypeTemplate> {
                                   fontWeight: FontWeight.w300,
                                 ),
                               ),
-                              const Icon(
-                                Icons.arrow_forward,
-                                size: 25,
-                                color: Colors.white,
+                              Padding(
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 5),
+                                child: const Icon(
+                                  Icons.arrow_forward_rounded,
+                                  size: 25,
+                                  color: Colors.white,
+                                ),
                               ),
                             ],
                           ),

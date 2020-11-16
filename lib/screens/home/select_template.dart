@@ -7,8 +7,6 @@ import 'package:alfa_project/utils/common_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import 'create_edit_template.dart';
-
 class SelectTemplateScreen extends StatefulWidget {
   const SelectTemplateScreen({Key key}) : super(key: key);
 
@@ -21,6 +19,8 @@ class _SelectTemplateScreenState extends State<SelectTemplateScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final height = MediaQuery.of(context).size.height;
+
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
@@ -56,6 +56,7 @@ class _SelectTemplateScreenState extends State<SelectTemplateScreen> {
                   },
                   child: CardGeneralWidget(
                     colorMain: AppStyle.colorRed,
+                    height: height * 0.2,
                     colorText: Colors.white,
                     imageAsset: 'assets/images/png/red1.png',
                     shadowColor: index == 1 ? Colors.red[300] : null,
@@ -72,6 +73,7 @@ class _SelectTemplateScreenState extends State<SelectTemplateScreen> {
                     });
                   },
                   child: CardGeneralWidget(
+                    height: height * 0.2,
                     colorMain: Colors.white,
                     colorText: AppStyle.colorRed,
                     imageAsset: 'assets/images/png/red3.png',
@@ -89,6 +91,7 @@ class _SelectTemplateScreenState extends State<SelectTemplateScreen> {
                     });
                   },
                   child: CardGeneralWidget(
+                    height: height * 0.2,
                     colorMain: AppStyle.colorRed,
                     imageAsset: 'assets/images/png/red2.png',
                     shadowColor: index == 3 ? Colors.red[300] : null,
@@ -96,36 +99,36 @@ class _SelectTemplateScreenState extends State<SelectTemplateScreen> {
                     colorText: Colors.white,
                   ),
                 ),
-                const SizedBox(
-                  height: 40,
-                ),
-                Builder(
-                  builder: (ctx) => FlatButton(
-                    color: AppStyle.colorRed,
-                    onPressed: () => _onTapTemplate(index, ctx),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(4),
-                    ),
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 14),
-                      child: SizedBox(
-                        height: 25,
-                        width: double.infinity,
-                        child: Center(
-                          child: const Text(
-                            'Далее',
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 22,
-                              fontWeight: FontWeight.w300,
-                            ),
-                          ),
-                        ),
+              ],
+            ),
+          ),
+        ),
+        bottomNavigationBar: Builder(
+          builder: (ctx) => Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 10),
+            child: FlatButton(
+              color: AppStyle.colorRed,
+              onPressed: () => _onTapTemplate(index, ctx),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(4),
+              ),
+              child: Padding(
+                padding: const EdgeInsets.symmetric(vertical: 14),
+                child: SizedBox(
+                  height: 25,
+                  width: double.infinity,
+                  child: Center(
+                    child: const Text(
+                      'Далее',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 22,
+                        fontWeight: FontWeight.w300,
                       ),
                     ),
                   ),
                 ),
-              ],
+              ),
             ),
           ),
         ),
@@ -142,7 +145,9 @@ class _SelectTemplateScreenState extends State<SelectTemplateScreen> {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => CreateEditTemplateScreen(),
+            builder: (context) => HomeMainScreen(
+              mainColor: AppStyle.colorRed,
+            ),
           ),
         );
         break;
@@ -153,7 +158,9 @@ class _SelectTemplateScreenState extends State<SelectTemplateScreen> {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => CreateEditTemplateScreen(),
+            builder: (context) => HomeMainScreen(
+              mainColor: Color.fromRGBO(237, 237, 237, 1),
+            ),
           ),
         );
         break;

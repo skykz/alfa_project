@@ -145,7 +145,17 @@ class CustomActionDialog extends StatelessWidget {
           ]),
         );
         break;
-
+      case DialogType.LoadingDialog:
+        return Padding(
+          padding: const EdgeInsets.all(15),
+          child: Column(mainAxisSize: MainAxisSize.min, children: [
+            Text(
+              "Загрузка...",
+              textAlign: TextAlign.center,
+            ),
+          ]),
+        );
+        break;
       default:
         return const SizedBox();
     }

@@ -64,6 +64,7 @@ class FilterBloc extends ChangeNotifier {
     FilePickerResult result;
     result = await FilePicker.platform.pickFiles(
       type: FileType.custom,
+      allowCompression: true,
       allowedExtensions: ['jpg', 'png', 'jpeg'],
     );
 
@@ -77,6 +78,7 @@ class FilterBloc extends ChangeNotifier {
       if (file.path != null) {
         fileName = basename(file.path);
         final imageMain = imageLib.decodeImage(file.readAsBytesSync());
+        // final image = imageLib.copyResize(imageMain, width: );
         _goToFilterScreen(context, imageMain, templateStringUrl, fileName);
       }
     }
@@ -99,10 +101,12 @@ class FilterBloc extends ChangeNotifier {
   Future getImage(BuildContext context, String templateStringUrl) async {
     File _image;
     String fileName;
+
     final picker = ImagePicker();
     final pickedFile = await picker.getImage(source: ImageSource.camera);
 
     if (pickedFile != null) {
+      setImageLoading(true);
       _image = File(pickedFile.path);
 
       File file;
@@ -112,16 +116,21 @@ class FilterBloc extends ChangeNotifier {
       if (file.path != null) {
         fileName = basename(file.path);
         final imageMain = imageLib.decodeImage(file.readAsBytesSync());
-        _goToFilterScreen(context, imageMain, templateStringUrl, fileName);
+        final image = imageLib.copyResize(imageMain, width: 800);
+        _goToFilterScreen(context, image, templateStringUrl, fileName);
       }
     } else {
+      setImageLoading(false);
       print('No image selected.');
     }
+
     return _image;
   }
 
   _goToFilterScreen(BuildContext context, imageMain, String templateStringUrl,
       String fileName) {
+    setImageLoading(false);
+
     Navigator.push(
       context,
       MaterialPageRoute(

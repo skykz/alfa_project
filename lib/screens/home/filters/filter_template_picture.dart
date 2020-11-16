@@ -118,32 +118,28 @@ class _FilterImageScreenState extends State<FilterImageScreen> {
                             child: Center(
                               child: Consumer<FilterBloc>(
                                   builder: (context, bloc, child) {
-                                return bloc.getImageLoading
-                                    ? const CircularProgressIndicator()
-                                    : Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.center,
-                                        children: [
-                                          const Text(
-                                            'Выбрать',
-                                            style: TextStyle(
-                                              fontSize: 20,
-                                              color: Colors.white,
-                                              fontWeight: FontWeight.w300,
-                                            ),
-                                          ),
-                                          const SizedBox(
-                                            width: 5,
-                                          ),
-                                          const Icon(
-                                            Icons.arrow_forward,
-                                            size: 25,
-                                            color: Colors.white,
-                                          ),
-                                        ],
-                                      );
+                                return Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    const Text(
+                                      'Выбрать',
+                                      style: TextStyle(
+                                        fontSize: 20,
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.w300,
+                                      ),
+                                    ),
+                                    const SizedBox(
+                                      width: 5,
+                                    ),
+                                    const Icon(
+                                      Icons.arrow_forward,
+                                      size: 25,
+                                      color: Colors.white,
+                                    ),
+                                  ],
+                                );
                               }),
                             ),
                           ),
@@ -224,35 +220,55 @@ class _FilterImageScreenState extends State<FilterImageScreen> {
 
   _showSelectFile(val, bool isAndroid, BuildContext context) {
     final filterBloc = Provider.of<FilterBloc>(context, listen: false);
-
     if (isAndroid)
       showModalBottomSheet(
-        context: context,
-        isScrollControlled: true,
-        builder: (context) => Padding(
-          padding: const EdgeInsets.symmetric(vertical: 10),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              ListTile(
-                leading: Icon(Icons.camera, color: AppStyle.colorRed),
-                title: const Text('Камера'),
-                onTap: () => filterBloc.getImage(context,
-                    filterBloc.getListTemplates['data'][currentpage]['url']),
-              ),
-              ListTile(
-                leading: Icon(Icons.image_outlined, color: AppStyle.colorRed),
-                title: const Text('Галлерея'),
-                onTap: () {
-                  filterBloc.pickFileFrom(context,
-                      filterBloc.getListTemplates['data'][currentpage]['url']);
-                },
-              ),
-            ],
-          ),
-        ),
-      );
+          context: context,
+          isScrollControlled: true,
+          builder: (context) => Padding(
+                padding: const EdgeInsets.symmetric(vertical: 10),
+                child: Consumer<FilterBloc>(
+                  builder: (context, val, child) => val.getImageLoading
+                      ? SizedBox(
+                          width: 100,
+                          height: 100,
+                          child: Center(
+                            child: const CircularProgressIndicator(
+                              strokeWidth: 2,
+                            ),
+                          ),
+                        )
+                      : Column(
+                          mainAxisSize: MainAxisSize.min,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            ListTile(
+                                leading: Icon(Icons.camera,
+                                    color: AppStyle.colorRed),
+                                title: const Text('Камера'),
+                                onTap: () {
+                                  filterBloc.setImageLoading(true);
+                                  filterBloc.getImage(
+                                      context,
+                                      filterBloc.getListTemplates['data']
+                                          [currentpage]['url']);
+                                }),
+                            ListTile(
+                              leading: Icon(Icons.image_outlined,
+                                  color: AppStyle.colorRed),
+                              title: const Text('Галлерея'),
+                              onTap: () {
+                                filterBloc.setImageLoading(true);
+
+                                filterBloc.pickFileFrom(
+                                    context,
+                                    filterBloc.getListTemplates['data']
+                                        [currentpage]['url']);
+                              },
+                            ),
+                          ],
+                        ),
+                ),
+              ));
     else
       showCupertinoModalPopup(
         context: context,
@@ -274,17 +290,6 @@ class _FilterImageScreenState extends State<FilterImageScreen> {
               onPressed: () {
                 filterBloc.pickFileFrom(context,
                     filterBloc.getListTemplates['data'][currentpage]['url']);
-              },
-            ),
-            CupertinoActionSheetAction(
-              child: const Text(
-                'iCloud Драйф',
-                style: TextStyle(
-                  color: Colors.blue,
-                ),
-              ),
-              onPressed: () {
-                print('pressed');
               },
             ),
             CupertinoActionSheetAction(
