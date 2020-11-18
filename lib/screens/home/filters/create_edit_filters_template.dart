@@ -9,7 +9,6 @@ import 'package:alfa_project/core/data/consts/app_const.dart';
 import 'package:alfa_project/core/data/models/dialog_type.dart';
 import 'package:alfa_project/provider/story_bloc.dart';
 import 'package:alfa_project/screens/search/picker_image_text.dart';
-import 'package:alfa_project/screens/search/search_image_text.dart';
 import 'package:alfa_project/utils/common_utils.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';

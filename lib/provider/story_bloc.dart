@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'dart:developer';
-import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:alfa_project/components/styles/app_style.dart';
@@ -9,8 +8,6 @@ import 'package:flutter/rendering.dart';
 
 import 'dart:ui' as ui;
 import 'package:image/image.dart' as image;
-import 'package:flutter/services.dart';
-import 'package:path_provider/path_provider.dart';
 
 class StoryBloc extends ChangeNotifier {
   StoryBloc() {
@@ -26,6 +23,17 @@ class StoryBloc extends ChangeNotifier {
 
   bool _isLoadingDownload = false;
   bool get getLoadingDownload => _isLoadingDownload;
+
+  bool _isStoryTemplate = false;
+  bool get getIsStoryTemplate => this._isStoryTemplate;
+
+  StreamController<bool> streamController = StreamController<bool>.broadcast();
+  Stream get getLoadingStream => streamController.stream;
+
+  setTypeOfAlfa(bool val) {
+    this._isStoryTemplate = val;
+    notifyListeners();
+  }
 
   setLoading(bool val) {
     this._isLoading = val;
@@ -225,6 +233,7 @@ class StoryBloc extends ChangeNotifier {
     _textAlign = CrossAxisAlignment.start;
     _align = TextAlign.start;
     offset = Offset(50, 100);
+    setSavingState(false);
 
     notifyListeners();
   }
@@ -274,7 +283,7 @@ class StoryBloc extends ChangeNotifier {
     this._imageUrl = null;
     this._indexFontSizeTitle = 0;
     this._indexFontSizebody = 0;
-
+    setSavingState(false);
     log('all data cleared');
     notifyListeners();
   }
@@ -361,6 +370,7 @@ class StoryBloc extends ChangeNotifier {
   @override
   void dispose() {
     _stream?.close();
+    streamController?.close();
     super.dispose();
   }
 
@@ -389,5 +399,9 @@ class StoryBloc extends ChangeNotifier {
     ui.FrameInfo frameInfo = await codec.getNextFrame();
 
     return frameInfo.image;
+  }
+
+  setSavingState(bool val) {
+    streamController.sink.add(val);
   }
 }

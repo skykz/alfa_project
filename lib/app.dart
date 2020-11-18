@@ -3,7 +3,6 @@ import 'dart:developer';
 import 'package:alfa_project/components/styles/app_style.dart';
 import 'package:alfa_project/provider/auth_bloc.dart';
 import 'package:alfa_project/provider/filter_bloc.dart';
-import 'package:alfa_project/provider/home_bloc.dart';
 import 'package:alfa_project/provider/search_text_image.dart';
 import 'package:alfa_project/provider/story_bloc.dart';
 import 'package:alfa_project/screens/auth/login_screen.dart';
@@ -17,9 +16,6 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider<HomeBloc>(
-          create: (context) => HomeBloc(),
-        ),
         ChangeNotifierProvider<AuthBloc>(
           create: (context) => AuthBloc(),
         ),

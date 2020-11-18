@@ -8,7 +8,6 @@ import 'package:alfa_project/components/styles/app_style.dart';
 import 'package:alfa_project/components/widgets/bounce_button.dart';
 import 'package:alfa_project/core/data/consts/app_const.dart';
 import 'package:alfa_project/core/data/models/dialog_type.dart';
-import 'package:alfa_project/provider/home_bloc.dart';
 import 'package:alfa_project/provider/story_bloc.dart';
 import 'package:alfa_project/screens/search/picker_image_text.dart';
 import 'package:alfa_project/screens/search/search_image_text.dart';
@@ -51,6 +50,9 @@ class _CreateEditTemplateScreenState extends State<CreateEditTemplateScreen> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
+      final storyBloc = Provider.of<StoryBloc>(context, listen: false);
+      storyBloc.setSavingState(false);
+
       _value = MediaQuery.of(context).size.width;
     });
   }
@@ -87,6 +89,7 @@ class _CreateEditTemplateScreenState extends State<CreateEditTemplateScreen> {
   @override
   Widget build(BuildContext context) {
     final storyBloc = Provider.of<StoryBloc>(context);
+    final height = MediaQuery.of(context).size.height;
 
     return WillPopScope(
       onWillPop: () async => displayCustomDialog(
@@ -217,21 +220,27 @@ class _CreateEditTemplateScreenState extends State<CreateEditTemplateScreen> {
                   onTap: () => FocusScope.of(context).unfocus(),
                   child: Stack(
                     children: [
-                      RepaintBoundary(
-                        key: globalKey,
-                        child: Container(
-                          color: storyBloc.getBackColor,
-                          child: Stack(
-                            fit: StackFit.expand,
-                            children: [
-                              widget.imageUrl != null
-                                  ? _buildMainImage()
-                                  : const SizedBox(),
-                              storyBloc.getTextEnabled
-                                  ? _buildTextWidget(storyBloc)
-                                  : const SizedBox(),
-                              _buildDecoImage(),
-                            ],
+                      Padding(
+                        padding: EdgeInsets.symmetric(
+                            vertical: storyBloc.getIsStoryTemplate
+                                ? 0
+                                : height * 0.15),
+                        child: RepaintBoundary(
+                          key: globalKey,
+                          child: Container(
+                            color: storyBloc.getBackColor,
+                            child: Stack(
+                              fit: StackFit.expand,
+                              children: [
+                                widget.imageUrl != null
+                                    ? _buildMainImage()
+                                    : const SizedBox(),
+                                storyBloc.getTextEnabled
+                                    ? _buildTextWidget(storyBloc)
+                                    : const SizedBox(),
+                                _buildDecoImage(),
+                              ],
+                            ),
                           ),
                         ),
                       ),
@@ -537,6 +546,25 @@ class _CreateEditTemplateScreenState extends State<CreateEditTemplateScreen> {
                                   ),
                                 )
                           : const SizedBox(),
+                      StreamBuilder(
+                        stream: storyBloc.getLoadingStream,
+                        builder:
+                            (BuildContext context, AsyncSnapshot snapshot) {
+                          if (snapshot.data == false) return const SizedBox();
+                          return Container(
+                            color: Colors.grey.withOpacity(0.5),
+                            child: const Center(
+                              child: SizedBox(
+                                height: 30,
+                                width: 30,
+                                child: CircularProgressIndicator(
+                                  strokeWidth: 2,
+                                ),
+                              ),
+                            ),
+                          );
+                        },
+                      ),
                     ],
                   ),
                 ),
@@ -908,21 +936,14 @@ class _CreateEditTemplateScreenState extends State<CreateEditTemplateScreen> {
   }
 
   Future<void> _capturePng() {
-    final homeBloc = Provider.of<HomeBloc>(context, listen: false);
     final storyBloc = Provider.of<StoryBloc>(context, listen: false);
-    // displayCustomDialog(
-    //   context,
-    //   'null',
-    //   DialogType.LoadingDialog,
-    //   false,
-    //   true,
-    //   null,
-    // );
+    storyBloc.setSavingState(true);
     return new Future.delayed(const Duration(milliseconds: 28), () async {
       RenderRepaintBoundary boundary =
           globalKey.currentContext.findRenderObject();
 
-      ui.Image image = await boundary.toImage(pixelRatio: 3);
+      ui.Image image = await boundary.toImage(
+          pixelRatio: storyBloc.getIsStoryTemplate ? 3 : 5);
 
       ByteData byteData =
           await image.toByteData(format: ui.ImageByteFormat.png);
@@ -934,11 +955,10 @@ class _CreateEditTemplateScreenState extends State<CreateEditTemplateScreen> {
           "${DateTime.now().millisecondsSinceEpoch}" +
           ".png");
 
-      if (!homeBloc.getIsStoryTemplate) {
+      if (!storyBloc.getIsStoryTemplate) {
         storyBloc.getUiImage(pngBytes, 1920, 1536).then((value) async {
           log("${value.height}");
           log("${value.width}");
-
           ByteData byteData =
               await value.toByteData(format: ui.ImageByteFormat.png);
           Uint8List pngBytes = byteData.buffer.asUint8List();
@@ -972,52 +992,7 @@ class _CreateEditTemplateScreenState extends State<CreateEditTemplateScreen> {
         });
       }
 
-      // if (!homeBloc.getIsStoryTemplate) {
-      //   // ui.Image x = await decodeImageFromList(pngBytes);
-      //   // print('height is ${x.height}'); //height of original image
-      //   // print('width is ${x.width}'); //width of oroginal image
-      //   ui
-      //       .instantiateImageCodec(
-      //     pngBytes,
-      //     targetHeight: 1920,
-      //     targetWidth: 1536,
-      //   )
-      //       .then((codec) {
-      //     codec.getNextFrame().then((frameInfo) async {
-      //       String dir = (await getApplicationDocumentsDirectory()).path;
-      //       File file = File("$dir/" +
-      //           'AlfaStory' +
-      //           "${DateTime.now().millisecondsSinceEpoch}" +
-      //           ".png");
-      //       ui.Image i = frameInfo.image;
-      //       // print('image width is ${i.width}'); //height of resized image
-      //       // print('image height is ${i.height}'); //width of resized image
-      //       ByteData bytes = await i.toByteData();
-
-      //       await file.writeAsBytes(bytes.buffer.asUint32List());
-      //       log('${file.path}');
-      //       print('resized image size is ${bytes.lengthInBytes}');
-      // GallerySaver.saveImage(file.path).then((value) {
-      //   log("$value");
-      //   displayCustomDialog(
-      //     context,
-      //     null,
-      //     DialogType.InfoDialog,
-      //     false,
-      //     value,
-      //     _goToInitialHome,
-      //   );
-      // });
-      //     });
-      //   });
-      // } else {
-      //   String dir = (await getApplicationDocumentsDirectory()).path;
-      //   File file = File("$dir/" +
-      //       'AlfaStory' +
-      //       "${DateTime.now().millisecondsSinceEpoch}" +
-      //       ".png");
-      //
-      // }
+      storyBloc.setSavingState(false);
     });
   }
 
@@ -1131,12 +1106,17 @@ class _CreateEditTemplateScreenState extends State<CreateEditTemplateScreen> {
           builder: (BuildContext context, BoxConstraints constraints) {
         double myMaxWidthRight = constraints.maxWidth -
             math.min(storyBloc.textWidthContainer,
-                constraints.maxWidth - width * 0.1) -
-            width * 0.1;
-
-        double myMaxHeightTop = constraints.maxHeight - height * 0.87; //580
-        double myMaxHeightBottom = constraints.maxHeight - height * 0.31; //250
-        double myMaxWidthLeft = constraints.maxWidth - width * 0.91; //330
+                constraints.maxWidth - width * 0.2) -
+            width * 0.06;
+        double myMaxHeightTop = constraints.maxHeight -
+            (storyBloc.getIsStoryTemplate
+                ? height * 0.87
+                : constraints.biggest.height * 0.98); //580
+        double myMaxHeightBottom = constraints.maxHeight -
+            (storyBloc.getIsStoryTemplate
+                ? height * 0.3
+                : constraints.biggest.height * 0.25); //250
+        double myMaxWidthLeft = constraints.maxWidth - width * 0.94; //330
 
         return Stack(
           children: [
@@ -1189,7 +1169,7 @@ class _CreateEditTemplateScreenState extends State<CreateEditTemplateScreen> {
                                   storyBloc.setTextFieldEnable(true);
                                 },
                                 maxLines: null,
-                                cursorColor: AppStyle.colorRed,
+                                cursorColor: storyBloc.getTextColorFirst,
                                 decoration: InputDecoration(
                                   fillColor: Colors.blue,
                                   border: InputBorder.none,
@@ -1218,7 +1198,7 @@ class _CreateEditTemplateScreenState extends State<CreateEditTemplateScreen> {
                                       storyBloc.getCustomTextWeightSecond,
                                 ),
                                 maxLines: null,
-                                cursorColor: AppStyle.colorRed,
+                                cursorColor: storyBloc.getTextColorSecond,
                                 decoration: InputDecoration(
                                   fillColor: Colors.blue,
                                   border: InputBorder.none,

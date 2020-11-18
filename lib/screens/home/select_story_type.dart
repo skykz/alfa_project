@@ -1,8 +1,7 @@
 import 'package:alfa_project/components/styles/app_style.dart';
-import 'package:alfa_project/provider/home_bloc.dart';
+import 'package:alfa_project/provider/story_bloc.dart';
 import 'package:alfa_project/screens/home/select_template.dart';
 import 'package:flutter/material.dart';
-import 'package:gallery_saver/gallery_saver.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 
@@ -179,7 +178,7 @@ class _SelectTypeTemplateState extends State<SelectTypeTemplate> {
                       onPressed: () {
                         if (isGranted) {
                           final homeModel =
-                              Provider.of<HomeBloc>(context, listen: false);
+                              Provider.of<StoryBloc>(context, listen: false);
                           homeModel.setTypeOfAlfa(isFirstContainerSelected);
                           Navigator.push(
                             context,

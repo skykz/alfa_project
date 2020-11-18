@@ -6,7 +6,6 @@ import 'package:alfa_project/components/icons/custom_icons.dart';
 import 'package:alfa_project/components/widgets/bounce_button.dart';
 import 'package:alfa_project/components/widgets/fade_transition.dart';
 import 'package:alfa_project/core/data/models/dialog_type.dart';
-import 'package:alfa_project/provider/home_bloc.dart';
 import 'package:alfa_project/provider/story_bloc.dart';
 import 'package:alfa_project/screens/search/search_image_text.dart';
 import 'package:alfa_project/utils/common_utils.dart';
@@ -33,16 +32,31 @@ class _HomeMainScreenState extends State<HomeMainScreen> {
   GlobalKey globalKey = GlobalKey();
 
   @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final storyBloc = Provider.of<StoryBloc>(context, listen: false);
+      storyBloc.setSavingState(false);
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
+    final storyBloc = Provider.of<StoryBloc>(context);
+    final height = MediaQuery.of(context).size.height;
     return Scaffold(
       body: SafeArea(
         child: Stack(
           fit: StackFit.expand,
           children: [
-            RepaintBoundary(
-              key: globalKey,
-              child: Scaffold(
-                backgroundColor: widget.mainColor,
+            Padding(
+              padding: EdgeInsets.symmetric(
+                  vertical: storyBloc.getIsStoryTemplate ? 0 : height * 0.15),
+              child: RepaintBoundary(
+                key: globalKey,
+                child: Scaffold(
+                  backgroundColor: widget.mainColor,
+                ),
               ),
             ),
             Positioned(
@@ -159,7 +173,25 @@ class _HomeMainScreenState extends State<HomeMainScreen> {
                   ),
                 ],
               ),
-            )
+            ),
+            StreamBuilder(
+              stream: storyBloc.getLoadingStream,
+              builder: (BuildContext context, AsyncSnapshot snapshot) {
+                if (snapshot.data == false) return const SizedBox();
+                return Container(
+                  color: Colors.grey.withOpacity(0.5),
+                  child: const Center(
+                    child: SizedBox(
+                      height: 30,
+                      width: 30,
+                      child: CircularProgressIndicator(
+                        strokeWidth: 2,
+                      ),
+                    ),
+                  ),
+                );
+              },
+            ),
           ],
         ),
       ),
@@ -167,8 +199,9 @@ class _HomeMainScreenState extends State<HomeMainScreen> {
   }
 
   Future<void> _capturePng() {
-    final homeBloc = Provider.of<HomeBloc>(context, listen: false);
-    return new Future.delayed(const Duration(milliseconds: 25), () async {
+    final storyBloc = Provider.of<StoryBloc>(context, listen: false);
+    storyBloc.setSavingState(true);
+    return new Future.delayed(const Duration(milliseconds: 5005), () async {
       RenderRepaintBoundary boundary =
           globalKey.currentContext.findRenderObject();
 
@@ -178,7 +211,7 @@ class _HomeMainScreenState extends State<HomeMainScreen> {
           await image.toByteData(format: ui.ImageByteFormat.png);
 
       Uint8List pngBytes = byteData.buffer.asUint8List();
-      if (!homeBloc.getIsStoryTemplate) {
+      if (!storyBloc.getIsStoryTemplate) {
         ui.Image x = await decodeImageFromList(pngBytes);
         print('height is ${x.height}'); //height of original image
         print('width is ${x.width}'); //width of oroginal image
@@ -209,6 +242,7 @@ class _HomeMainScreenState extends State<HomeMainScreen> {
           _goToInitialHome,
         );
       });
+      storyBloc.setSavingState(false);
     });
   }
 

@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:alfa_project/components/widgets/bounce_button.dart';
 import 'package:alfa_project/provider/search_text_image.dart';
 import 'package:alfa_project/screens/search/picker_image_text.dart';
