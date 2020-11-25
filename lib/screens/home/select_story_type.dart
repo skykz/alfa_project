@@ -13,7 +13,6 @@ class SelectTypeTemplate extends StatefulWidget {
 }
 
 class _SelectTypeTemplateState extends State<SelectTypeTemplate> {
-  double withContainer = 145;
   bool isFirstContainerSelected = true;
   bool isGranted = false;
 
@@ -76,7 +75,7 @@ class _SelectTypeTemplateState extends State<SelectTypeTemplate> {
                     },
                     child: Container(
                       height: height * 0.35,
-                      width: withContainer,
+                      width: width / 2.5,
                       decoration: BoxDecoration(
                         color: Colors.white,
                         boxShadow: isFirstContainerSelected
@@ -124,7 +123,7 @@ class _SelectTypeTemplateState extends State<SelectTypeTemplate> {
                     },
                     child: Container(
                       height: height * 0.28,
-                      width: withContainer,
+                      width: width / 2.5,
                       decoration: BoxDecoration(
                         color: Colors.white,
                         boxShadow: !isFirstContainerSelected

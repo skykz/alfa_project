@@ -11,6 +11,7 @@ import 'package:alfa_project/screens/search/search_image_text.dart';
 import 'package:alfa_project/utils/common_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:flutter_native_image/flutter_native_image.dart';
 import 'package:gallery_saver/gallery_saver.dart';
 import 'package:path_provider/path_provider.dart';
 import 'dart:ui' as ui;
@@ -43,21 +44,28 @@ class _HomeMainScreenState extends State<HomeMainScreen> {
   @override
   Widget build(BuildContext context) {
     final storyBloc = Provider.of<StoryBloc>(context);
-    final height = MediaQuery.of(context).size.height;
     return Scaffold(
       body: SafeArea(
         child: Stack(
           fit: StackFit.expand,
           children: [
-            Padding(
-              padding: EdgeInsets.symmetric(
-                  vertical: storyBloc.getIsStoryTemplate ? 0 : height * 0.15),
-              child: RepaintBoundary(
-                key: globalKey,
-                child: Scaffold(
-                  backgroundColor: widget.mainColor,
-                ),
-              ),
+            LayoutBuilder(
+              builder: (BuildContext context, BoxConstraints constraints) {
+                return Padding(
+                  padding: EdgeInsets.symmetric(
+                      vertical: storyBloc.getIsStoryTemplate
+                          ? 0
+                          : constraints.maxHeight * 0.13),
+                  child: Center(
+                    child: RepaintBoundary(
+                      key: globalKey,
+                      child: Scaffold(
+                        backgroundColor: widget.mainColor,
+                      ),
+                    ),
+                  ),
+                );
+              },
             ),
             Positioned(
               top: 0,
@@ -186,6 +194,7 @@ class _HomeMainScreenState extends State<HomeMainScreen> {
                       width: 30,
                       child: CircularProgressIndicator(
                         strokeWidth: 2,
+                        backgroundColor: Colors.white,
                       ),
                     ),
                   ),
@@ -209,30 +218,28 @@ class _HomeMainScreenState extends State<HomeMainScreen> {
 
       ByteData byteData =
           await image.toByteData(format: ui.ImageByteFormat.png);
-
       Uint8List pngBytes = byteData.buffer.asUint8List();
-      if (!storyBloc.getIsStoryTemplate) {
-        ui.Image x = await decodeImageFromList(pngBytes);
-        print('height is ${x.height}'); //height of original image
-        print('width is ${x.width}'); //width of oroginal image
-        ui.instantiateImageCodec(pngBytes, targetWidth: 1536).then((codec) {
-          codec.getNextFrame().then((frameInfo) async {
-            ui.Image i = frameInfo.image;
-            print('image width is ${i.width}'); //height of resized image
-            print('image height is ${i.height}'); //width of resized image
-          });
-        });
-      }
+
       String dir = (await getApplicationDocumentsDirectory()).path;
       File file = File("$dir/" +
           'AlfaStory' +
           "${DateTime.now().millisecondsSinceEpoch}" +
           ".png");
-      await file.writeAsBytes(pngBytes);
-      log('${file.path}');
 
-      GallerySaver.saveImage(file.path).then((value) {
-        log("$value");
+      await file.writeAsBytes(pngBytes);
+
+      ImageProperties properties =
+          await FlutterNativeImage.getImageProperties(file.path);
+      log('IMage properties height: ${properties.height}');
+      log('IMage properties width: ${properties.width}');
+
+      File compressedFile = await FlutterNativeImage.compressImage(file.path,
+          percentage: 0,
+          quality: 100,
+          targetWidth: storyBloc.getIsStoryTemplate ? 1080 : 1536,
+          targetHeight: 1920);
+
+      GallerySaver.saveImage(compressedFile.path).then((value) {
         displayCustomDialog(
           context,
           null,

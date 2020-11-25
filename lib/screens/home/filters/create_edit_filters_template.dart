@@ -7,12 +7,15 @@ import 'package:alfa_project/components/styles/app_style.dart';
 import 'package:alfa_project/components/widgets/bounce_button.dart';
 import 'package:alfa_project/core/data/consts/app_const.dart';
 import 'package:alfa_project/core/data/models/dialog_type.dart';
+import 'package:alfa_project/provider/filter_bloc.dart';
 import 'package:alfa_project/provider/story_bloc.dart';
 import 'package:alfa_project/screens/search/picker_image_text.dart';
+import 'package:alfa_project/screens/search/search_image_text.dart';
 import 'package:alfa_project/utils/common_utils.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:flutter_native_image/flutter_native_image.dart';
 import 'package:gallery_saver/gallery_saver.dart';
 import 'package:matrix_gesture_detector/matrix_gesture_detector.dart';
 import 'package:path_provider/path_provider.dart';
@@ -38,14 +41,46 @@ class CreateEditFilterTemplateScreen extends StatefulWidget {
 
 class _CreateEditFilterTemplateScreenState
     extends State<CreateEditFilterTemplateScreen> {
-  _goBack() {
-    final storyBloc = Provider.of<StoryBloc>(context, listen: false);
-    storyBloc.setClearStoryData();
-    Navigator.pop(context);
-    Navigator.pop(context);
+  final globalKey = GlobalKey();
+  double _valueWidth;
+  double _valueHeight;
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final storyBloc = Provider.of<StoryBloc>(context, listen: false);
+      storyBloc.setSavingState(false);
+      _valueWidth = MediaQuery.of(context).size.width;
+      _valueHeight = MediaQuery.of(context).size.height;
+    });
   }
 
-  GlobalKey globalKey = GlobalKey();
+  _goBack() {
+    final storyBloc = Provider.of<StoryBloc>(context, listen: false);
+    final filterBloc = Provider.of<FilterBloc>(context, listen: false);
+    storyBloc.setClearStoryData();
+    filterBloc.setClearFilterData();
+    Navigator.of(context, rootNavigator: true).pop();
+    Navigator.pushAndRemoveUntil(
+        context,
+        PageRouteBuilder(pageBuilder: (BuildContext context,
+            Animation animation, Animation secondaryAnimation) {
+          return MyApp();
+        }, transitionsBuilder: (BuildContext context,
+            Animation<double> animation,
+            Animation<double> secondaryAnimation,
+            Widget child) {
+          return SlideTransition(
+            position: Tween<Offset>(
+              begin: const Offset(1.0, 0.0),
+              end: Offset.zero,
+            ).animate(animation),
+            child: child,
+          );
+        }),
+        (Route route) => false);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -62,97 +97,109 @@ class _CreateEditFilterTemplateScreenState
       child: SafeArea(
         child: Scaffold(
           resizeToAvoidBottomPadding: false,
+          backgroundColor: storyBloc.getBackColor,
           body: GestureDetector(
             onTap: () => FocusScope.of(context).unfocus(),
             child: Stack(
               children: [
-                RepaintBoundary(
-                  key: globalKey,
-                  child: Container(
-                    color: Color.fromRGBO(237, 237, 237, 1),
-                    child: Stack(
-                      fit: StackFit.expand,
-                      children: [
-                        MatrixGestureDetector(
-                          shouldRotate: !storyBloc.getImagePositionState,
-                          shouldScale: !storyBloc.getImagePositionState,
-                          shouldTranslate: !storyBloc.getImagePositionState,
-                          onMatrixUpdate: (m, tm, sm, rm) {
-                            storyBloc.notifierPicture.value = m;
-                          },
-                          child: !storyBloc.getImagePositionState
-                              ? AnimatedBuilder(
-                                  animation: storyBloc.notifierPicture,
-                                  builder: (ctx, child) {
-                                    return Transform(
-                                      transform:
-                                          storyBloc.notifierPicture.value,
-                                      child: Stack(
-                                        fit: StackFit.expand,
-                                        children: <Widget>[
-                                          Image(
-                                              image: FileImage(
-                                                  widget.filteredImage)),
-                                        ],
-                                      ),
-                                    );
-                                  },
-                                )
-                              : StreamBuilder(
-                                  stream: storyBloc.getPosition,
-                                  builder: (BuildContext context,
-                                      AsyncSnapshot snapshot) {
-                                    return Transform(
-                                      transform:
-                                          storyBloc.getCurrenImagePosition,
-                                      child: Stack(
-                                        fit: StackFit.expand,
-                                        children: <Widget>[
-                                          Image(
-                                            image:
-                                                FileImage(widget.filteredImage),
+                LayoutBuilder(builder:
+                    (BuildContext context, BoxConstraints constraints) {
+                  return Padding(
+                    padding: EdgeInsets.symmetric(
+                        vertical: storyBloc.getIsStoryTemplate
+                            ? 7
+                            : constraints.maxHeight * 0.16),
+                    child: RepaintBoundary(
+                      key: globalKey,
+                      child: Container(
+                        color: const Color.fromRGBO(237, 237, 237, 1),
+                        child: Stack(
+                          fit: StackFit.expand,
+                          children: [
+                            MatrixGestureDetector(
+                              shouldRotate: !storyBloc.getImagePositionState,
+                              shouldScale: !storyBloc.getImagePositionState,
+                              shouldTranslate: !storyBloc.getImagePositionState,
+                              onMatrixUpdate: (m, tm, sm, rm) {
+                                storyBloc.notifierPicture.value = m;
+                              },
+                              child: !storyBloc.getImagePositionState
+                                  ? AnimatedBuilder(
+                                      animation: storyBloc.notifierPicture,
+                                      builder: (ctx, child) {
+                                        return Transform(
+                                          transform:
+                                              storyBloc.notifierPicture.value,
+                                          child: Stack(
+                                            fit: StackFit.expand,
+                                            children: <Widget>[
+                                              Image(
+                                                  image: FileImage(
+                                                      widget.filteredImage)),
+                                            ],
                                           ),
-                                        ],
+                                        );
+                                      },
+                                    )
+                                  : StreamBuilder(
+                                      stream: storyBloc.getPosition,
+                                      builder: (BuildContext context,
+                                          AsyncSnapshot snapshot) {
+                                        return Transform(
+                                          transform:
+                                              storyBloc.getCurrenImagePosition,
+                                          child: Stack(
+                                            fit: StackFit.expand,
+                                            children: <Widget>[
+                                              Image(
+                                                image: FileImage(
+                                                    widget.filteredImage),
+                                              ),
+                                            ],
+                                          ),
+                                        );
+                                      },
+                                    ),
+                            ),
+                            IgnorePointer(
+                              ignoring: true,
+                              child: CachedNetworkImage(
+                                imageUrl:
+                                    BASE_URL_IMAGE + widget.templateImageId,
+                                imageBuilder: (context, imageProvider) =>
+                                    InkWell(
+                                  borderRadius: BorderRadius.circular(8),
+                                  onTap: () => {},
+                                  child: Container(
+                                    width: double.infinity,
+                                    decoration: BoxDecoration(
+                                      image: DecorationImage(
+                                        image: imageProvider,
+                                        fit: BoxFit.fill,
                                       ),
-                                    );
-                                  },
-                                ),
-                        ),
-                        IgnorePointer(
-                          ignoring: true,
-                          child: CachedNetworkImage(
-                            imageUrl: BASE_URL_IMAGE + widget.templateImageId,
-                            imageBuilder: (context, imageProvider) => InkWell(
-                              borderRadius: BorderRadius.circular(8),
-                              onTap: () => {},
-                              child: Container(
-                                width: double.infinity,
-                                decoration: BoxDecoration(
-                                  image: DecorationImage(
-                                    image: imageProvider,
-                                    fit: BoxFit.fitWidth,
+                                    ),
                                   ),
                                 ),
+                                placeholder: (context, url) => Center(
+                                  child: const CircularProgressIndicator(
+                                    strokeWidth: 2,
+                                    backgroundColor: Colors.white,
+                                  ),
+                                ),
+                                errorWidget: (context, url, error) =>
+                                    const Icon(Icons.error),
                               ),
                             ),
-                            placeholder: (context, url) => Center(
-                              child: const CircularProgressIndicator(
-                                strokeWidth: 2,
-                                backgroundColor: Colors.white,
-                              ),
-                            ),
-                            errorWidget: (context, url, error) =>
-                                const Icon(Icons.error),
-                          ),
+                            storyBloc.getTextEnabled
+                                ? _buildTextWidget(storyBloc)
+                                : const SizedBox(),
+                            _buildDecoImage(),
+                          ],
                         ),
-                        storyBloc.getTextEnabled
-                            ? _buildTextWidget(storyBloc)
-                            : const SizedBox(),
-                        _buildDecoImage(),
-                      ],
+                      ),
                     ),
-                  ),
-                ),
+                  );
+                }),
                 _buildToolBar(storyBloc),
                 storyBloc.getTextEnabled
                     ? const SizedBox()
@@ -453,32 +500,77 @@ class _CreateEditFilterTemplateScreenState
                     ? storyBloc.getTextPositionSaved
                         ? const SizedBox()
                         : Positioned(
-                            bottom: 80,
-                            left: 0,
-                            right: 0,
-                            child: Container(
-                              decoration: BoxDecoration(boxShadow: [
-                                BoxShadow(
-                                  color: Colors.white.withOpacity(0.5),
-                                  blurRadius: 10,
+                            bottom: 40,
+                            left: 50,
+                            right: 50,
+                            child: Column(
+                              children: [
+                                Container(
+                                  decoration: BoxDecoration(boxShadow: [
+                                    BoxShadow(
+                                      color: Colors.white.withOpacity(0.5),
+                                      blurRadius: 10,
+                                    ),
+                                  ]),
+                                  child: SliderTheme(
+                                    data: SliderTheme.of(context).copyWith(
+                                        thumbShape: RoundSliderThumbShape()),
+                                    child: Slider(
+                                      value: storyBloc.textWidthContainer,
+                                      max: _valueWidth * 0.75,
+                                      min: 100,
+                                      onChanged: (newValue) {
+                                        storyBloc
+                                            .setTextWidthContainer(newValue);
+                                      },
+                                    ),
+                                  ),
                                 ),
-                              ]),
-                              child: SliderTheme(
-                                data: SliderTheme.of(context).copyWith(
-                                    thumbShape: RoundSliderThumbShape()),
-                                child: Slider(
-                                  value: storyBloc.textWidthContainer,
-                                  max: MediaQuery.of(context).size.width * 0.75,
-                                  min: 5,
-                                  onChanged: (newValue) {
-                                    storyBloc.setTextWidthContainer(newValue);
-                                    log('$newValue');
-                                  },
+                                Container(
+                                  decoration: BoxDecoration(boxShadow: [
+                                    BoxShadow(
+                                      color: Colors.white.withOpacity(0.5),
+                                      blurRadius: 10,
+                                    ),
+                                  ]),
+                                  child: SliderTheme(
+                                    data: SliderTheme.of(context).copyWith(
+                                      thumbShape: RoundSliderThumbShape(),
+                                    ),
+                                    child: Slider(
+                                      value: storyBloc.textHeightContainer,
+                                      max: _valueHeight * 0.75,
+                                      min: 100,
+                                      onChanged: (newValue) {
+                                        storyBloc
+                                            .setTextHeightContainer(newValue);
+                                      },
+                                    ),
+                                  ),
                                 ),
-                              ),
+                              ],
                             ),
                           )
                     : const SizedBox(),
+                StreamBuilder(
+                  stream: storyBloc.getLoadingStream,
+                  builder: (BuildContext context, AsyncSnapshot snapshot) {
+                    if (snapshot.data == false) return const SizedBox();
+                    return Container(
+                      color: Colors.grey.withOpacity(0.5),
+                      child: const Center(
+                        child: SizedBox(
+                          height: 30,
+                          width: 30,
+                          child: CircularProgressIndicator(
+                            strokeWidth: 2,
+                            backgroundColor: Colors.white,
+                          ),
+                        ),
+                      ),
+                    );
+                  },
+                ),
               ],
             ),
           ),
@@ -501,7 +593,7 @@ class _CreateEditFilterTemplateScreenState
       left: 10,
       right: 10,
       child: AnimatedSwitcher(
-        duration: const Duration(milliseconds: 300),
+        duration: const Duration(milliseconds: 200),
         transitionBuilder: (Widget child, Animation<double> animation) =>
             ScaleTransition(
           scale: animation,
@@ -591,11 +683,10 @@ class _CreateEditFilterTemplateScreenState
                                     Navigator.push(
                                       context,
                                       MaterialPageRoute(
-                                        builder: (context) => StickerTextPicker(
-                                          isDecoration: true,
-                                          isTextBase: false,
-                                          title: "",
-                                          text: "",
+                                        builder: (context) =>
+                                            SearchPickerScreen(
+                                          isText: true,
+                                          isTextToImage: true,
                                         ),
                                       ),
                                     );
@@ -789,6 +880,29 @@ class _CreateEditFilterTemplateScreenState
                               )
                             ],
                           ),
+                          Column(
+                            children: [
+                              SizedBox(
+                                height: 35,
+                                width: 35,
+                                child: BounceButton(
+                                  onPressed: () =>
+                                      storyBloc.setTextBaseFontSize(),
+                                  iconImagePath: SvgIconsClass.textSizeIcon,
+                                ),
+                              ),
+                              FittedBox(
+                                child: Text(
+                                  'Размер',
+                                  style: TextStyle(
+                                    color: AppStyle.colorDark,
+                                    fontSize: 10,
+                                    fontWeight: FontWeight.w300,
+                                  ),
+                                ),
+                              )
+                            ],
+                          ),
                           Expanded(
                             child: Align(
                               alignment: Alignment.centerRight,
@@ -828,30 +942,48 @@ class _CreateEditFilterTemplateScreenState
   }
 
   Future<void> _capturePng() {
-    return new Future.delayed(const Duration(milliseconds: 25), () async {
+    final storyBloc = Provider.of<StoryBloc>(context, listen: false);
+    storyBloc.setSavingState(true);
+
+    return new Future.delayed(const Duration(milliseconds: 30), () async {
       RenderRepaintBoundary boundary =
           globalKey.currentContext.findRenderObject();
-      ui.Image image = await boundary.toImage(pixelRatio: 3);
+      ui.Image image = await boundary.toImage(
+          pixelRatio: storyBloc.getIsStoryTemplate ? 3 : 5);
       ByteData byteData =
           await image.toByteData(format: ui.ImageByteFormat.png);
       Uint8List pngBytes = byteData.buffer.asUint8List();
-      // print(pngBytes);
       String dir = (await getApplicationDocumentsDirectory()).path;
       File file = File("$dir/" +
           'AlfaStory' +
           "${DateTime.now().millisecondsSinceEpoch}" +
           ".png");
-      await file.writeAsBytes(pngBytes);
-      log('${file.path}');
 
-      GallerySaver.saveImage(file.path).then((value) => displayCustomDialog(
-            context,
-            null,
-            DialogType.InfoDialog,
-            false,
-            value,
-            _goToInitialHome,
-          ));
+      await file.writeAsBytes(pngBytes);
+
+      ImageProperties properties =
+          await FlutterNativeImage.getImageProperties(file.path);
+      log('IMage properties height: ${properties.height}');
+      log('IMage properties width: ${properties.width}');
+
+      File compressedFile = await FlutterNativeImage.compressImage(file.path,
+          percentage: 0,
+          quality: 100,
+          targetWidth: storyBloc.getIsStoryTemplate ? 1080 : 1536,
+          targetHeight: 1920);
+
+      GallerySaver.saveImage(compressedFile.path).then((value) {
+        displayCustomDialog(
+          context,
+          null,
+          DialogType.InfoDialog,
+          false,
+          value,
+          _goToInitialHome,
+        );
+      });
+
+      storyBloc.setSavingState(false);
     });
   }
 
@@ -883,12 +1015,26 @@ class _CreateEditFilterTemplateScreenState
       child: LayoutBuilder(
           builder: (BuildContext context, BoxConstraints constraints) {
         double myMaxWidthRight = constraints.maxWidth -
-            math.min(storyBloc.textWidthContainer, constraints.maxWidth - 30) -
-            30;
+            math.min(storyBloc.textWidthContainer,
+                constraints.maxWidth - constraints.maxWidth * 0.2) -
+            constraints.maxWidth * 0.06;
 
-        double myMaxHeightTop = constraints.maxHeight - 580;
-        double myMaxHeightBottom = constraints.maxHeight - 250;
-        double myMaxWidthLeft = constraints.maxWidth - 330;
+        double myMaxHeightTop = constraints.maxHeight -
+            (storyBloc.getIsStoryTemplate
+                ? constraints.maxHeight * 0.85
+                : constraints.biggest.height * 0.92); //580
+
+        double myMaxHeightBottom = storyBloc.getIsStoryTemplate
+            ? (constraints.maxHeight -
+                math.min(storyBloc.textHeightContainer,
+                    constraints.maxHeight - constraints.maxHeight * 0.25) -
+                constraints.maxHeight * 0.15)
+            : (constraints.maxHeight -
+                math.min(storyBloc.textHeightContainer,
+                    constraints.maxHeight - constraints.maxHeight * 0.15) -
+                constraints.maxHeight * 0.09);
+        double myMaxWidthLeft =
+            constraints.maxWidth - constraints.maxWidth * 0.94; //330
 
         return Stack(
           children: [
@@ -911,14 +1057,19 @@ class _CreateEditFilterTemplateScreenState
                   );
                 },
                 child: Container(
+                  height: storyBloc.getIsStoryTemplate
+                      ? math.min(storyBloc.textHeightContainer,
+                          constraints.maxHeight * 0.7)
+                      : math.min(storyBloc.textHeightContainer,
+                          constraints.maxHeight * 0.82),
                   width: math.min(
-                      storyBloc.textWidthContainer, constraints.maxWidth - 80),
+                      storyBloc.textWidthContainer, constraints.maxWidth),
                   decoration: BoxDecoration(
                     border: Border.all(
                       width: 0.5,
                       color: storyBloc.getTextPositionSaved
                           ? Colors.transparent
-                          : Color.fromRGBO(200, 203, 208, 1),
+                          : const Color.fromRGBO(200, 203, 208, 1),
                     ),
                   ),
                   child: storyBloc.getTitle == null
@@ -930,7 +1081,7 @@ class _CreateEditFilterTemplateScreenState
                                 cursorRadius: Radius.circular(2),
                                 textAlign: storyBloc.getAlign,
                                 style: TextStyle(
-                                  color: storyBloc.getTextColorFirst,
+                                  color: AppStyle.colorDark,
                                   fontSize: storyBloc.getTitleFontSize,
                                   fontFamily: 'Styrene A LC',
                                   fontWeight:
@@ -940,7 +1091,7 @@ class _CreateEditFilterTemplateScreenState
                                   storyBloc.setTextFieldEnable(true);
                                 },
                                 maxLines: null,
-                                cursorColor: AppStyle.colorRed,
+                                cursorColor: AppStyle.colorDark,
                                 decoration: InputDecoration(
                                   fillColor: Colors.blue,
                                   border: InputBorder.none,
@@ -962,14 +1113,14 @@ class _CreateEditFilterTemplateScreenState
                                   storyBloc.setTextFieldEnable(false);
                                 },
                                 style: TextStyle(
-                                  color: storyBloc.getTextColorSecond,
+                                  color: AppStyle.colorDark,
                                   fontSize: storyBloc.getBodyFontSize,
                                   fontFamily: 'Styrene A LC',
                                   fontWeight:
                                       storyBloc.getCustomTextWeightSecond,
                                 ),
                                 maxLines: null,
-                                cursorColor: AppStyle.colorRed,
+                                cursorColor: AppStyle.colorDark,
                                 decoration: InputDecoration(
                                   fillColor: Colors.blue,
                                   border: InputBorder.none,
@@ -992,8 +1143,8 @@ class _CreateEditFilterTemplateScreenState
                               storyBloc.getTitle,
                               textAlign: storyBloc.getAlign,
                               style: TextStyle(
-                                color: storyBloc.getTextColor,
-                                fontSize: 24,
+                                color: AppStyle.colorDark,
+                                fontSize: storyBloc.getTitleTextBaseFontSize,
                                 height: 0.95,
                                 fontFamily: 'Styrene A LC',
                                 fontWeight: FontWeight.bold,
@@ -1006,14 +1157,11 @@ class _CreateEditFilterTemplateScreenState
                               storyBloc.getBody,
                               textAlign: storyBloc.getAlign,
                               style: TextStyle(
-                                color: storyBloc.getTextColor,
-                                fontSize: 16,
+                                color: AppStyle.colorDark,
+                                fontSize: storyBloc.getBodyTextBaseFontSize,
                                 height: 1,
-
                                 fontFamily: 'Styrene A LC',
                                 fontWeight: FontWeight.normal,
-
-                                // fontWeight: storyBloc.getCustomTextWeightFirst,
                               ),
                             ),
                           ],

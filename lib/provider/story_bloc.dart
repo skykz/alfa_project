@@ -1,13 +1,9 @@
 import 'dart:async';
 import 'dart:developer';
-import 'dart:typed_data';
 
 import 'package:alfa_project/components/styles/app_style.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-
-import 'dart:ui' as ui;
-import 'package:image/image.dart' as image;
 
 class StoryBloc extends ChangeNotifier {
   StoryBloc() {
@@ -30,21 +26,6 @@ class StoryBloc extends ChangeNotifier {
   StreamController<bool> streamController = StreamController<bool>.broadcast();
   Stream get getLoadingStream => streamController.stream;
 
-  setTypeOfAlfa(bool val) {
-    this._isStoryTemplate = val;
-    notifyListeners();
-  }
-
-  setLoading(bool val) {
-    this._isLoading = val;
-    notifyListeners();
-  }
-
-  setLoadingDownload(bool val) {
-    this._isLoading = val;
-    notifyListeners();
-  }
-
   String _imageUrl;
   String get getImageUrl => _imageUrl;
 
@@ -66,7 +47,7 @@ class StoryBloc extends ChangeNotifier {
   Matrix4 _currentTextPosition = Matrix4.identity();
   Matrix4 get getCurrenTextPosition => _currentTextPosition;
 
-  Offset offset = Offset(50, 100);
+  Offset offset = Offset(100, 100);
   Offset get getOffset => offset;
 
   ValueNotifier<Matrix4> notifierPicture = ValueNotifier(Matrix4.identity());
@@ -87,6 +68,9 @@ class StoryBloc extends ChangeNotifier {
 
   double _textWidthContainer = 150;
   double get textWidthContainer => _textWidthContainer;
+
+  double _textHeightContainer = 150;
+  double get textHeightContainer => _textHeightContainer;
 
   String _title;
   String _body;
@@ -133,6 +117,21 @@ class StoryBloc extends ChangeNotifier {
   int _indexFontSizeTitle = 0;
   int _indexFontSizebody = 0;
   int _indexTextBaseFontSizebody = 0;
+
+  setTypeOfAlfa(bool val) {
+    this._isStoryTemplate = val;
+    notifyListeners();
+  }
+
+  setLoading(bool val) {
+    this._isLoading = val;
+    notifyListeners();
+  }
+
+  setLoadingDownload(bool val) {
+    this._isLoading = val;
+    notifyListeners();
+  }
 
   setImageSticker(String val) {
     this._imageUrl = val;
@@ -222,17 +221,21 @@ class StoryBloc extends ChangeNotifier {
     this._body = null;
     this._color = AppStyle.colorRed;
     this._textWidthContainer = 150;
+    this._textHeightContainer = 150;
     this._fontWeightFirst = FontWeight.normal;
     this._fontWeightSecond = FontWeight.normal;
     this._titleFontSize = 22;
     this._bodyFontSize = 12;
     this._titleTextBaseFontSize = 22;
     this._bodyTextBaseFontSize = 12;
-    this._colorFirstText = AppStyle.colorRed;
-    this._colorSecondText = AppStyle.colorRed;
+    // this._colorFirstText = AppStyle.colorRed;
+    // this._colorSecondText = AppStyle.colorRed;
     _textAlign = CrossAxisAlignment.start;
     _align = TextAlign.start;
-    offset = Offset(50, 100);
+    offset = Offset(100, 100);
+    this._indexFontSizeTitle = 0;
+    this._indexTextBaseFontSizebody = 0;
+    this._indexFontSizebody = 0;
     setSavingState(false);
 
     notifyListeners();
@@ -266,6 +269,7 @@ class StoryBloc extends ChangeNotifier {
     this._body = null;
     this._color = AppStyle.colorRed;
     this._textWidthContainer = 150;
+    this._textHeightContainer = 150;
     this._fontWeightFirst = FontWeight.normal;
     this._fontWeightSecond = FontWeight.normal;
     this._isRemoveEnabled = false;
@@ -278,10 +282,11 @@ class StoryBloc extends ChangeNotifier {
     this._bodyTextBaseFontSize = 12;
     this._colorFirstText = AppStyle.colorRed;
     this._colorSecondText = AppStyle.colorRed;
-    offset = Offset(50, 100);
+    offset = Offset(100, 100);
     this._childrenStickers.clear();
     this._imageUrl = null;
     this._indexFontSizeTitle = 0;
+    this._indexTextBaseFontSizebody = 0;
     this._indexFontSizebody = 0;
     setSavingState(false);
     log('all data cleared');
@@ -317,29 +322,53 @@ class StoryBloc extends ChangeNotifier {
   }
 
   setTextColor() {
-    if (_isFirstText) {
-      if (_colorFirstText == AppStyle.colorRed)
-        _colorFirstText = AppStyle.colorDark;
-      else
-        _colorFirstText = AppStyle.colorRed;
-    } else if (!_isFirstText) {
-      if (_colorSecondText == AppStyle.colorRed)
-        _colorSecondText = AppStyle.colorDark;
-      else
-        _colorSecondText = AppStyle.colorRed;
+    if (_backgColor == AppStyle.colorRed) {
+      if (_isFirstText) {
+        if (_colorFirstText == AppStyle.colorDark)
+          _colorFirstText = AppStyle.colorWhite;
+        else
+          _colorFirstText = AppStyle.colorDark;
+      } else if (!_isFirstText) {
+        if (_colorSecondText == AppStyle.colorDark)
+          _colorSecondText = AppStyle.colorWhite;
+        else
+          _colorSecondText = AppStyle.colorDark;
+      }
+    } else {
+      if (_isFirstText) {
+        if (_colorFirstText == AppStyle.colorRed)
+          _colorFirstText = AppStyle.colorDark;
+        else
+          _colorFirstText = AppStyle.colorRed;
+      } else if (!_isFirstText) {
+        if (_colorSecondText == AppStyle.colorRed)
+          _colorSecondText = AppStyle.colorDark;
+        else
+          _colorSecondText = AppStyle.colorRed;
+      }
     }
 
-    if (_color == AppStyle.colorRed) {
-      _color = AppStyle.colorDark;
-      notifyListeners();
-    } else if (_color == AppStyle.colorDark) {
-      _color = AppStyle.colorRed;
-      notifyListeners();
+    if (_backgColor == AppStyle.colorRed) {
+      if (_color == AppStyle.colorDark)
+        _color = AppStyle.colorWhite;
+      else
+        _color = AppStyle.colorDark;
+    } else {
+      if (_color == AppStyle.colorRed)
+        _color = AppStyle.colorDark;
+      else
+        _color = AppStyle.colorRed;
     }
+    notifyListeners();
   }
 
   setTextWidthContainer(double val) {
     this._textWidthContainer = val;
+    notifyListeners();
+  }
+
+  setTextHeightContainer(double val) {
+    this._textHeightContainer = val;
     notifyListeners();
   }
 
@@ -382,23 +411,6 @@ class StoryBloc extends ChangeNotifier {
   removeLastWidgetChildren() {
     this._childrenStickers.removeLast();
     notifyListeners();
-  }
-
-  // List<Map<int, dynamic>> imageWidgetPosition = List<Map<int, dynamic>>();
-  // setPositionOfWidget(val, ValueNotifier<Matrix4> pos) {
-  //   this.imageWidgetPosition[val].addAll({val: pos});
-  // }
-
-  Future<ui.Image> getUiImage(
-      Uint8List imageAssetPath, int height, int width) async {
-    image.Image baseSizeImage = image.decodeImage(imageAssetPath);
-    image.Image resizeImage =
-        image.copyResize(baseSizeImage, height: height, width: width);
-    ui.Codec codec =
-        await ui.instantiateImageCodec(image.encodePng(resizeImage));
-    ui.FrameInfo frameInfo = await codec.getNextFrame();
-
-    return frameInfo.image;
   }
 
   setSavingState(bool val) {

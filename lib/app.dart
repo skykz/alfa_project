@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:alfa_project/components/styles/app_style.dart';
 import 'package:alfa_project/provider/auth_bloc.dart';
 import 'package:alfa_project/provider/filter_bloc.dart';
@@ -26,7 +24,7 @@ class MyApp extends StatelessWidget {
           create: (context) => StoryBloc(),
         ),
         ChangeNotifierProvider<FilterBloc>(
-          create: (context) => FilterBloc(),
+          create: (context) => FilterBloc(context),
         ),
       ],
       child: MaterialApp(
@@ -44,11 +42,14 @@ class MyApp extends StatelessWidget {
               if (snapshot.data == null)
                 return const Scaffold(
                   body: Center(
-                    child: CircularProgressIndicator(),
+                    child: SizedBox(
+                      width: 30,
+                      height: 30,
+                      child: CircularProgressIndicator(),
+                    ),
                   ),
                 );
               bool isLogged = snapshot.data.getBool('isReminder') ?? false;
-              log("$isLogged");
               if (isLogged)
                 return SelectTypeTemplate();
               else

@@ -38,6 +38,8 @@ class _FilterImageScreenState extends State<FilterImageScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final bloc = Provider.of<FilterBloc>(context, listen: true);
+
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
@@ -46,9 +48,10 @@ class _FilterImageScreenState extends State<FilterImageScreen> {
             color: AppStyle.colorDark,
           ),
           leading: IconButton(
-            icon: const Icon(Icons.arrow_back_ios_rounded),
-            onPressed: () => Navigator.pop(context),
-          ),
+              icon: const Icon(Icons.arrow_back_ios_rounded),
+              onPressed: () {
+                Navigator.pop(context);
+              }),
           title: Text(
             'Выберете рамку',
             style: TextStyle(
@@ -59,104 +62,101 @@ class _FilterImageScreenState extends State<FilterImageScreen> {
           shadowColor: Colors.grey[300],
           centerTitle: true,
         ),
-        body: Consumer<FilterBloc>(
-          builder: (context, bloc, child) {
-            return Column(
-              children: [
-                bloc.getLoading
-                    ? const Expanded(
-                        child: Center(
-                          child: SizedBox(
-                            height: 35,
-                            width: 35,
-                            child: CircularProgressIndicator(
-                              strokeWidth: 2,
-                              backgroundColor: Colors.white,
-                            ),
-                          ),
-                        ),
-                      )
-                    : Expanded(
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 20),
-                          child: Center(
-                            child: Container(
-                              child: PageView.builder(
-                                onPageChanged: (value) {
-                                  setState(() {
-                                    currentpage = value;
-                                  });
-                                },
-                                itemCount: bloc.getListTemplates['data'].length,
-                                controller: controller,
-                                itemBuilder: (context, index) =>
-                                    templateBuilder(
-                                        index, bloc.getListTemplates),
-                              ),
-                            ),
-                          ),
+        body: Column(
+          children: [
+            bloc.getLoading
+                ? const Expanded(
+                    child: Center(
+                      child: SizedBox(
+                        height: 30,
+                        width: 30,
+                        child: CircularProgressIndicator(
+                          strokeWidth: 2,
+                          backgroundColor: Colors.white,
                         ),
                       ),
-                Padding(
-                  padding: const EdgeInsets.all(5),
-                  child: Builder(
-                    builder: (ctx) => Padding(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 40, vertical: 30),
-                      child: FlatButton(
-                        color: AppStyle.colorRed,
-                        onPressed: () =>
-                            _showSelectFile(bloc, Platform.isAndroid, context),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(4),
-                        ),
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 14),
-                          child: SizedBox(
-                            height: 25,
-                            width: double.infinity,
-                            child: Center(
-                              child: Consumer<FilterBloc>(
-                                  builder: (context, bloc, child) {
-                                return Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
-                                    const Text(
-                                      'Выбрать',
-                                      style: TextStyle(
-                                        fontSize: 20,
-                                        color: Colors.white,
-                                        fontWeight: FontWeight.w300,
-                                      ),
-                                    ),
-                                    const SizedBox(
-                                      width: 5,
-                                    ),
-                                    const Icon(
-                                      Icons.arrow_forward,
-                                      size: 25,
-                                      color: Colors.white,
-                                    ),
-                                  ],
-                                );
-                              }),
-                            ),
+                    ),
+                  )
+                : Expanded(
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 20),
+                      child: Center(
+                        child: Container(
+                          child: PageView.builder(
+                            onPageChanged: (value) {
+                              setState(() {
+                                currentpage = value;
+                              });
+                            },
+                            itemCount: bloc.getListTemplates['data'].length,
+                            controller: controller,
+                            itemBuilder: (context, index) =>
+                                templateBuilder(index, bloc.getListTemplates),
                           ),
                         ),
                       ),
                     ),
                   ),
+            Padding(
+              padding: const EdgeInsets.all(5),
+              child: Builder(
+                builder: (ctx) => Padding(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 40, vertical: 30),
+                  child: FlatButton(
+                    color: AppStyle.colorRed,
+                    onPressed: () =>
+                        _showSelectFile(bloc, Platform.isAndroid, context),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(4),
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 14),
+                      child: SizedBox(
+                        height: 25,
+                        width: double.infinity,
+                        child: Center(
+                          child: Consumer<FilterBloc>(
+                              builder: (context, bloc, child) {
+                            return Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                const Text(
+                                  'Выбрать',
+                                  style: TextStyle(
+                                    fontSize: 20,
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.w300,
+                                  ),
+                                ),
+                                const SizedBox(
+                                  width: 5,
+                                ),
+                                const Icon(
+                                  Icons.arrow_forward_rounded,
+                                  size: 25,
+                                  color: Colors.white,
+                                ),
+                              ],
+                            );
+                          }),
+                        ),
+                      ),
+                    ),
+                  ),
                 ),
-              ],
-            );
-          },
+              ),
+            ),
+          ],
         ),
       ),
     );
   }
 
   templateBuilder(int index, filterImageData) {
+    final width = MediaQuery.of(context).size.width;
+
     return AnimatedBuilder(
       animation: controller,
       builder: (context, child) {
@@ -184,7 +184,7 @@ class _FilterImageScreenState extends State<FilterImageScreen> {
             borderRadius: BorderRadius.circular(8),
             onTap: () => {},
             child: Container(
-              width: 500,
+              width: width * 0.85,
               decoration: BoxDecoration(
                 border: index == currentpage
                     ? Border.all(
@@ -201,18 +201,23 @@ class _FilterImageScreenState extends State<FilterImageScreen> {
                 borderRadius: BorderRadius.circular(8),
                 image: DecorationImage(
                   image: imageProvider,
-                  fit: BoxFit.fill,
+                  fit: BoxFit.cover,
                 ),
               ),
             ),
           ),
-          placeholder: (context, url) => const Center(
-            child: CircularProgressIndicator(
-              strokeWidth: 2,
-              backgroundColor: Colors.white,
+          placeholder: (context, url) => const SizedBox(
+            width: 30,
+            height: 30,
+            child: const Center(
+              child: CircularProgressIndicator(
+                strokeWidth: 2,
+                backgroundColor: Colors.white,
+              ),
             ),
           ),
-          errorWidget: (context, url, error) => const Icon(Icons.error),
+          errorWidget: (context, url, error) =>
+              const Icon(Icons.error_outline_rounded),
         ),
       ),
     );
@@ -222,53 +227,58 @@ class _FilterImageScreenState extends State<FilterImageScreen> {
     final filterBloc = Provider.of<FilterBloc>(context, listen: false);
     if (isAndroid)
       showModalBottomSheet(
-          context: context,
-          isScrollControlled: true,
-          builder: (context) => Padding(
-                padding: const EdgeInsets.symmetric(vertical: 10),
-                child: Consumer<FilterBloc>(
-                  builder: (context, val, child) => val.getImageLoading
-                      ? SizedBox(
-                          width: 100,
-                          height: 100,
-                          child: Center(
-                            child: const CircularProgressIndicator(
-                              strokeWidth: 2,
-                            ),
-                          ),
-                        )
-                      : Column(
-                          mainAxisSize: MainAxisSize.min,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            ListTile(
-                                leading: Icon(Icons.camera,
-                                    color: AppStyle.colorRed),
-                                title: const Text('Камера'),
-                                onTap: () {
-                                  filterBloc.setImageLoading(true);
-                                  filterBloc.getImage(
-                                      context,
-                                      filterBloc.getListTemplates['data']
-                                          [currentpage]['url']);
-                                }),
-                            ListTile(
-                              leading: Icon(Icons.image_outlined,
-                                  color: AppStyle.colorRed),
-                              title: const Text('Галлерея'),
-                              onTap: () {
-                                filterBloc.setImageLoading(true);
-
-                                filterBloc.pickFileFrom(
-                                    context,
-                                    filterBloc.getListTemplates['data']
-                                        [currentpage]['url']);
-                              },
-                            ),
-                          ],
+        context: context,
+        isScrollControlled: true,
+        builder: (context) => Padding(
+          padding: const EdgeInsets.symmetric(vertical: 10),
+          child: Consumer<FilterBloc>(
+            builder: (context, val, child) => val.getImageLoading
+                ? SizedBox(
+                    height: 100,
+                    width: 100,
+                    child: Center(
+                      child: const SizedBox(
+                        width: 30,
+                        height: 30,
+                        child: const CircularProgressIndicator(
+                          strokeWidth: 2,
+                          backgroundColor: Colors.white,
                         ),
-                ),
-              ));
+                      ),
+                    ),
+                  )
+                : Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      ListTile(
+                          leading: Icon(Icons.camera_alt_rounded,
+                              color: AppStyle.colorRed),
+                          title: const Text('Камера'),
+                          onTap: () {
+                            filterBloc.setImageLoading(true);
+                            filterBloc.getCamerImage(
+                                context,
+                                filterBloc.getListTemplates['data'][currentpage]
+                                    ['url']);
+                          }),
+                      ListTile(
+                        leading:
+                            Icon(Icons.image_rounded, color: AppStyle.colorRed),
+                        title: const Text('Галлерея'),
+                        onTap: () {
+                          filterBloc.setImageLoading(true);
+                          filterBloc.pickFileFromGallery(
+                              context,
+                              filterBloc.getListTemplates['data'][currentpage]
+                                  ['url']);
+                        },
+                      ),
+                    ],
+                  ),
+          ),
+        ),
+      );
     else
       showCupertinoModalPopup(
         context: context,
@@ -288,7 +298,7 @@ class _FilterImageScreenState extends State<FilterImageScreen> {
                 ),
               ),
               onPressed: () {
-                filterBloc.pickFileFrom(context,
+                filterBloc.pickFileFromGallery(context,
                     filterBloc.getListTemplates['data'][currentpage]['url']);
               },
             ),
@@ -299,7 +309,7 @@ class _FilterImageScreenState extends State<FilterImageScreen> {
                   color: Colors.blue,
                 ),
               ),
-              onPressed: () => filterBloc.getImage(context,
+              onPressed: () => filterBloc.getCamerImage(context,
                   filterBloc.getListTemplates['data'][currentpage]['url']),
             )
           ],

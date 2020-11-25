@@ -4,7 +4,6 @@ import 'dart:io';
 import 'package:alfa_project/components/styles/app_style.dart';
 import 'package:alfa_project/core/repository/api_repository.dart';
 import 'package:alfa_project/screens/home/filters/filter_image_color.dart';
-import 'package:file_picker/file_picker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
@@ -26,19 +25,31 @@ class FilterBloc extends ChangeNotifier {
   File _file;
   File get getPickedFile => _file;
 
-  FilterBloc() {
-    getTemplates();
+  List<Filter> _filters = [
+    NoFilter(),
+    BrannanFilter(),
+    F1977Filter(),
+    XProIIFilter(),
+    ReyesFilter(),
+    SkylineFilter(),
+  ];
+
+  FilterBloc(BuildContext context) {
+    getTemplates(context);
   }
 
-  Future getTemplates() async {
+  getTemplates(BuildContext context) {
     setLoading(true);
     _alfaApi.getCategory().then((value) {
       if (value != null) {
         for (var i = 0; i < value.length; i++) {
           if (value[i]['name'] == 'template')
-            _alfaApi.getImage(value[i]['id']).then((value) {
-              if (value != null) setUrlImages(value);
+            _alfaApi.getImage(value[i]['id'], context).then((value) {
+              if (value != null) {
+                this._listTemplates = value;
+              }
             }).whenComplete(() => setLoading(false));
+          notifyListeners();
         }
       }
     });
@@ -49,38 +60,39 @@ class FilterBloc extends ChangeNotifier {
     notifyListeners();
   }
 
+  setClearFilterData() {
+    this._file = null;
+    this._isLoading = false;
+    this._isLoadingImage = false;
+    this._listTemplates = null;
+    notifyListeners();
+  }
+
   setImageLoading(bool val) {
     this._isLoadingImage = val;
     notifyListeners();
   }
 
-  setUrlImages(dynamic val) {
-    this._listTemplates = val;
-    notifyListeners();
-  }
-
-  pickFileFrom(BuildContext context, String templateStringUrl) async {
+  pickFileFromGallery(BuildContext context, String templateStringUrl) async {
     String fileName;
-    FilePickerResult result;
-    result = await FilePicker.platform.pickFiles(
-      type: FileType.custom,
-      allowCompression: true,
-      allowedExtensions: ['jpg', 'png', 'jpeg'],
-    );
+    final picker = ImagePicker();
+    final pickedFile = await picker.getImage(source: ImageSource.gallery);
 
-    if (result != null) {
+    if (pickedFile != null) {
       Navigator.pop(context);
 
       File file;
-      file = File(result.files.single.path);
+      file = File(pickedFile.path);
 
       log("${file.path}");
       if (file.path != null) {
         fileName = basename(file.path);
         final imageMain = imageLib.decodeImage(file.readAsBytesSync());
-        // final image = imageLib.copyResize(imageMain, width: );
         _goToFilterScreen(context, imageMain, templateStringUrl, fileName);
       }
+      setImageLoading(false);
+    } else {
+      setImageLoading(false);
     }
   }
 
@@ -89,16 +101,7 @@ class FilterBloc extends ChangeNotifier {
     notifyListeners();
   }
 
-  List<Filter> _filters = [
-    NoFilter(),
-    BrannanFilter(),
-    F1977Filter(),
-    XProIIFilter(),
-    ReyesFilter(),
-    SkylineFilter(),
-  ];
-
-  Future getImage(BuildContext context, String templateStringUrl) async {
+  Future getCamerImage(BuildContext context, String templateStringUrl) async {
     File _image;
     String fileName;
 

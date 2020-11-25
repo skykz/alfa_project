@@ -16,6 +16,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:flutter_native_image/flutter_native_image.dart';
 import 'package:gallery_saver/gallery_saver.dart';
 import 'package:matrix_gesture_detector/matrix_gesture_detector.dart';
 import 'package:path_provider/path_provider.dart';
@@ -42,9 +43,8 @@ class CreateEditTemplateScreen extends StatefulWidget {
 
 class _CreateEditTemplateScreenState extends State<CreateEditTemplateScreen> {
   GlobalKey globalKey = GlobalKey();
-  double _value;
-  final GlobalKey _textKey = GlobalKey();
-  Size textSize;
+  double _valueWidth;
+  double _valueHeight;
 
   @override
   void initState() {
@@ -53,7 +53,8 @@ class _CreateEditTemplateScreenState extends State<CreateEditTemplateScreen> {
       final storyBloc = Provider.of<StoryBloc>(context, listen: false);
       storyBloc.setSavingState(false);
 
-      _value = MediaQuery.of(context).size.width;
+      _valueWidth = MediaQuery.of(context).size.width;
+      _valueHeight = MediaQuery.of(context).size.height;
     });
   }
 
@@ -82,11 +83,6 @@ class _CreateEditTemplateScreenState extends State<CreateEditTemplateScreen> {
   }
 
   @override
-  void dispose() {
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
     final storyBloc = Provider.of<StoryBloc>(context);
     final height = MediaQuery.of(context).size.height;
@@ -101,6 +97,7 @@ class _CreateEditTemplateScreenState extends State<CreateEditTemplateScreen> {
           _goBack),
       child: SafeArea(
         child: Scaffold(
+          backgroundColor: storyBloc.getBackColor,
           resizeToAvoidBottomPadding: false,
           body: !storyBloc.getLoading
               ? Column(
@@ -223,8 +220,8 @@ class _CreateEditTemplateScreenState extends State<CreateEditTemplateScreen> {
                       Padding(
                         padding: EdgeInsets.symmetric(
                             vertical: storyBloc.getIsStoryTemplate
-                                ? 0
-                                : height * 0.15),
+                                ? 7
+                                : height * 0.16),
                         child: RepaintBoundary(
                           key: globalKey,
                           child: Container(
@@ -519,30 +516,61 @@ class _CreateEditTemplateScreenState extends State<CreateEditTemplateScreen> {
                           ? storyBloc.getTextPositionSaved
                               ? const SizedBox()
                               : Positioned(
-                                  bottom: 80,
-                                  left: 0,
-                                  right: 0,
-                                  child: Container(
-                                    decoration: BoxDecoration(boxShadow: [
-                                      BoxShadow(
-                                        color: Colors.white.withOpacity(0.5),
-                                        blurRadius: 10,
+                                  bottom: 40,
+                                  left: 50,
+                                  right: 50,
+                                  child: Column(
+                                    children: [
+                                      Container(
+                                        decoration: BoxDecoration(boxShadow: [
+                                          BoxShadow(
+                                            color:
+                                                Colors.white.withOpacity(0.5),
+                                            blurRadius: 10,
+                                          ),
+                                        ]),
+                                        child: SliderTheme(
+                                          data:
+                                              SliderTheme.of(context).copyWith(
+                                            thumbShape: RoundSliderThumbShape(),
+                                          ),
+                                          child: Slider(
+                                            value: storyBloc.textWidthContainer,
+                                            max: _valueWidth * 0.75,
+                                            min: 100,
+                                            onChanged: (newValue) {
+                                              storyBloc.setTextWidthContainer(
+                                                  newValue);
+                                            },
+                                          ),
+                                        ),
                                       ),
-                                    ]),
-                                    child: SliderTheme(
-                                      data: SliderTheme.of(context).copyWith(
-                                          thumbShape: RoundSliderThumbShape()),
-                                      child: Slider(
-                                        value: storyBloc.textWidthContainer,
-                                        max: _value * 0.75,
-                                        min: 5,
-                                        onChanged: (newValue) {
-                                          storyBloc
-                                              .setTextWidthContainer(newValue);
-                                          log('$newValue');
-                                        },
+                                      Container(
+                                        decoration: BoxDecoration(boxShadow: [
+                                          BoxShadow(
+                                            color:
+                                                Colors.white.withOpacity(0.5),
+                                            blurRadius: 10,
+                                          ),
+                                        ]),
+                                        child: SliderTheme(
+                                          data:
+                                              SliderTheme.of(context).copyWith(
+                                            thumbShape: RoundSliderThumbShape(),
+                                          ),
+                                          child: Slider(
+                                            value:
+                                                storyBloc.textHeightContainer,
+                                            max: _valueHeight * 0.75,
+                                            min: 100,
+                                            onChanged: (newValue) {
+                                              storyBloc.setTextHeightContainer(
+                                                  newValue);
+                                            },
+                                          ),
+                                        ),
                                       ),
-                                    ),
+                                    ],
                                   ),
                                 )
                           : const SizedBox(),
@@ -559,6 +587,7 @@ class _CreateEditTemplateScreenState extends State<CreateEditTemplateScreen> {
                                 width: 30,
                                 child: CircularProgressIndicator(
                                   strokeWidth: 2,
+                                  backgroundColor: Colors.white,
                                 ),
                               ),
                             ),
@@ -598,15 +627,6 @@ class _CreateEditTemplateScreenState extends State<CreateEditTemplateScreen> {
                           width: 40,
                           child: BounceButton(
                             onPressed: () {
-                              // Navigator.push(
-                              //   context,
-                              //   MaterialPageRoute(
-                              //     builder: (context) => SearchPickerScreen(
-                              //       isText: false,
-                              //       isTextToImage: true,
-                              //     ),
-                              //   ),
-                              // );
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
@@ -676,14 +696,15 @@ class _CreateEditTemplateScreenState extends State<CreateEditTemplateScreen> {
                                 child: BounceButton(
                                   onPressed: () {
                                     Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                          builder: (context) =>
-                                              SearchPickerScreen(
-                                            isText: true,
-                                            isTextToImage: true,
-                                          ),
-                                        ));
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) =>
+                                            SearchPickerScreen(
+                                          isText: true,
+                                          isTextToImage: true,
+                                        ),
+                                      ),
+                                    );
                                   },
                                   iconImagePath: SvgIconsClass.libraryIcon,
                                 ),
@@ -938,7 +959,7 @@ class _CreateEditTemplateScreenState extends State<CreateEditTemplateScreen> {
   Future<void> _capturePng() {
     final storyBloc = Provider.of<StoryBloc>(context, listen: false);
     storyBloc.setSavingState(true);
-    return new Future.delayed(const Duration(milliseconds: 28), () async {
+    return new Future.delayed(const Duration(milliseconds: 30), () async {
       RenderRepaintBoundary boundary =
           globalKey.currentContext.findRenderObject();
 
@@ -955,42 +976,29 @@ class _CreateEditTemplateScreenState extends State<CreateEditTemplateScreen> {
           "${DateTime.now().millisecondsSinceEpoch}" +
           ".png");
 
-      if (!storyBloc.getIsStoryTemplate) {
-        storyBloc.getUiImage(pngBytes, 1920, 1536).then((value) async {
-          log("${value.height}");
-          log("${value.width}");
-          ByteData byteData =
-              await value.toByteData(format: ui.ImageByteFormat.png);
-          Uint8List pngBytes = byteData.buffer.asUint8List();
-          await file.writeAsBytes(pngBytes);
+      await file.writeAsBytes(pngBytes);
 
-          GallerySaver.saveImage(file.path).then((value) {
-            displayCustomDialog(
-              context,
-              null,
-              DialogType.InfoDialog,
-              false,
-              value,
-              _goToInitialHome,
-            );
-          });
-        });
-      } else {
-        await file.writeAsBytes(pngBytes);
-        log('${file.path}');
+      ImageProperties properties =
+          await FlutterNativeImage.getImageProperties(file.path);
+      log('IMage properties height: ${properties.height}');
+      log('IMage properties width: ${properties.width}');
 
-        GallerySaver.saveImage(file.path).then((value) {
-          log("$value");
-          displayCustomDialog(
-            context,
-            null,
-            DialogType.InfoDialog,
-            false,
-            value,
-            _goToInitialHome,
-          );
-        });
-      }
+      File compressedFile = await FlutterNativeImage.compressImage(file.path,
+          percentage: 0,
+          quality: 100,
+          targetWidth: storyBloc.getIsStoryTemplate ? 1080 : 1536,
+          targetHeight: 1920);
+
+      GallerySaver.saveImage(compressedFile.path).then((value) {
+        displayCustomDialog(
+          context,
+          null,
+          DialogType.InfoDialog,
+          false,
+          value,
+          _goToInitialHome,
+        );
+      });
 
       storyBloc.setSavingState(false);
     });
@@ -1090,33 +1098,40 @@ class _CreateEditTemplateScreenState extends State<CreateEditTemplateScreen> {
     );
   }
 
-  getSizeAndPosition() {
-    RenderBox _cardBox = _textKey.currentContext.findRenderObject();
-    textSize = _cardBox.size;
-    setState(() {});
-  }
-
   _buildTextWidget(StoryBloc storyBloc) {
-    final height = MediaQuery.of(context).size.height;
-    final width = MediaQuery.of(context).size.width;
-
     return IgnorePointer(
       ignoring: storyBloc.getTextPositionSaved,
       child: LayoutBuilder(
           builder: (BuildContext context, BoxConstraints constraints) {
         double myMaxWidthRight = constraints.maxWidth -
             math.min(storyBloc.textWidthContainer,
-                constraints.maxWidth - width * 0.2) -
-            width * 0.06;
+                constraints.maxWidth - constraints.maxWidth * 0.2) -
+            constraints.maxWidth * 0.06;
+
         double myMaxHeightTop = constraints.maxHeight -
             (storyBloc.getIsStoryTemplate
-                ? height * 0.87
-                : constraints.biggest.height * 0.98); //580
-        double myMaxHeightBottom = constraints.maxHeight -
-            (storyBloc.getIsStoryTemplate
-                ? height * 0.3
-                : constraints.biggest.height * 0.25); //250
-        double myMaxWidthLeft = constraints.maxWidth - width * 0.94; //330
+                ? constraints.maxHeight * 0.85
+                : constraints.biggest.height * 0.92); //580
+
+        double myMaxHeightBottom = storyBloc.getIsStoryTemplate
+            ? (constraints.maxHeight -
+                math.min(storyBloc.textHeightContainer,
+                    constraints.maxHeight - constraints.maxHeight * 0.25) -
+                constraints.maxHeight * 0.15)
+            : (constraints.maxHeight -
+                math.min(storyBloc.textHeightContainer,
+                    constraints.maxHeight - constraints.maxHeight * 0.15) -
+                constraints.maxHeight * 0.09);
+
+        // double myMaxHeightBottom = storyBloc.getIsStoryTemplate
+        //     ? constraints.maxHeight * 0.35
+        // : constraints.maxHeight -
+        //     math.min(storyBloc.textHeightContainer,
+        //         constraints.maxHeight - constraints.maxHeight * 0.15) -
+        //     constraints.maxHeight * 0.1;
+
+        double myMaxWidthLeft =
+            constraints.maxWidth - constraints.maxWidth * 0.94; //330
 
         return Stack(
           children: [
@@ -1139,15 +1154,19 @@ class _CreateEditTemplateScreenState extends State<CreateEditTemplateScreen> {
                   );
                 },
                 child: Container(
-                  key: _textKey,
+                  height: storyBloc.getIsStoryTemplate
+                      ? math.min(storyBloc.textHeightContainer,
+                          constraints.maxHeight * 0.7)
+                      : math.min(storyBloc.textHeightContainer,
+                          constraints.maxHeight * 0.82),
                   width: math.min(
-                      storyBloc.textWidthContainer, constraints.maxWidth - 80),
+                      storyBloc.textWidthContainer, constraints.maxWidth),
                   decoration: BoxDecoration(
                     border: Border.all(
                       width: 0.5,
                       color: storyBloc.getTextPositionSaved
                           ? Colors.transparent
-                          : Color.fromRGBO(200, 203, 208, 1),
+                          : const Color.fromRGBO(200, 203, 208, 1),
                     ),
                   ),
                   child: storyBloc.getTitle == null

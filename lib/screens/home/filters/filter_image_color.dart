@@ -120,27 +120,32 @@ class _PhotoFilterSelectorState extends State<PhotoFilterSelector> {
             ),
           ),
           leading: IconButton(
-            icon: Icon(Icons.arrow_back_ios_rounded),
+            icon: const Icon(Icons.arrow_back_ios_rounded),
             onPressed: () {
               Navigator.pop(context);
             },
           ),
           actions: <Widget>[
             loading
-                ? !Platform.isIOS
-                    ? Center(
-                        child: const SizedBox(
-                          width: 15,
-                          height: 15,
-                          child: CircularProgressIndicator(
-                            strokeWidth: 2,
-                            backgroundColor: Colors.white,
-                          ),
+                ? Padding(
+                    padding: const EdgeInsets.only(right: 10),
+                    child: Center(
+                      child: SizedBox(
+                        width: 25,
+                        height: 25,
+                        child: Center(
+                          child: !Platform.isIOS
+                              ? const CircularProgressIndicator(
+                                  strokeWidth: 2,
+                                  backgroundColor: Colors.white,
+                                )
+                              : const CupertinoActivityIndicator(
+                                  radius: 10,
+                                ),
                         ),
-                      )
-                    : const CupertinoActivityIndicator(
-                        radius: 10,
-                      )
+                      ),
+                    ),
+                  )
                 : IconButton(
                     icon: Icon(
                       Icons.check_rounded,
@@ -303,7 +308,6 @@ class _PhotoFilterSelectorState extends State<PhotoFilterSelector> {
   Future<File> saveFilteredImage() async {
     var imageFile = await _localFile;
     await imageFile.writeAsBytes(cachedFilters[_filter?.name ?? "_"]);
-    // GallerySaver.saveImage(imageFile.path);
     Navigator.pushReplacement(
       context,
       MaterialPageRoute(
