@@ -1,4 +1,4 @@
-package com.example.alfa_project
+package kz.alfa.project
 
 import io.flutter.embedding.android.FlutterActivity
 

@@ -823,7 +823,7 @@ class _CreateEditTemplateScreenState extends State<CreateTextTemplateScreen> {
           globalKey.currentContext.findRenderObject();
 
       ui.Image image = await boundary.toImage(
-          pixelRatio: storyBloc.getIsStoryTemplate ? 3 : 5);
+          pixelRatio: storyBloc.getIsStoryTemplate ? 4 : 5);
 
       ByteData byteData =
           await image.toByteData(format: ui.ImageByteFormat.png);
