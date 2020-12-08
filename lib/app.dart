@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:alfa_project/components/styles/app_style.dart';
 import 'package:alfa_project/provider/auth_bloc.dart';
 import 'package:alfa_project/provider/filter_bloc.dart';
@@ -32,7 +34,8 @@ class MyApp extends StatelessWidget {
         debugShowCheckedModeBanner: false,
         theme: ThemeData(
           primarySwatch: Colors.red,
-          platform: TargetPlatform.iOS,
+          platform:
+              Platform.isIOS ? TargetPlatform.iOS : TargetPlatform.android,
           scaffoldBackgroundColor: AppStyle.mainbgColor,
           visualDensity: VisualDensity.adaptivePlatformDensity,
         ),

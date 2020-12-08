@@ -86,7 +86,6 @@ class _CreateEditTemplateScreenState extends State<CreateTextTemplateScreen> {
   Widget build(BuildContext context) {
     final storyBloc = Provider.of<StoryBloc>(context);
     final height = MediaQuery.of(context).size.height;
-
     return WillPopScope(
       onWillPop: () async => displayCustomDialog(
           context,
@@ -97,7 +96,6 @@ class _CreateEditTemplateScreenState extends State<CreateTextTemplateScreen> {
           _goBack),
       child: SafeArea(
         child: Scaffold(
-          backgroundColor: storyBloc.getBackColor,
           resizeToAvoidBottomPadding: false,
           body: GestureDetector(
             onTap: () => FocusScope.of(context).unfocus(),
@@ -106,7 +104,7 @@ class _CreateEditTemplateScreenState extends State<CreateTextTemplateScreen> {
                 Padding(
                   padding: EdgeInsets.symmetric(
                       vertical:
-                          storyBloc.getIsStoryTemplate ? 7 : height * 0.16),
+                          storyBloc.getIsStoryTemplate ? 0 : height * 0.16),
                   child: RepaintBoundary(
                     key: globalKey,
                     child: Container(
@@ -144,13 +142,12 @@ class _CreateEditTemplateScreenState extends State<CreateTextTemplateScreen> {
                                         true,
                                         null,
                                         _goBack),
-                                    iconImagePath: SvgIconsClass.closeIcon,
+                                    iconImagePath: IconsClass.closeIcon,
                                   ),
                                 ),
                                 Text(
                                   'Закрыть',
                                   style: TextStyle(
-                                    height: 1.5,
                                     fontSize: 10,
                                     fontWeight: FontWeight.w300,
                                     color: Colors.black87,
@@ -170,20 +167,20 @@ class _CreateEditTemplateScreenState extends State<CreateTextTemplateScreen> {
                                   child: Column(
                                     children: [
                                       SizedBox(
-                                        height: 40,
-                                        width: 40,
+                                        height: 35,
+                                        width: 35,
                                         child: BounceButton(
                                           onPressed: () {
                                             storyBloc.setTextEnabled(true);
                                           },
                                           iconImagePath:
-                                              SvgIconsClass.textSizeIcon,
+                                              IconsClass.textSizeIcon,
                                         ),
                                       ),
                                       Text(
                                         'Текст',
                                         style: TextStyle(
-                                          fontSize: 12,
+                                          fontSize: 10,
                                           fontWeight: FontWeight.w300,
                                         ),
                                       )
@@ -196,8 +193,8 @@ class _CreateEditTemplateScreenState extends State<CreateTextTemplateScreen> {
                                   child: Column(
                                     children: [
                                       SizedBox(
-                                        height: 40,
-                                        width: 40,
+                                        height: 35,
+                                        width: 35,
                                         child: BounceButton(
                                           onPressed: () {
                                             Navigator.push(
@@ -213,14 +210,13 @@ class _CreateEditTemplateScreenState extends State<CreateTextTemplateScreen> {
                                               ),
                                             );
                                           },
-                                          iconImagePath:
-                                              SvgIconsClass.stickerIcon,
+                                          iconImagePath: IconsClass.stickerIcon,
                                         ),
                                       ),
                                       Text(
                                         'Стикеры',
                                         style: TextStyle(
-                                          fontSize: 11,
+                                          fontSize: 10,
                                           fontWeight: FontWeight.w300,
                                         ),
                                       )
@@ -243,7 +239,7 @@ class _CreateEditTemplateScreenState extends State<CreateTextTemplateScreen> {
                                       width: 40,
                                       child: BounceButton(
                                         onPressed: _capturePng,
-                                        iconImagePath: SvgIconsClass.saveIcon,
+                                        iconImagePath: IconsClass.saveIcon,
                                       ),
                                     ),
                                     Text(
@@ -266,7 +262,7 @@ class _CreateEditTemplateScreenState extends State<CreateTextTemplateScreen> {
                                           storyBloc.setTextPosition(true);
                                           FocusScope.of(context).unfocus();
                                         },
-                                        iconImagePath: SvgIconsClass.doneIcon,
+                                        iconImagePath: IconsClass.doneIcon,
                                       ),
                                     ),
                                     Text(
@@ -287,7 +283,7 @@ class _CreateEditTemplateScreenState extends State<CreateTextTemplateScreen> {
                                       width: 40,
                                       child: BounceButton(
                                         onPressed: _capturePng,
-                                        iconImagePath: SvgIconsClass.saveIcon,
+                                        iconImagePath: IconsClass.saveIcon,
                                       ),
                                     ),
                                     Text(
@@ -309,7 +305,7 @@ class _CreateEditTemplateScreenState extends State<CreateTextTemplateScreen> {
                                         onPressed: () {
                                           storyBloc.setImagePositionState(true);
                                         },
-                                        iconImagePath: SvgIconsClass.doneIcon,
+                                        iconImagePath: IconsClass.doneIcon,
                                       ),
                                     ),
                                     Text(
@@ -331,8 +327,8 @@ class _CreateEditTemplateScreenState extends State<CreateTextTemplateScreen> {
                         child: Column(
                           children: [
                             SizedBox(
-                              height: 35,
-                              width: 35,
+                              height: 40,
+                              width: 40,
                               child: BounceButton(
                                 onPressed: () {
                                   if (storyBloc.getChildrenStickers.length >
@@ -350,7 +346,7 @@ class _CreateEditTemplateScreenState extends State<CreateTextTemplateScreen> {
                                     }
                                   }
                                 },
-                                iconImagePath: SvgIconsClass.undoIcon,
+                                iconImagePath: IconsClass.undoIcon,
                               ),
                             ),
                             Text(
@@ -477,8 +473,8 @@ class _CreateEditTemplateScreenState extends State<CreateTextTemplateScreen> {
                     child: Column(
                       children: [
                         SizedBox(
-                          height: 40,
-                          width: 40,
+                          height: 35,
+                          width: 35,
                           child: BounceButton(
                             onPressed: () {
                               if (storyBloc.getImagePositionState == false)
@@ -504,13 +500,13 @@ class _CreateEditTemplateScreenState extends State<CreateTextTemplateScreen> {
                                   ),
                                 );
                             },
-                            iconImagePath: SvgIconsClass.stickerIcon,
+                            iconImagePath: IconsClass.stickerIcon,
                           ),
                         ),
                         Text(
                           'Стикеры',
                           style: TextStyle(
-                            fontSize: 11,
+                            fontSize: 10,
                             fontWeight: FontWeight.w300,
                           ),
                         )
@@ -522,8 +518,8 @@ class _CreateEditTemplateScreenState extends State<CreateTextTemplateScreen> {
                     child: Column(
                       children: [
                         SizedBox(
-                          height: 40,
-                          width: 40,
+                          height: 35,
+                          width: 35,
                           child: BounceButton(
                             onPressed: () => displayCustomDialog(
                                 context,
@@ -532,7 +528,7 @@ class _CreateEditTemplateScreenState extends State<CreateTextTemplateScreen> {
                                 true,
                                 null,
                                 _goBack),
-                            iconImagePath: SvgIconsClass.closeIcon,
+                            iconImagePath: IconsClass.closeIcon,
                           ),
                         ),
                         Text(
@@ -568,18 +564,16 @@ class _CreateEditTemplateScreenState extends State<CreateTextTemplateScreen> {
                                       ),
                                     ));
                               },
-                              iconImagePath: SvgIconsClass.libraryIcon,
+                              iconImagePath: IconsClass.libraryIcon,
                             ),
                           ),
-                          FittedBox(
-                            child: Text(
-                              'База',
-                              textAlign: TextAlign.center,
-                              style: TextStyle(
-                                color: AppStyle.colorDark,
-                                fontSize: 10,
-                                fontWeight: FontWeight.w300,
-                              ),
+                          Text(
+                            'База',
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              color: AppStyle.colorDark,
+                              fontSize: 10,
+                              fontWeight: FontWeight.w300,
                             ),
                           )
                         ],
@@ -591,17 +585,15 @@ class _CreateEditTemplateScreenState extends State<CreateTextTemplateScreen> {
                             width: 35,
                             child: BounceButton(
                               onPressed: () => storyBloc.setFontSize(),
-                              iconImagePath: SvgIconsClass.textSelectIcon,
+                              iconImagePath: IconsClass.textSizeIcon,
                             ),
                           ),
-                          FittedBox(
-                            child: Text(
-                              'Размер',
-                              style: TextStyle(
-                                color: AppStyle.colorDark,
-                                fontSize: 10,
-                                fontWeight: FontWeight.w300,
-                              ),
+                          Text(
+                            'Размер',
+                            style: TextStyle(
+                              color: AppStyle.colorDark,
+                              fontSize: 10,
+                              fontWeight: FontWeight.w300,
                             ),
                           )
                         ],
@@ -615,19 +607,16 @@ class _CreateEditTemplateScreenState extends State<CreateTextTemplateScreen> {
                               onPressed: () {
                                 storyBloc.setTextAlign();
                               },
-                              iconImagePath: SvgIconsClass.textAlignIcon,
+                              iconImagePath: IconsClass.textAlignIcon,
                             ),
                           ),
-                          FittedBox(
-                            fit: BoxFit.cover,
-                            child: Text(
-                              'Ровнять',
-                              textAlign: TextAlign.center,
-                              style: TextStyle(
-                                color: AppStyle.colorDark,
-                                fontSize: 10,
-                                fontWeight: FontWeight.w300,
-                              ),
+                          Text(
+                            'Ровнять',
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              color: AppStyle.colorDark,
+                              fontSize: 10,
+                              fontWeight: FontWeight.w300,
                             ),
                           )
                         ],
@@ -641,7 +630,7 @@ class _CreateEditTemplateScreenState extends State<CreateTextTemplateScreen> {
                               onPressed: () {
                                 storyBloc.setTextColor();
                               },
-                              iconImagePath: SvgIconsClass.fillColorIcon,
+                              iconImagePath: IconsClass.fillColorIcon,
                             ),
                           ),
                           Text(
@@ -662,7 +651,7 @@ class _CreateEditTemplateScreenState extends State<CreateTextTemplateScreen> {
                             width: 35,
                             child: BounceButton(
                               onPressed: () => storyBloc.setFontCustomWeight(),
-                              iconImagePath: SvgIconsClass.boldIcon,
+                              iconImagePath: IconsClass.boldIcon,
                             ),
                           ),
                           Text(
@@ -680,7 +669,7 @@ class _CreateEditTemplateScreenState extends State<CreateTextTemplateScreen> {
                         children: [
                           SizedBox(
                             height: 35,
-                            width: 32,
+                            width: 35,
                             child: BounceButton(
                               onPressed: () => displayCustomDialog(
                                   context,
@@ -689,7 +678,7 @@ class _CreateEditTemplateScreenState extends State<CreateTextTemplateScreen> {
                                   true,
                                   null,
                                   _goBack),
-                              iconImagePath: SvgIconsClass.closeIcon,
+                              iconImagePath: IconsClass.closeIcon,
                             ),
                           ),
                           Text(
@@ -716,19 +705,16 @@ class _CreateEditTemplateScreenState extends State<CreateTextTemplateScreen> {
                               onPressed: () {
                                 storyBloc.setTextAlign();
                               },
-                              iconImagePath: SvgIconsClass.textAlignIcon,
+                              iconImagePath: IconsClass.textAlignIcon,
                             ),
                           ),
-                          FittedBox(
-                            fit: BoxFit.cover,
-                            child: Text(
-                              'Ровнять',
-                              textAlign: TextAlign.center,
-                              style: TextStyle(
-                                color: AppStyle.colorDark,
-                                fontSize: 10,
-                                fontWeight: FontWeight.w300,
-                              ),
+                          Text(
+                            'Ровнять',
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              color: AppStyle.colorDark,
+                              fontSize: 10,
+                              fontWeight: FontWeight.w300,
                             ),
                           )
                         ],
@@ -742,7 +728,7 @@ class _CreateEditTemplateScreenState extends State<CreateTextTemplateScreen> {
                               onPressed: () {
                                 storyBloc.setTextColor();
                               },
-                              iconImagePath: SvgIconsClass.fillColorIcon,
+                              iconImagePath: IconsClass.fillColorIcon,
                             ),
                           ),
                           Text(
@@ -763,17 +749,15 @@ class _CreateEditTemplateScreenState extends State<CreateTextTemplateScreen> {
                             width: 35,
                             child: BounceButton(
                               onPressed: () => storyBloc.setTextBaseFontSize(),
-                              iconImagePath: SvgIconsClass.textSizeIcon,
+                              iconImagePath: IconsClass.textSizeIcon,
                             ),
                           ),
-                          FittedBox(
-                            child: Text(
-                              'Размер',
-                              style: TextStyle(
-                                color: AppStyle.colorDark,
-                                fontSize: 10,
-                                fontWeight: FontWeight.w300,
-                              ),
+                          Text(
+                            'Размер',
+                            style: TextStyle(
+                              color: AppStyle.colorDark,
+                              fontSize: 10,
+                              fontWeight: FontWeight.w300,
                             ),
                           )
                         ],
@@ -785,7 +769,7 @@ class _CreateEditTemplateScreenState extends State<CreateTextTemplateScreen> {
                             children: [
                               SizedBox(
                                 height: 35,
-                                width: 32,
+                                width: 35,
                                 child: BounceButton(
                                   onPressed: () => displayCustomDialog(
                                       context,
@@ -794,7 +778,7 @@ class _CreateEditTemplateScreenState extends State<CreateTextTemplateScreen> {
                                       true,
                                       null,
                                       _goBack),
-                                  iconImagePath: SvgIconsClass.closeIcon,
+                                  iconImagePath: IconsClass.closeIcon,
                                 ),
                               ),
                               Text(
@@ -818,7 +802,7 @@ class _CreateEditTemplateScreenState extends State<CreateTextTemplateScreen> {
   Future<void> _capturePng() {
     final storyBloc = Provider.of<StoryBloc>(context, listen: false);
     storyBloc.setSavingState(true);
-    return new Future.delayed(const Duration(milliseconds: 25), () async {
+    return Future.delayed(const Duration(milliseconds: 25), () async {
       RenderRepaintBoundary boundary =
           globalKey.currentContext.findRenderObject();
 

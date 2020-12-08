@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:alfa_project/core/data/models/dialog_type.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -114,6 +116,9 @@ class CustomActionDialog extends StatelessWidget {
                   ? "Картинка успешно сохранена!"
                   : "Ошибка при сохранении картинки!",
               textAlign: TextAlign.center,
+              style: TextStyle(
+                fontSize: 18,
+              ),
             ),
             Column(
               mainAxisSize: MainAxisSize.min,
@@ -125,20 +130,23 @@ class CustomActionDialog extends StatelessWidget {
                         ? "Можете посмотреть в галереи."
                         : "Повторите попытку еще раз, проверьте еще раз доступ.",
                     textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontSize: 15,
+                    ),
                   ),
                 ),
                 FlatButton(
-                  color: Colors.red[100],
+                  color: Colors.green[100],
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(8),
                   ),
                   child: Text(
                     'Ok',
                     style: TextStyle(
-                      color: Colors.red,
+                      color: Colors.green,
                     ),
                   ),
-                  onPressed: () => Navigator.of(context).pop(true),
+                  onPressed: onPressed,
                 ),
               ],
             ),

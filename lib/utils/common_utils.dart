@@ -52,7 +52,7 @@ Future<bool> displayCustomDialog(
   String negativeText,
   String positiveText,
 ]) {
-  return !Platform.isAndroid == true
+  return Platform.isAndroid
       ? showDialog(
           context: context,
           barrierDismissible: barrierDismissible,

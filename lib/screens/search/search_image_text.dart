@@ -81,7 +81,7 @@ class _SearchPickerScreenState extends State<SearchPickerScreen> {
                             bloc.setClearData();
                             Navigator.pop(context);
                           },
-                          iconImagePath: SvgIconsClass.closeIcon,
+                          iconImagePath: IconsClass.closeIcon,
                         ),
                       ),
                     ),

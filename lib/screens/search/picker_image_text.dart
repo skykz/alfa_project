@@ -95,7 +95,7 @@ class StickerTextPicker extends StatelessWidget {
                             bloc.setClearData();
                             Navigator.pop(context);
                           },
-                          iconImagePath: SvgIconsClass.closeIcon,
+                          iconImagePath: IconsClass.closeIcon,
                         ),
                       ),
                     ),

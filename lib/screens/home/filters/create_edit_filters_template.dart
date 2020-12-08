@@ -97,7 +97,7 @@ class _CreateEditFilterTemplateScreenState
       child: SafeArea(
         child: Scaffold(
           resizeToAvoidBottomPadding: false,
-          backgroundColor: storyBloc.getBackColor,
+          // backgroundColor: storyBloc.getBackColor,
           body: GestureDetector(
             onTap: () => FocusScope.of(context).unfocus(),
             child: Stack(
@@ -107,7 +107,7 @@ class _CreateEditFilterTemplateScreenState
                   return Padding(
                     padding: EdgeInsets.symmetric(
                         vertical: storyBloc.getIsStoryTemplate
-                            ? 7
+                            ? 0
                             : constraints.maxHeight * 0.16),
                     child: RepaintBoundary(
                       key: globalKey,
@@ -220,7 +220,7 @@ class _CreateEditFilterTemplateScreenState
                                         true,
                                         null,
                                         _goBack),
-                                    iconImagePath: SvgIconsClass.closeIcon,
+                                    iconImagePath: IconsClass.closeIcon,
                                   ),
                                 ),
                                 const Text(
@@ -252,7 +252,7 @@ class _CreateEditFilterTemplateScreenState
                                       storyBloc.setClearStoryData();
                                       Navigator.pop(context);
                                     },
-                                    iconImagePath: SvgIconsClass.closeIcon,
+                                    iconImagePath: IconsClass.closeIcon,
                                   ),
                                 ),
                                 Text(
@@ -285,7 +285,7 @@ class _CreateEditFilterTemplateScreenState
                                             storyBloc.setTextEnabled(true);
                                           },
                                           iconImagePath:
-                                              SvgIconsClass.textSizeIcon,
+                                              IconsClass.textSizeIcon,
                                         ),
                                       ),
                                       Text(
@@ -321,8 +321,7 @@ class _CreateEditFilterTemplateScreenState
                                               ),
                                             );
                                           },
-                                          iconImagePath:
-                                              SvgIconsClass.stickerIcon,
+                                          iconImagePath: IconsClass.stickerIcon,
                                         ),
                                       ),
                                       Text(
@@ -350,7 +349,7 @@ class _CreateEditFilterTemplateScreenState
                                   width: 40,
                                   child: BounceButton(
                                     onPressed: _capturePng,
-                                    iconImagePath: SvgIconsClass.saveIcon,
+                                    iconImagePath: IconsClass.saveIcon,
                                   ),
                                 ),
                                 Text(
@@ -372,7 +371,7 @@ class _CreateEditFilterTemplateScreenState
                                     onPressed: () {
                                       storyBloc.setImagePositionState(true);
                                     },
-                                    iconImagePath: SvgIconsClass.doneIcon,
+                                    iconImagePath: IconsClass.doneIcon,
                                   ),
                                 ),
                                 Text(
@@ -393,7 +392,7 @@ class _CreateEditFilterTemplateScreenState
                                   width: 40,
                                   child: BounceButton(
                                     onPressed: _capturePng,
-                                    iconImagePath: SvgIconsClass.saveIcon,
+                                    iconImagePath: IconsClass.saveIcon,
                                   ),
                                 ),
                                 Text(
@@ -416,7 +415,7 @@ class _CreateEditFilterTemplateScreenState
                                       storyBloc.setTextPosition(true);
                                       FocusScope.of(context).unfocus();
                                     },
-                                    iconImagePath: SvgIconsClass.doneIcon,
+                                    iconImagePath: IconsClass.doneIcon,
                                   ),
                                 ),
                                 Text(
@@ -446,7 +445,7 @@ class _CreateEditFilterTemplateScreenState
                                   else
                                     storyBloc.setUndoImageState(false);
                                 },
-                                iconImagePath: SvgIconsClass.undoIcon,
+                                iconImagePath: IconsClass.undoIcon,
                               ),
                             ),
                             Text(
@@ -481,7 +480,7 @@ class _CreateEditFilterTemplateScreenState
                                         false) storyBloc.setLoading(false);
                                   }
                                 },
-                                iconImagePath: SvgIconsClass.undoIcon,
+                                iconImagePath: IconsClass.undoIcon,
                               ),
                             ),
                             Text(
@@ -624,7 +623,7 @@ class _CreateEditFilterTemplateScreenState
                                 ),
                               );
                             },
-                            iconImagePath: SvgIconsClass.stickerIcon,
+                            iconImagePath: IconsClass.stickerIcon,
                           ),
                         ),
                         Text(
@@ -652,7 +651,7 @@ class _CreateEditFilterTemplateScreenState
                                 true,
                                 null,
                                 _goBack),
-                            iconImagePath: SvgIconsClass.closeIcon,
+                            iconImagePath: IconsClass.closeIcon,
                           ),
                         ),
                         Text(
@@ -691,7 +690,7 @@ class _CreateEditFilterTemplateScreenState
                                       ),
                                     );
                                   },
-                                  iconImagePath: SvgIconsClass.libraryIcon,
+                                  iconImagePath: IconsClass.libraryIcon,
                                 ),
                               ),
                               FittedBox(
@@ -714,7 +713,7 @@ class _CreateEditFilterTemplateScreenState
                                 width: 35,
                                 child: BounceButton(
                                   onPressed: () => storyBloc.setFontSize(),
-                                  iconImagePath: SvgIconsClass.textSelectIcon,
+                                  iconImagePath: IconsClass.textSelectIcon,
                                 ),
                               ),
                               FittedBox(
@@ -738,7 +737,7 @@ class _CreateEditFilterTemplateScreenState
                                   onPressed: () {
                                     storyBloc.setTextAlign();
                                   },
-                                  iconImagePath: SvgIconsClass.textAlignIcon,
+                                  iconImagePath: IconsClass.textAlignIcon,
                                 ),
                               ),
                               FittedBox(
@@ -764,7 +763,7 @@ class _CreateEditFilterTemplateScreenState
                                   onPressed: () {
                                     storyBloc.setTextColor();
                                   },
-                                  iconImagePath: SvgIconsClass.fillColorIcon,
+                                  iconImagePath: IconsClass.fillColorIcon,
                                 ),
                               ),
                               Text(
@@ -786,7 +785,7 @@ class _CreateEditFilterTemplateScreenState
                                 child: BounceButton(
                                   onPressed: () =>
                                       storyBloc.setFontCustomWeight(),
-                                  iconImagePath: SvgIconsClass.boldIcon,
+                                  iconImagePath: IconsClass.boldIcon,
                                 ),
                               ),
                               Text(
@@ -813,7 +812,7 @@ class _CreateEditFilterTemplateScreenState
                                       true,
                                       null,
                                       _goBack),
-                                  iconImagePath: SvgIconsClass.closeIcon,
+                                  iconImagePath: IconsClass.closeIcon,
                                 ),
                               ),
                               Text(
@@ -840,7 +839,7 @@ class _CreateEditFilterTemplateScreenState
                                   onPressed: () {
                                     storyBloc.setTextAlign();
                                   },
-                                  iconImagePath: SvgIconsClass.textAlignIcon,
+                                  iconImagePath: IconsClass.textAlignIcon,
                                 ),
                               ),
                               FittedBox(
@@ -866,7 +865,7 @@ class _CreateEditFilterTemplateScreenState
                                   onPressed: () {
                                     storyBloc.setTextColor();
                                   },
-                                  iconImagePath: SvgIconsClass.fillColorIcon,
+                                  iconImagePath: IconsClass.fillColorIcon,
                                 ),
                               ),
                               Text(
@@ -888,7 +887,7 @@ class _CreateEditFilterTemplateScreenState
                                 child: BounceButton(
                                   onPressed: () =>
                                       storyBloc.setTextBaseFontSize(),
-                                  iconImagePath: SvgIconsClass.textSizeIcon,
+                                  iconImagePath: IconsClass.textSizeIcon,
                                 ),
                               ),
                               FittedBox(
@@ -919,7 +918,7 @@ class _CreateEditFilterTemplateScreenState
                                           true,
                                           null,
                                           _goBack),
-                                      iconImagePath: SvgIconsClass.closeIcon,
+                                      iconImagePath: IconsClass.closeIcon,
                                     ),
                                   ),
                                   Text(

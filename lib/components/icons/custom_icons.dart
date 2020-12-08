@@ -1,32 +1,20 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
 
-class SvgIconsClass {
+class IconsClass {
   final Color color;
-  SvgIconsClass({this.color});
+  IconsClass({this.color});
 
-  static SvgPicture doneIcon =
-      SvgPicture.asset('assets/images/svg/custom_icons/icon_done.svg');
-  static SvgPicture boldIcon =
-      SvgPicture.asset('assets/images/svg/custom_icons/icon_bold.svg');
-  static SvgPicture closeIcon =
-      SvgPicture.asset('assets/images/svg/custom_icons/icon_close.svg');
-  static SvgPicture deleteIcon =
-      SvgPicture.asset('assets/images/svg/custom_icons/icon_trash.svg');
-  static SvgPicture fillColorIcon =
-      SvgPicture.asset('assets/images/svg/custom_icons/icon_color.svg');
-  static SvgPicture libraryIcon =
-      SvgPicture.asset('assets/images/svg/custom_icons/icon_lib.svg');
-  static SvgPicture saveIcon =
-      SvgPicture.asset('assets/images/svg/custom_icons/icon_save.svg');
-  static SvgPicture stickerIcon =
-      SvgPicture.asset('assets/images/svg/custom_icons/icon_sticker.svg');
-  static SvgPicture textAlignIcon =
-      SvgPicture.asset('assets/images/svg/custom_icons/icon_alignment.svg');
-  static SvgPicture textSelectIcon =
-      SvgPicture.asset('assets/images/svg/custom_icons/icon_text.svg');
-  static SvgPicture textSizeIcon =
-      SvgPicture.asset('assets/images/svg/custom_icons/icon_txt_size.svg');
-  static SvgPicture undoIcon =
-      SvgPicture.asset('assets/images/svg/custom_icons/icon_undo.svg');
+  static Image doneIcon = Image.asset('assets/images/png/icon_done.png');
+  static Image boldIcon = Image.asset('assets/images/png/icon_bold.png');
+  static Image closeIcon = Image.asset('assets/images/png/icon_close.png');
+  static Image fillColorIcon = Image.asset('assets/images/png/icon_color.png');
+  static Image libraryIcon = Image.asset('assets/images/png/icon_lib.png');
+  static Image saveIcon = Image.asset('assets/images/png/icon_save.png');
+  static Image stickerIcon = Image.asset('assets/images/png/icon_sticker.png');
+  static Image textAlignIcon =
+      Image.asset('assets/images/png/icon_alignment.png');
+  static Image textSelectIcon = Image.asset('assets/images/png/icon_text.png');
+  static Image textSizeIcon =
+      Image.asset('assets/images/png/icon_txt_size.png');
+  static Image undoIcon = Image.asset('assets/images/png/icon_undo.png');
 }

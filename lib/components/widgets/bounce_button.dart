@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
 
 class BounceButton extends StatefulWidget {
-  final SvgPicture iconImagePath;
+  final Image iconImagePath;
   final Function onPressed;
   final Icon icon;
   final bool isShadow;

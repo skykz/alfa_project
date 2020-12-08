@@ -55,13 +55,11 @@ class _HomeMainScreenState extends State<HomeMainScreen> {
                   padding: EdgeInsets.symmetric(
                       vertical: storyBloc.getIsStoryTemplate
                           ? 0
-                          : constraints.maxHeight * 0.13),
-                  child: Center(
-                    child: RepaintBoundary(
-                      key: globalKey,
-                      child: Scaffold(
-                        backgroundColor: widget.mainColor,
-                      ),
+                          : constraints.maxHeight * 0.15),
+                  child: RepaintBoundary(
+                    key: globalKey,
+                    child: Scaffold(
+                      backgroundColor: widget.mainColor,
                     ),
                   ),
                 );
@@ -87,8 +85,8 @@ class _HomeMainScreenState extends State<HomeMainScreen> {
                         child: Column(
                           children: [
                             SizedBox(
-                              height: 40,
-                              width: 40,
+                              height: 35,
+                              width: 35,
                               child: BounceButton(
                                 onPressed: () {
                                   Navigator.pushReplacement(
@@ -98,13 +96,13 @@ class _HomeMainScreenState extends State<HomeMainScreen> {
                                     ),
                                   );
                                 },
-                                iconImagePath: SvgIconsClass.textSizeIcon,
+                                iconImagePath: IconsClass.textSelectIcon,
                               ),
                             ),
                             const Text(
                               'Текст',
                               style: TextStyle(
-                                fontSize: 11,
+                                fontSize: 10,
                                 fontWeight: FontWeight.w300,
                               ),
                             )
@@ -117,8 +115,8 @@ class _HomeMainScreenState extends State<HomeMainScreen> {
                         child: Column(
                           children: [
                             SizedBox(
-                              height: 40,
-                              width: 40,
+                              height: 35,
+                              width: 35,
                               child: BounceButton(
                                 onPressed: () {
                                   Navigator.pushReplacement(
@@ -131,13 +129,13 @@ class _HomeMainScreenState extends State<HomeMainScreen> {
                                     ),
                                   );
                                 },
-                                iconImagePath: SvgIconsClass.stickerIcon,
+                                iconImagePath: IconsClass.stickerIcon,
                               ),
                             ),
                             const Text(
                               'Стикеры',
                               style: TextStyle(
-                                fontSize: 11,
+                                fontSize: 10,
                                 fontWeight: FontWeight.w300,
                               ),
                             )
@@ -165,14 +163,13 @@ class _HomeMainScreenState extends State<HomeMainScreen> {
                           width: 40,
                           child: BounceButton(
                             onPressed: _capturePng,
-                            iconImagePath: SvgIconsClass.saveIcon,
+                            iconImagePath: IconsClass.saveIcon,
                           ),
                         ),
                         const Text(
                           'Сохранить',
                           style: TextStyle(
-                            height: 1.5,
-                            fontSize: 11,
+                            fontSize: 10,
                             fontWeight: FontWeight.w300,
                           ),
                         ),
@@ -210,7 +207,7 @@ class _HomeMainScreenState extends State<HomeMainScreen> {
   Future<void> _capturePng() {
     final storyBloc = Provider.of<StoryBloc>(context, listen: false);
     storyBloc.setSavingState(true);
-    return new Future.delayed(const Duration(milliseconds: 5005), () async {
+    return Future.delayed(const Duration(milliseconds: 5005), () async {
       RenderRepaintBoundary boundary =
           globalKey.currentContext.findRenderObject();
 
