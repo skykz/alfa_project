@@ -85,7 +85,7 @@ class _CreateEditFilterTemplateScreenState
   @override
   Widget build(BuildContext context) {
     final storyBloc = Provider.of<StoryBloc>(context, listen: true);
-
+    final width = MediaQuery.of(context).size.width;
     return WillPopScope(
       onWillPop: () async => displayCustomDialog(
           context,
@@ -97,7 +97,6 @@ class _CreateEditFilterTemplateScreenState
       child: SafeArea(
         child: Scaffold(
           resizeToAvoidBottomPadding: false,
-          // backgroundColor: storyBloc.getBackColor,
           body: GestureDetector(
             onTap: () => FocusScope.of(context).unfocus(),
             child: Stack(
@@ -108,7 +107,7 @@ class _CreateEditFilterTemplateScreenState
                     padding: EdgeInsets.symmetric(
                         vertical: storyBloc.getIsStoryTemplate
                             ? 0
-                            : constraints.maxHeight * 0.16),
+                            : constraints.maxHeight * 0.15),
                     child: RepaintBoundary(
                       key: globalKey,
                       child: Container(
@@ -171,6 +170,7 @@ class _CreateEditFilterTemplateScreenState
                                   borderRadius: BorderRadius.circular(8),
                                   onTap: () => {},
                                   child: Container(
+                                    height: width,
                                     width: double.infinity,
                                     decoration: BoxDecoration(
                                       image: DecorationImage(
@@ -210,8 +210,8 @@ class _CreateEditFilterTemplateScreenState
                             child: Column(
                               children: [
                                 SizedBox(
-                                  height: 35,
-                                  width: 35,
+                                  height: 40,
+                                  width: 40,
                                   child: BounceButton(
                                     onPressed: () => displayCustomDialog(
                                         context,
@@ -226,8 +226,7 @@ class _CreateEditFilterTemplateScreenState
                                 const Text(
                                   'Закрыть',
                                   style: TextStyle(
-                                    height: 1.5,
-                                    fontSize: 10,
+                                    fontSize: 12,
                                     fontWeight: FontWeight.w300,
                                     color: Colors.black87,
                                   ),
@@ -245,8 +244,8 @@ class _CreateEditFilterTemplateScreenState
                             child: Column(
                               children: [
                                 SizedBox(
-                                  height: 35,
-                                  width: 35,
+                                  height: 40,
+                                  width: 40,
                                   child: BounceButton(
                                     onPressed: () {
                                       storyBloc.setClearStoryData();
@@ -258,8 +257,7 @@ class _CreateEditFilterTemplateScreenState
                                 Text(
                                   'Закрыть',
                                   style: TextStyle(
-                                    height: 1.5,
-                                    fontSize: 10,
+                                    fontSize: 12,
                                     fontWeight: FontWeight.w300,
                                     color: Colors.black87,
                                   ),
@@ -278,8 +276,8 @@ class _CreateEditFilterTemplateScreenState
                                   child: Column(
                                     children: [
                                       SizedBox(
-                                        height: 35,
-                                        width: 35,
+                                        height: 40,
+                                        width: 40,
                                         child: BounceButton(
                                           onPressed: () {
                                             storyBloc.setTextEnabled(true);
@@ -291,7 +289,7 @@ class _CreateEditFilterTemplateScreenState
                                       Text(
                                         'Текст',
                                         style: TextStyle(
-                                          fontSize: 11,
+                                          fontSize: 12,
                                           fontWeight: FontWeight.w300,
                                         ),
                                       )
@@ -304,8 +302,8 @@ class _CreateEditFilterTemplateScreenState
                                   child: Column(
                                     children: [
                                       SizedBox(
-                                        height: 35,
-                                        width: 35,
+                                        height: 40,
+                                        width: 40,
                                         child: BounceButton(
                                           onPressed: () {
                                             Navigator.push(
@@ -327,7 +325,7 @@ class _CreateEditFilterTemplateScreenState
                                       Text(
                                         'Стикеры',
                                         style: TextStyle(
-                                          fontSize: 11,
+                                          fontSize: 12,
                                           fontWeight: FontWeight.w300,
                                         ),
                                       )
@@ -338,15 +336,15 @@ class _CreateEditFilterTemplateScreenState
                             ),
                           ),
                 Positioned(
-                  bottom: 20,
+                  bottom: 10,
                   right: 10,
                   child: !storyBloc.getTextEnabled
                       ? storyBloc.getImagePositionState
                           ? Column(
                               children: [
                                 SizedBox(
-                                  height: 40,
-                                  width: 40,
+                                  height: 45,
+                                  width: 45,
                                   child: BounceButton(
                                     onPressed: _capturePng,
                                     iconImagePath: IconsClass.saveIcon,
@@ -355,7 +353,7 @@ class _CreateEditFilterTemplateScreenState
                                 Text(
                                   'Сохранить',
                                   style: TextStyle(
-                                    fontSize: 10,
+                                    fontSize: 12,
                                     fontWeight: FontWeight.w300,
                                     color: AppStyle.colorDark,
                                   ),
@@ -365,8 +363,8 @@ class _CreateEditFilterTemplateScreenState
                           : Column(
                               children: [
                                 SizedBox(
-                                  height: 40,
-                                  width: 40,
+                                  height: 45,
+                                  width: 45,
                                   child: BounceButton(
                                     onPressed: () {
                                       storyBloc.setImagePositionState(true);
@@ -377,7 +375,7 @@ class _CreateEditFilterTemplateScreenState
                                 Text(
                                   'Готово',
                                   style: TextStyle(
-                                    fontSize: 10,
+                                    fontSize: 12,
                                     fontWeight: FontWeight.w300,
                                     color: AppStyle.colorDark,
                                   ),
@@ -388,8 +386,8 @@ class _CreateEditFilterTemplateScreenState
                           ? Column(
                               children: [
                                 SizedBox(
-                                  height: 40,
-                                  width: 40,
+                                  height: 45,
+                                  width: 45,
                                   child: BounceButton(
                                     onPressed: _capturePng,
                                     iconImagePath: IconsClass.saveIcon,
@@ -398,7 +396,7 @@ class _CreateEditFilterTemplateScreenState
                                 Text(
                                   'Сохранить',
                                   style: TextStyle(
-                                    fontSize: 10,
+                                    fontSize: 12,
                                     fontWeight: FontWeight.w300,
                                     color: AppStyle.colorDark,
                                   ),
@@ -408,8 +406,8 @@ class _CreateEditFilterTemplateScreenState
                           : Column(
                               children: [
                                 SizedBox(
-                                  height: 40,
-                                  width: 40,
+                                  height: 45,
+                                  width: 45,
                                   child: BounceButton(
                                     onPressed: () {
                                       storyBloc.setTextPosition(true);
@@ -421,7 +419,7 @@ class _CreateEditFilterTemplateScreenState
                                 Text(
                                   'Готово',
                                   style: TextStyle(
-                                    fontSize: 10,
+                                    fontSize: 12,
                                     fontWeight: FontWeight.w300,
                                     color: AppStyle.colorDark,
                                   ),
@@ -431,13 +429,13 @@ class _CreateEditFilterTemplateScreenState
                 ),
                 storyBloc.getImagePositionState
                     ? Positioned(
-                        bottom: 20,
+                        bottom: 10,
                         left: 10,
                         child: Column(
                           children: [
                             SizedBox(
-                              height: 35,
-                              width: 35,
+                              height: 45,
+                              width: 45,
                               child: BounceButton(
                                 onPressed: () {
                                   if (storyBloc.getChildrenStickers.length > 0)
@@ -451,7 +449,7 @@ class _CreateEditFilterTemplateScreenState
                             Text(
                               'Вернуть',
                               style: TextStyle(
-                                fontSize: 10,
+                                fontSize: 12,
                                 fontWeight: FontWeight.w300,
                                 color: AppStyle.colorDark,
                               ),
@@ -462,13 +460,13 @@ class _CreateEditFilterTemplateScreenState
                     : const SizedBox(),
                 storyBloc.getTextEnabled
                     ? Positioned(
-                        bottom: 20,
+                        bottom: 10,
                         left: 10,
                         child: Column(
                           children: [
                             SizedBox(
-                              height: 35,
-                              width: 35,
+                              height: 45,
+                              width: 45,
                               child: BounceButton(
                                 onPressed: () {
                                   if (storyBloc.getChildrenStickers.length >
@@ -486,7 +484,7 @@ class _CreateEditFilterTemplateScreenState
                             Text(
                               'Вернуть',
                               style: TextStyle(
-                                fontSize: 10,
+                                fontSize: 12,
                                 fontWeight: FontWeight.w300,
                                 color: AppStyle.colorDark,
                               ),
@@ -504,40 +502,41 @@ class _CreateEditFilterTemplateScreenState
                             right: 50,
                             child: Column(
                               children: [
-                                Container(
-                                  decoration: BoxDecoration(boxShadow: [
-                                    BoxShadow(
-                                      color: Colors.white.withOpacity(0.5),
-                                      blurRadius: 10,
-                                    ),
-                                  ]),
-                                  child: SliderTheme(
-                                    data: SliderTheme.of(context).copyWith(
-                                        thumbShape: RoundSliderThumbShape()),
-                                    child: Slider(
-                                      value: storyBloc.textWidthContainer,
-                                      max: _valueWidth * 0.75,
-                                      min: 100,
-                                      onChanged: (newValue) {
-                                        storyBloc
-                                            .setTextWidthContainer(newValue);
-                                      },
+                                SliderTheme(
+                                  data: SliderTheme.of(context).copyWith(
+                                    thumbShape: RoundSliderThumbShape(
+                                      elevation: 10,
+                                      enabledThumbRadius: 8,
+                                      pressedElevation: 12,
                                     ),
                                   ),
+                                  child: Slider(
+                                    activeColor: Colors.white,
+                                    inactiveColor:
+                                        Colors.white.withOpacity(0.5),
+                                    value: storyBloc.textWidthContainer,
+                                    max: _valueWidth * 0.75,
+                                    min: 100,
+                                    onChanged: (newValue) {
+                                      storyBloc.setTextWidthContainer(newValue);
+                                    },
+                                  ),
                                 ),
-                                Container(
-                                  decoration: BoxDecoration(boxShadow: [
-                                    BoxShadow(
-                                      color: Colors.white.withOpacity(0.5),
-                                      blurRadius: 10,
-                                    ),
-                                  ]),
+                                SizedBox(
+                                  height: 16,
                                   child: SliderTheme(
                                     data: SliderTheme.of(context).copyWith(
-                                      thumbShape: RoundSliderThumbShape(),
+                                      thumbShape: RoundSliderThumbShape(
+                                        elevation: 10,
+                                        enabledThumbRadius: 8,
+                                        pressedElevation: 12,
+                                      ),
                                     ),
                                     child: Slider(
                                       value: storyBloc.textHeightContainer,
+                                      activeColor: Colors.white,
+                                      inactiveColor:
+                                          Colors.white.withOpacity(0.5),
                                       max: _valueHeight * 0.75,
                                       min: 100,
                                       onChanged: (newValue) {
@@ -629,7 +628,7 @@ class _CreateEditFilterTemplateScreenState
                         Text(
                           'Стикеры',
                           style: TextStyle(
-                            fontSize: 11,
+                            fontSize: 12,
                             fontWeight: FontWeight.w300,
                           ),
                         )
@@ -657,7 +656,7 @@ class _CreateEditFilterTemplateScreenState
                         Text(
                           'Удалить',
                           style: TextStyle(
-                            fontSize: 10,
+                            fontSize: 12,
                             fontWeight: FontWeight.w300,
                             color: AppStyle.colorDark,
                           ),
@@ -675,8 +674,8 @@ class _CreateEditFilterTemplateScreenState
                           Column(
                             children: [
                               SizedBox(
-                                height: 35,
-                                width: 35,
+                                height: 40,
+                                width: 40,
                                 child: BounceButton(
                                   onPressed: () {
                                     Navigator.push(
@@ -699,7 +698,7 @@ class _CreateEditFilterTemplateScreenState
                                   textAlign: TextAlign.center,
                                   style: TextStyle(
                                     color: AppStyle.colorDark,
-                                    fontSize: 10,
+                                    fontSize: 12,
                                     fontWeight: FontWeight.w300,
                                   ),
                                 ),
@@ -709,8 +708,8 @@ class _CreateEditFilterTemplateScreenState
                           Column(
                             children: [
                               SizedBox(
-                                height: 35,
-                                width: 35,
+                                height: 40,
+                                width: 40,
                                 child: BounceButton(
                                   onPressed: () => storyBloc.setFontSize(),
                                   iconImagePath: IconsClass.textSelectIcon,
@@ -721,7 +720,7 @@ class _CreateEditFilterTemplateScreenState
                                   'Размер',
                                   style: TextStyle(
                                     color: AppStyle.colorDark,
-                                    fontSize: 10,
+                                    fontSize: 12,
                                     fontWeight: FontWeight.w300,
                                   ),
                                 ),
@@ -731,8 +730,8 @@ class _CreateEditFilterTemplateScreenState
                           Column(
                             children: [
                               SizedBox(
-                                height: 35,
-                                width: 35,
+                                height: 40,
+                                width: 40,
                                 child: BounceButton(
                                   onPressed: () {
                                     storyBloc.setTextAlign();
@@ -747,7 +746,7 @@ class _CreateEditFilterTemplateScreenState
                                   textAlign: TextAlign.center,
                                   style: TextStyle(
                                     color: AppStyle.colorDark,
-                                    fontSize: 10,
+                                    fontSize: 12,
                                     fontWeight: FontWeight.w300,
                                   ),
                                 ),
@@ -757,8 +756,8 @@ class _CreateEditFilterTemplateScreenState
                           Column(
                             children: [
                               SizedBox(
-                                height: 35,
-                                width: 35,
+                                height: 40,
+                                width: 40,
                                 child: BounceButton(
                                   onPressed: () {
                                     storyBloc.setTextColor();
@@ -770,7 +769,7 @@ class _CreateEditFilterTemplateScreenState
                                 'Цвет',
                                 textAlign: TextAlign.center,
                                 style: TextStyle(
-                                  fontSize: 10,
+                                  fontSize: 12,
                                   color: AppStyle.colorDark,
                                   fontWeight: FontWeight.w300,
                                 ),
@@ -780,8 +779,8 @@ class _CreateEditFilterTemplateScreenState
                           Column(
                             children: [
                               SizedBox(
-                                height: 35,
-                                width: 35,
+                                height: 40,
+                                width: 40,
                                 child: BounceButton(
                                   onPressed: () =>
                                       storyBloc.setFontCustomWeight(),
@@ -792,7 +791,7 @@ class _CreateEditFilterTemplateScreenState
                                 'Толщина',
                                 textAlign: TextAlign.center,
                                 style: TextStyle(
-                                  fontSize: 10,
+                                  fontSize: 12,
                                   color: AppStyle.colorDark,
                                   fontWeight: FontWeight.w300,
                                 ),
@@ -802,23 +801,21 @@ class _CreateEditFilterTemplateScreenState
                           Column(
                             children: [
                               SizedBox(
-                                height: 35,
-                                width: 32,
+                                height: 40,
+                                width: 40,
                                 child: BounceButton(
-                                  onPressed: () => displayCustomDialog(
-                                      context,
-                                      "Вы точно хотите покинуть эту страницу?\n",
-                                      DialogType.AlertDialog,
-                                      true,
-                                      null,
-                                      _goBack),
+                                  onPressed: () {
+                                    storyBloc.setUndoTextState(false);
+                                    if (storyBloc.getImagePositionState ==
+                                        false) storyBloc.setLoading(false);
+                                  },
                                   iconImagePath: IconsClass.closeIcon,
                                 ),
                               ),
                               Text(
                                 'Удалить',
                                 style: TextStyle(
-                                  fontSize: 10,
+                                  fontSize: 12,
                                   fontWeight: FontWeight.w300,
                                   color: AppStyle.colorDark,
                                 ),
@@ -833,8 +830,8 @@ class _CreateEditFilterTemplateScreenState
                           Column(
                             children: [
                               SizedBox(
-                                height: 35,
-                                width: 35,
+                                height: 40,
+                                width: 40,
                                 child: BounceButton(
                                   onPressed: () {
                                     storyBloc.setTextAlign();
@@ -849,7 +846,7 @@ class _CreateEditFilterTemplateScreenState
                                   textAlign: TextAlign.center,
                                   style: TextStyle(
                                     color: AppStyle.colorDark,
-                                    fontSize: 10,
+                                    fontSize: 12,
                                     fontWeight: FontWeight.w300,
                                   ),
                                 ),
@@ -859,8 +856,8 @@ class _CreateEditFilterTemplateScreenState
                           Column(
                             children: [
                               SizedBox(
-                                height: 35,
-                                width: 35,
+                                height: 40,
+                                width: 40,
                                 child: BounceButton(
                                   onPressed: () {
                                     storyBloc.setTextColor();
@@ -872,7 +869,7 @@ class _CreateEditFilterTemplateScreenState
                                 'Цвет',
                                 textAlign: TextAlign.center,
                                 style: TextStyle(
-                                  fontSize: 10,
+                                  fontSize: 12,
                                   color: AppStyle.colorDark,
                                   fontWeight: FontWeight.w300,
                                 ),
@@ -882,8 +879,8 @@ class _CreateEditFilterTemplateScreenState
                           Column(
                             children: [
                               SizedBox(
-                                height: 35,
-                                width: 35,
+                                height: 40,
+                                width: 40,
                                 child: BounceButton(
                                   onPressed: () =>
                                       storyBloc.setTextBaseFontSize(),
@@ -895,7 +892,7 @@ class _CreateEditFilterTemplateScreenState
                                   'Размер',
                                   style: TextStyle(
                                     color: AppStyle.colorDark,
-                                    fontSize: 10,
+                                    fontSize: 12,
                                     fontWeight: FontWeight.w300,
                                   ),
                                 ),
@@ -908,8 +905,8 @@ class _CreateEditFilterTemplateScreenState
                               child: Column(
                                 children: [
                                   SizedBox(
-                                    height: 35,
-                                    width: 32,
+                                    height: 40,
+                                    width: 40,
                                     child: BounceButton(
                                       onPressed: () => displayCustomDialog(
                                           context,
@@ -924,7 +921,7 @@ class _CreateEditFilterTemplateScreenState
                                   Text(
                                     'Удалить',
                                     style: TextStyle(
-                                      fontSize: 10,
+                                      fontSize: 12,
                                       fontWeight: FontWeight.w300,
                                       color: AppStyle.colorDark,
                                     ),
@@ -1080,7 +1077,7 @@ class _CreateEditFilterTemplateScreenState
                                 cursorRadius: Radius.circular(2),
                                 textAlign: storyBloc.getAlign,
                                 style: TextStyle(
-                                  color: AppStyle.colorDark,
+                                  color: storyBloc.getTextColorFirst,
                                   fontSize: storyBloc.getTitleFontSize,
                                   fontFamily: 'Styrene A LC',
                                   fontWeight:
@@ -1112,7 +1109,7 @@ class _CreateEditFilterTemplateScreenState
                                   storyBloc.setTextFieldEnable(false);
                                 },
                                 style: TextStyle(
-                                  color: AppStyle.colorDark,
+                                  color: storyBloc.getTextColorSecond,
                                   fontSize: storyBloc.getBodyFontSize,
                                   fontFamily: 'Styrene A LC',
                                   fontWeight:
@@ -1142,7 +1139,7 @@ class _CreateEditFilterTemplateScreenState
                               storyBloc.getTitle,
                               textAlign: storyBloc.getAlign,
                               style: TextStyle(
-                                color: AppStyle.colorDark,
+                                color: storyBloc.getTextColorFirst,
                                 fontSize: storyBloc.getTitleTextBaseFontSize,
                                 height: 0.95,
                                 fontFamily: 'Styrene A LC',
@@ -1156,7 +1153,7 @@ class _CreateEditFilterTemplateScreenState
                               storyBloc.getBody,
                               textAlign: storyBloc.getAlign,
                               style: TextStyle(
-                                color: AppStyle.colorDark,
+                                color: storyBloc.getTextColorSecond,
                                 fontSize: storyBloc.getBodyTextBaseFontSize,
                                 height: 1,
                                 fontFamily: 'Styrene A LC',

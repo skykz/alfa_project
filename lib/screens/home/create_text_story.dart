@@ -6,6 +6,7 @@ import 'dart:typed_data';
 import 'package:alfa_project/components/icons/custom_icons.dart';
 import 'package:alfa_project/components/styles/app_style.dart';
 import 'package:alfa_project/components/widgets/bounce_button.dart';
+import 'package:alfa_project/components/widgets/fade_transition.dart';
 import 'package:alfa_project/core/data/consts/app_const.dart';
 import 'package:alfa_project/core/data/models/dialog_type.dart';
 import 'package:alfa_project/provider/story_bloc.dart';
@@ -25,6 +26,8 @@ import 'dart:ui' as ui;
 
 import '../../app.dart';
 import 'dart:math' as math;
+
+import 'home_screen.dart';
 
 class CreateTextTemplateScreen extends StatefulWidget {
   final String imageUrl;
@@ -104,7 +107,7 @@ class _CreateEditTemplateScreenState extends State<CreateTextTemplateScreen> {
                 Padding(
                   padding: EdgeInsets.symmetric(
                       vertical:
-                          storyBloc.getIsStoryTemplate ? 0 : height * 0.16),
+                          storyBloc.getIsStoryTemplate ? 0 : height * 0.15),
                   child: RepaintBoundary(
                     key: globalKey,
                     child: Container(
@@ -132,8 +135,8 @@ class _CreateEditTemplateScreenState extends State<CreateTextTemplateScreen> {
                             child: Column(
                               children: [
                                 SizedBox(
-                                  height: 35,
-                                  width: 35,
+                                  height: 40,
+                                  width: 40,
                                   child: BounceButton(
                                     onPressed: () => displayCustomDialog(
                                         context,
@@ -148,7 +151,7 @@ class _CreateEditTemplateScreenState extends State<CreateTextTemplateScreen> {
                                 Text(
                                   'Закрыть',
                                   style: TextStyle(
-                                    fontSize: 10,
+                                    fontSize: 12,
                                     fontWeight: FontWeight.w300,
                                     color: Colors.black87,
                                   ),
@@ -167,8 +170,8 @@ class _CreateEditTemplateScreenState extends State<CreateTextTemplateScreen> {
                                   child: Column(
                                     children: [
                                       SizedBox(
-                                        height: 35,
-                                        width: 35,
+                                        height: 40,
+                                        width: 40,
                                         child: BounceButton(
                                           onPressed: () {
                                             storyBloc.setTextEnabled(true);
@@ -180,7 +183,7 @@ class _CreateEditTemplateScreenState extends State<CreateTextTemplateScreen> {
                                       Text(
                                         'Текст',
                                         style: TextStyle(
-                                          fontSize: 10,
+                                          fontSize: 12,
                                           fontWeight: FontWeight.w300,
                                         ),
                                       )
@@ -193,8 +196,8 @@ class _CreateEditTemplateScreenState extends State<CreateTextTemplateScreen> {
                                   child: Column(
                                     children: [
                                       SizedBox(
-                                        height: 35,
-                                        width: 35,
+                                        height: 40,
+                                        width: 40,
                                         child: BounceButton(
                                           onPressed: () {
                                             Navigator.push(
@@ -216,7 +219,7 @@ class _CreateEditTemplateScreenState extends State<CreateTextTemplateScreen> {
                                       Text(
                                         'Стикеры',
                                         style: TextStyle(
-                                          fontSize: 10,
+                                          fontSize: 12,
                                           fontWeight: FontWeight.w300,
                                         ),
                                       )
@@ -227,7 +230,7 @@ class _CreateEditTemplateScreenState extends State<CreateTextTemplateScreen> {
                             ),
                           ),
                 Positioned(
-                  bottom: 20,
+                  bottom: 10,
                   right: 10,
                   child: storyBloc.getTextEnabled
                       ? storyBloc.getImageUrl == null
@@ -235,8 +238,8 @@ class _CreateEditTemplateScreenState extends State<CreateTextTemplateScreen> {
                               ? Column(
                                   children: [
                                     SizedBox(
-                                      height: 40,
-                                      width: 40,
+                                      height: 45,
+                                      width: 45,
                                       child: BounceButton(
                                         onPressed: _capturePng,
                                         iconImagePath: IconsClass.saveIcon,
@@ -245,7 +248,7 @@ class _CreateEditTemplateScreenState extends State<CreateTextTemplateScreen> {
                                     Text(
                                       'Сохранить',
                                       style: TextStyle(
-                                        fontSize: 10,
+                                        fontSize: 12,
                                         fontWeight: FontWeight.w300,
                                         color: AppStyle.colorDark,
                                       ),
@@ -255,8 +258,8 @@ class _CreateEditTemplateScreenState extends State<CreateTextTemplateScreen> {
                               : Column(
                                   children: [
                                     SizedBox(
-                                      height: 40,
-                                      width: 40,
+                                      height: 45,
+                                      width: 45,
                                       child: BounceButton(
                                         onPressed: () {
                                           storyBloc.setTextPosition(true);
@@ -268,7 +271,7 @@ class _CreateEditTemplateScreenState extends State<CreateTextTemplateScreen> {
                                     Text(
                                       'Готово',
                                       style: TextStyle(
-                                        fontSize: 10,
+                                        fontSize: 12,
                                         fontWeight: FontWeight.w300,
                                         color: AppStyle.colorDark,
                                       ),
@@ -279,8 +282,8 @@ class _CreateEditTemplateScreenState extends State<CreateTextTemplateScreen> {
                               ? Column(
                                   children: [
                                     SizedBox(
-                                      height: 40,
-                                      width: 40,
+                                      height: 45,
+                                      width: 45,
                                       child: BounceButton(
                                         onPressed: _capturePng,
                                         iconImagePath: IconsClass.saveIcon,
@@ -289,7 +292,7 @@ class _CreateEditTemplateScreenState extends State<CreateTextTemplateScreen> {
                                     Text(
                                       'Сохранить',
                                       style: TextStyle(
-                                        fontSize: 10,
+                                        fontSize: 12,
                                         fontWeight: FontWeight.w300,
                                         color: AppStyle.colorDark,
                                       ),
@@ -299,8 +302,8 @@ class _CreateEditTemplateScreenState extends State<CreateTextTemplateScreen> {
                               : Column(
                                   children: [
                                     SizedBox(
-                                      height: 40,
-                                      width: 40,
+                                      height: 45,
+                                      width: 45,
                                       child: BounceButton(
                                         onPressed: () {
                                           storyBloc.setImagePositionState(true);
@@ -311,7 +314,7 @@ class _CreateEditTemplateScreenState extends State<CreateTextTemplateScreen> {
                                     Text(
                                       'Готово',
                                       style: TextStyle(
-                                        fontSize: 10,
+                                        fontSize: 12,
                                         fontWeight: FontWeight.w300,
                                         color: AppStyle.colorDark,
                                       ),
@@ -322,13 +325,13 @@ class _CreateEditTemplateScreenState extends State<CreateTextTemplateScreen> {
                 ),
                 storyBloc.getTextEnabled
                     ? Positioned(
-                        bottom: 20,
+                        bottom: 10,
                         left: 10,
                         child: Column(
                           children: [
                             SizedBox(
-                              height: 40,
-                              width: 40,
+                              height: 45,
+                              width: 45,
                               child: BounceButton(
                                 onPressed: () {
                                   if (storyBloc.getChildrenStickers.length >
@@ -352,7 +355,7 @@ class _CreateEditTemplateScreenState extends State<CreateTextTemplateScreen> {
                             Text(
                               'Вернуть',
                               style: TextStyle(
-                                fontSize: 10,
+                                fontSize: 12,
                                 fontWeight: FontWeight.w300,
                                 color: AppStyle.colorDark,
                               ),
@@ -370,40 +373,41 @@ class _CreateEditTemplateScreenState extends State<CreateTextTemplateScreen> {
                             right: 50,
                             child: Column(
                               children: [
-                                Container(
-                                  decoration: BoxDecoration(boxShadow: [
-                                    BoxShadow(
-                                      color: Colors.white.withOpacity(0.5),
-                                      blurRadius: 10,
-                                    ),
-                                  ]),
-                                  child: SliderTheme(
-                                    data: SliderTheme.of(context).copyWith(
-                                        thumbShape: RoundSliderThumbShape()),
-                                    child: Slider(
-                                      value: storyBloc.textWidthContainer,
-                                      max: _valueWidth * 0.75,
-                                      min: 100,
-                                      onChanged: (newValue) {
-                                        storyBloc
-                                            .setTextWidthContainer(newValue);
-                                      },
+                                SliderTheme(
+                                  data: SliderTheme.of(context).copyWith(
+                                    thumbShape: RoundSliderThumbShape(
+                                      elevation: 10,
+                                      enabledThumbRadius: 8,
+                                      pressedElevation: 12,
                                     ),
                                   ),
+                                  child: Slider(
+                                    value: storyBloc.textWidthContainer,
+                                    activeColor: Colors.white,
+                                    inactiveColor:
+                                        Colors.white.withOpacity(0.5),
+                                    max: _valueWidth * 0.75,
+                                    min: 100,
+                                    onChanged: (newValue) {
+                                      storyBloc.setTextWidthContainer(newValue);
+                                    },
+                                  ),
                                 ),
-                                Container(
-                                  decoration: BoxDecoration(boxShadow: [
-                                    BoxShadow(
-                                      color: Colors.white.withOpacity(0.5),
-                                      blurRadius: 10,
-                                    ),
-                                  ]),
+                                SizedBox(
+                                  height: 16,
                                   child: SliderTheme(
                                     data: SliderTheme.of(context).copyWith(
-                                      thumbShape: RoundSliderThumbShape(),
+                                      thumbShape: RoundSliderThumbShape(
+                                        elevation: 10,
+                                        enabledThumbRadius: 8,
+                                        pressedElevation: 12,
+                                      ),
                                     ),
                                     child: Slider(
                                       value: storyBloc.textHeightContainer,
+                                      activeColor: Colors.white,
+                                      inactiveColor:
+                                          Colors.white.withOpacity(0.5),
                                       max: _valueHeight * 0.75,
                                       min: 100,
                                       onChanged: (newValue) {
@@ -473,8 +477,8 @@ class _CreateEditTemplateScreenState extends State<CreateTextTemplateScreen> {
                     child: Column(
                       children: [
                         SizedBox(
-                          height: 35,
-                          width: 35,
+                          height: 40,
+                          width: 40,
                           child: BounceButton(
                             onPressed: () {
                               if (storyBloc.getImagePositionState == false)
@@ -506,7 +510,7 @@ class _CreateEditTemplateScreenState extends State<CreateTextTemplateScreen> {
                         Text(
                           'Стикеры',
                           style: TextStyle(
-                            fontSize: 10,
+                            fontSize: 12,
                             fontWeight: FontWeight.w300,
                           ),
                         )
@@ -518,8 +522,8 @@ class _CreateEditTemplateScreenState extends State<CreateTextTemplateScreen> {
                     child: Column(
                       children: [
                         SizedBox(
-                          height: 35,
-                          width: 35,
+                          height: 40,
+                          width: 40,
                           child: BounceButton(
                             onPressed: () => displayCustomDialog(
                                 context,
@@ -534,7 +538,7 @@ class _CreateEditTemplateScreenState extends State<CreateTextTemplateScreen> {
                         Text(
                           'Удалить',
                           style: TextStyle(
-                            fontSize: 10,
+                            fontSize: 12,
                             fontWeight: FontWeight.w300,
                             color: AppStyle.colorDark,
                           ),
@@ -551,8 +555,8 @@ class _CreateEditTemplateScreenState extends State<CreateTextTemplateScreen> {
                       Column(
                         children: [
                           SizedBox(
-                            height: 35,
-                            width: 35,
+                            height: 40,
+                            width: 40,
                             child: BounceButton(
                               onPressed: () {
                                 Navigator.push(
@@ -572,7 +576,7 @@ class _CreateEditTemplateScreenState extends State<CreateTextTemplateScreen> {
                             textAlign: TextAlign.center,
                             style: TextStyle(
                               color: AppStyle.colorDark,
-                              fontSize: 10,
+                              fontSize: 12,
                               fontWeight: FontWeight.w300,
                             ),
                           )
@@ -581,8 +585,8 @@ class _CreateEditTemplateScreenState extends State<CreateTextTemplateScreen> {
                       Column(
                         children: [
                           SizedBox(
-                            height: 35,
-                            width: 35,
+                            height: 40,
+                            width: 40,
                             child: BounceButton(
                               onPressed: () => storyBloc.setFontSize(),
                               iconImagePath: IconsClass.textSizeIcon,
@@ -592,7 +596,7 @@ class _CreateEditTemplateScreenState extends State<CreateTextTemplateScreen> {
                             'Размер',
                             style: TextStyle(
                               color: AppStyle.colorDark,
-                              fontSize: 10,
+                              fontSize: 12,
                               fontWeight: FontWeight.w300,
                             ),
                           )
@@ -601,8 +605,8 @@ class _CreateEditTemplateScreenState extends State<CreateTextTemplateScreen> {
                       Column(
                         children: [
                           SizedBox(
-                            height: 35,
-                            width: 35,
+                            height: 40,
+                            width: 40,
                             child: BounceButton(
                               onPressed: () {
                                 storyBloc.setTextAlign();
@@ -615,7 +619,7 @@ class _CreateEditTemplateScreenState extends State<CreateTextTemplateScreen> {
                             textAlign: TextAlign.center,
                             style: TextStyle(
                               color: AppStyle.colorDark,
-                              fontSize: 10,
+                              fontSize: 12,
                               fontWeight: FontWeight.w300,
                             ),
                           )
@@ -624,8 +628,8 @@ class _CreateEditTemplateScreenState extends State<CreateTextTemplateScreen> {
                       Column(
                         children: [
                           SizedBox(
-                            height: 35,
-                            width: 35,
+                            height: 40,
+                            width: 40,
                             child: BounceButton(
                               onPressed: () {
                                 storyBloc.setTextColor();
@@ -637,7 +641,7 @@ class _CreateEditTemplateScreenState extends State<CreateTextTemplateScreen> {
                             'Цвет',
                             textAlign: TextAlign.center,
                             style: TextStyle(
-                              fontSize: 10,
+                              fontSize: 12,
                               color: AppStyle.colorDark,
                               fontWeight: FontWeight.w300,
                             ),
@@ -647,8 +651,8 @@ class _CreateEditTemplateScreenState extends State<CreateTextTemplateScreen> {
                       Column(
                         children: [
                           SizedBox(
-                            height: 35,
-                            width: 35,
+                            height: 40,
+                            width: 40,
                             child: BounceButton(
                               onPressed: () => storyBloc.setFontCustomWeight(),
                               iconImagePath: IconsClass.boldIcon,
@@ -658,7 +662,7 @@ class _CreateEditTemplateScreenState extends State<CreateTextTemplateScreen> {
                             'Толщина',
                             textAlign: TextAlign.center,
                             style: TextStyle(
-                              fontSize: 10,
+                              fontSize: 12,
                               color: AppStyle.colorDark,
                               fontWeight: FontWeight.w300,
                             ),
@@ -668,23 +672,27 @@ class _CreateEditTemplateScreenState extends State<CreateTextTemplateScreen> {
                       Column(
                         children: [
                           SizedBox(
-                            height: 35,
-                            width: 35,
+                            height: 40,
+                            width: 40,
                             child: BounceButton(
-                              onPressed: () => displayCustomDialog(
+                              onPressed: () {
+                                storyBloc.setUndoTextState(false);
+                                Navigator.pushReplacement(
                                   context,
-                                  "Вы точно хотите покинуть эту страницу?\n",
-                                  DialogType.AlertDialog,
-                                  true,
-                                  null,
-                                  _goBack),
+                                  FadeRouteBuilder(
+                                    page: HomeMainScreen(
+                                      mainColor: storyBloc.getBackColor,
+                                    ),
+                                  ),
+                                );
+                              },
                               iconImagePath: IconsClass.closeIcon,
                             ),
                           ),
                           Text(
                             'Удалить',
                             style: TextStyle(
-                              fontSize: 10,
+                              fontSize: 12,
                               fontWeight: FontWeight.w300,
                               color: AppStyle.colorDark,
                             ),
@@ -699,8 +707,8 @@ class _CreateEditTemplateScreenState extends State<CreateTextTemplateScreen> {
                       Column(
                         children: [
                           SizedBox(
-                            height: 35,
-                            width: 35,
+                            height: 40,
+                            width: 40,
                             child: BounceButton(
                               onPressed: () {
                                 storyBloc.setTextAlign();
@@ -713,7 +721,7 @@ class _CreateEditTemplateScreenState extends State<CreateTextTemplateScreen> {
                             textAlign: TextAlign.center,
                             style: TextStyle(
                               color: AppStyle.colorDark,
-                              fontSize: 10,
+                              fontSize: 12,
                               fontWeight: FontWeight.w300,
                             ),
                           )
@@ -722,8 +730,8 @@ class _CreateEditTemplateScreenState extends State<CreateTextTemplateScreen> {
                       Column(
                         children: [
                           SizedBox(
-                            height: 35,
-                            width: 35,
+                            height: 40,
+                            width: 40,
                             child: BounceButton(
                               onPressed: () {
                                 storyBloc.setTextColor();
@@ -735,7 +743,7 @@ class _CreateEditTemplateScreenState extends State<CreateTextTemplateScreen> {
                             'Цвет',
                             textAlign: TextAlign.center,
                             style: TextStyle(
-                              fontSize: 10,
+                              fontSize: 12,
                               color: AppStyle.colorDark,
                               fontWeight: FontWeight.w300,
                             ),
@@ -745,8 +753,8 @@ class _CreateEditTemplateScreenState extends State<CreateTextTemplateScreen> {
                       Column(
                         children: [
                           SizedBox(
-                            height: 35,
-                            width: 35,
+                            height: 40,
+                            width: 40,
                             child: BounceButton(
                               onPressed: () => storyBloc.setTextBaseFontSize(),
                               iconImagePath: IconsClass.textSizeIcon,
@@ -756,7 +764,7 @@ class _CreateEditTemplateScreenState extends State<CreateTextTemplateScreen> {
                             'Размер',
                             style: TextStyle(
                               color: AppStyle.colorDark,
-                              fontSize: 10,
+                              fontSize: 12,
                               fontWeight: FontWeight.w300,
                             ),
                           )
@@ -768,8 +776,8 @@ class _CreateEditTemplateScreenState extends State<CreateTextTemplateScreen> {
                           child: Column(
                             children: [
                               SizedBox(
-                                height: 35,
-                                width: 35,
+                                height: 40,
+                                width: 40,
                                 child: BounceButton(
                                   onPressed: () => displayCustomDialog(
                                       context,
@@ -784,7 +792,7 @@ class _CreateEditTemplateScreenState extends State<CreateTextTemplateScreen> {
                               Text(
                                 'Удалить',
                                 style: TextStyle(
-                                  fontSize: 10,
+                                  fontSize: 12,
                                   fontWeight: FontWeight.w300,
                                   color: AppStyle.colorDark,
                                 ),
@@ -999,7 +1007,6 @@ class _CreateEditTemplateScreenState extends State<CreateTextTemplateScreen> {
                     width: math.min(
                         storyBloc.textWidthContainer, constraints.maxWidth),
                     decoration: BoxDecoration(
-                      // color: Colors.white,
                       border: Border.all(
                         width: 0.5,
                         color: storyBloc.getTextPositionSaved

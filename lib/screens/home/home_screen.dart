@@ -44,9 +44,9 @@ class _HomeMainScreenState extends State<HomeMainScreen> {
   @override
   Widget build(BuildContext context) {
     final storyBloc = Provider.of<StoryBloc>(context);
-    return Scaffold(
-      body: SafeArea(
-        child: Stack(
+    return SafeArea(
+      child: Scaffold(
+        body: Stack(
           fit: StackFit.expand,
           children: [
             LayoutBuilder(
@@ -71,22 +71,25 @@ class _HomeMainScreenState extends State<HomeMainScreen> {
               right: 0,
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                crossAxisAlignment: CrossAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   IconButton(
-                    icon: const Icon(Icons.arrow_back_ios_rounded),
+                    icon: const Icon(
+                      Icons.arrow_back_ios_rounded,
+                      color: Colors.black54,
+                    ),
                     onPressed: () => Navigator.pop(context),
                   ),
                   Row(
                     children: [
                       Padding(
                         padding: const EdgeInsets.symmetric(
-                            horizontal: 10, vertical: 5),
+                            horizontal: 7, vertical: 5),
                         child: Column(
                           children: [
                             SizedBox(
-                              height: 35,
-                              width: 35,
+                              height: 40,
+                              width: 40,
                               child: BounceButton(
                                 onPressed: () {
                                   Navigator.pushReplacement(
@@ -102,7 +105,7 @@ class _HomeMainScreenState extends State<HomeMainScreen> {
                             const Text(
                               'Текст',
                               style: TextStyle(
-                                fontSize: 10,
+                                fontSize: 12,
                                 fontWeight: FontWeight.w300,
                               ),
                             )
@@ -111,12 +114,12 @@ class _HomeMainScreenState extends State<HomeMainScreen> {
                       ),
                       Padding(
                         padding: const EdgeInsets.symmetric(
-                            horizontal: 10, vertical: 5),
+                            horizontal: 7, vertical: 5),
                         child: Column(
                           children: [
                             SizedBox(
-                              height: 35,
-                              width: 35,
+                              height: 40,
+                              width: 40,
                               child: BounceButton(
                                 onPressed: () {
                                   Navigator.pushReplacement(
@@ -135,7 +138,7 @@ class _HomeMainScreenState extends State<HomeMainScreen> {
                             const Text(
                               'Стикеры',
                               style: TextStyle(
-                                fontSize: 10,
+                                fontSize: 12,
                                 fontWeight: FontWeight.w300,
                               ),
                             )
@@ -159,8 +162,8 @@ class _HomeMainScreenState extends State<HomeMainScreen> {
                     child: Column(
                       children: [
                         SizedBox(
-                          height: 40,
-                          width: 40,
+                          height: 45,
+                          width: 45,
                           child: BounceButton(
                             onPressed: _capturePng,
                             iconImagePath: IconsClass.saveIcon,
@@ -169,7 +172,7 @@ class _HomeMainScreenState extends State<HomeMainScreen> {
                         const Text(
                           'Сохранить',
                           style: TextStyle(
-                            fontSize: 10,
+                            fontSize: 12,
                             fontWeight: FontWeight.w300,
                           ),
                         ),

@@ -41,66 +41,108 @@ class StickerTextPicker extends StatelessWidget {
       child: Scaffold(
         backgroundColor: Color(0xFF6E7886).withOpacity(0.8),
         resizeToAvoidBottomPadding: false,
+        appBar: AppBar(
+          backgroundColor: Colors.transparent,
+          elevation: 0,
+          leading: IconButton(
+            color: Colors.transparent,
+            padding: const EdgeInsets.all(0),
+            icon: const Icon(
+              Icons.arrow_back_ios_rounded,
+              color: Colors.white,
+            ),
+            onPressed: () => Navigator.pop(context),
+          ),
+          centerTitle: true,
+          title: Text(
+            isDecoration ? 'Декорация' : '$title',
+            textAlign: TextAlign.center,
+            overflow: TextOverflow.ellipsis,
+            style: TextStyle(
+              fontSize: 20,
+              color: Colors.white,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          actions: [
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 10),
+              child: SizedBox(
+                height: 35,
+                width: 35,
+                child: BounceButton(
+                  onPressed: () {
+                    bloc.setClearData();
+                    Navigator.pop(context);
+                  },
+                  iconImagePath: IconsClass.closeIcon,
+                ),
+              ),
+            ),
+          ],
+        ),
         body: Stack(
           children: [
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.only(right: 3),
-                      child: FlatButton(
-                        color: Colors.transparent,
-                        padding: const EdgeInsets.all(0),
-                        child: Row(
-                          children: [
-                            const Icon(
-                              Icons.arrow_back_ios_rounded,
-                              color: Colors.white,
-                            ),
-                            const Text(
-                              'Назад',
-                              style: TextStyle(
-                                fontSize: 15,
-                                fontWeight: FontWeight.w300,
-                                color: Colors.white,
-                              ),
-                            ),
-                          ],
-                        ),
-                        onPressed: () => Navigator.pop(context),
-                      ),
-                    ),
-                    Flexible(
-                      child: Text(
-                        isDecoration ? 'Декорация' : '$title',
-                        textAlign: TextAlign.center,
-                        overflow: TextOverflow.ellipsis,
-                        style: TextStyle(
-                          fontSize: 20,
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.all(8),
-                      child: SizedBox(
-                        height: 35,
-                        width: 35,
-                        child: BounceButton(
-                          onPressed: () {
-                            bloc.setClearData();
-                            Navigator.pop(context);
-                          },
-                          iconImagePath: IconsClass.closeIcon,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
+                // Row(
+                //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                //   children: [
+                //     Padding(
+                //       padding: const EdgeInsets.only(right: 3),
+                //       child: FlatButton(
+                //         color: Colors.transparent,
+                //         padding: const EdgeInsets.all(0),
+                //         child: Row(
+                //           children: [
+                //             const Icon(
+                //               Icons.arrow_back_ios_rounded,
+                //               color: Colors.white,
+                //             ),
+                //             const Text(
+                //               'Назад',
+                //               style: TextStyle(
+                //                 fontSize: 15,
+                //                 fontWeight: FontWeight.w300,
+                //                 color: Colors.white,
+                //               ),
+                //             ),
+                //           ],
+                //         ),
+                //         onPressed: () => Navigator.pop(context),
+                //       ),
+                //     ),
+                //     Flexible(
+                //       child: Center(
+                // child: Text(
+                //   isDecoration ? 'Декорация' : '$title',
+                //   textAlign: TextAlign.center,
+                //   overflow: TextOverflow.ellipsis,
+                //   style: TextStyle(
+                //     fontSize: 20,
+                //     color: Colors.white,
+                //     fontWeight: FontWeight.bold,
+                //   ),
+                // ),
+                //       ),
+                //     ),
+                //     Padding(
+                //       padding: const EdgeInsets.all(8),
+                // child: SizedBox(
+                //   height: 35,
+                //   width: 35,
+                //   child: BounceButton(
+                //     onPressed: () {
+                //       bloc.setClearData();
+                //       Navigator.pop(context);
+                //     },
+                //     iconImagePath: IconsClass.closeIcon,
+                //   ),
+                // ),
+                //     ),
+                //   ],
+                // ),
                 const SizedBox(
                   height: 10,
                 ),

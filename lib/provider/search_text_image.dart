@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 
 class SearchTextImageBloc extends ChangeNotifier {
   AlfaApi _alfaApi = AlfaApi();
-  dynamic _textList = List();
+  List<dynamic> _textList = List();
   dynamic get getSearchText => _textList;
   bool _isLoading = false;
   bool get isLoading => _isLoading;
@@ -40,5 +40,11 @@ class SearchTextImageBloc extends ChangeNotifier {
   setClearData() {
     this._textList = List();
     notifyListeners();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    this._textList = List();
   }
 }

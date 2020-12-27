@@ -32,7 +32,7 @@ class StoryBloc extends ChangeNotifier {
   bool _isImagePositionSaved = false;
   bool _isTextPositionSaved = false;
 
-  Color _backgColor = Colors.white;
+  Color _backgColor;
   Color get getBackColor => _backgColor;
 
   bool get getImagePositionState => _isImagePositionSaved;
@@ -322,6 +322,10 @@ class StoryBloc extends ChangeNotifier {
   }
 
   setTextColor() {
+    log('$_isFirstText');
+    inspect(_colorFirstText);
+    inspect(_backgColor);
+
     if (_backgColor == AppStyle.colorRed) {
       if (_isFirstText) {
         if (_colorFirstText == AppStyle.colorDark)
@@ -336,10 +340,14 @@ class StoryBloc extends ChangeNotifier {
       }
     } else {
       if (_isFirstText) {
-        if (_colorFirstText == AppStyle.colorRed)
+        if (_colorFirstText == AppStyle.colorRed) {
+          log("message");
           _colorFirstText = AppStyle.colorDark;
-        else
+        } else {
+          log("message1");
+
           _colorFirstText = AppStyle.colorRed;
+        }
       } else if (!_isFirstText) {
         if (_colorSecondText == AppStyle.colorRed)
           _colorSecondText = AppStyle.colorDark;
