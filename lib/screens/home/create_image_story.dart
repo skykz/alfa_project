@@ -212,26 +212,26 @@ class _CreateEditTemplateScreenState extends State<CreateEditTemplateScreen> {
                   onTap: () => FocusScope.of(context).unfocus(),
                   child: Stack(
                     children: [
-                      Padding(
-                        padding: EdgeInsets.symmetric(
-                            vertical: storyBloc.getIsStoryTemplate
-                                ? 0
-                                : height * 0.15),
-                        child: RepaintBoundary(
-                          key: globalKey,
-                          child: Container(
-                            color: storyBloc.getBackColor,
-                            child: Stack(
-                              fit: StackFit.expand,
-                              children: [
-                                widget.imageUrl != null
-                                    ? _buildMainImage()
-                                    : const SizedBox(),
-                                storyBloc.getTextEnabled
-                                    ? _buildTextWidget(storyBloc)
-                                    : const SizedBox(),
-                                _buildDecoImage(),
-                              ],
+                      Center(
+                        child: AspectRatio(
+                          aspectRatio:
+                              storyBloc.getIsStoryTemplate ? (9 / 16) : (4 / 5),
+                          child: RepaintBoundary(
+                            key: globalKey,
+                            child: Container(
+                              color: storyBloc.getBackColor,
+                              child: Stack(
+                                fit: StackFit.expand,
+                                children: [
+                                  widget.imageUrl != null
+                                      ? _buildMainImage()
+                                      : const SizedBox(),
+                                  storyBloc.getTextEnabled
+                                      ? _buildTextWidget(storyBloc)
+                                      : const SizedBox(),
+                                  _buildDecoImage(),
+                                ],
+                              ),
                             ),
                           ),
                         ),
@@ -1097,7 +1097,7 @@ class _CreateEditTemplateScreenState extends State<CreateEditTemplateScreen> {
         double myMaxHeightTop = constraints.maxHeight -
             (storyBloc.getIsStoryTemplate
                 ? constraints.maxHeight * 0.85
-                : constraints.biggest.height * 0.92); //580
+                : constraints.biggest.height * 0.88); //580
 
         double myMaxHeightBottom = storyBloc.getIsStoryTemplate
             ? (constraints.maxHeight -

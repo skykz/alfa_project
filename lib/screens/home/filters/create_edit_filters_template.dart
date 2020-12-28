@@ -101,13 +101,10 @@ class _CreateEditFilterTemplateScreenState
             onTap: () => FocusScope.of(context).unfocus(),
             child: Stack(
               children: [
-                LayoutBuilder(builder:
-                    (BuildContext context, BoxConstraints constraints) {
-                  return Padding(
-                    padding: EdgeInsets.symmetric(
-                        vertical: storyBloc.getIsStoryTemplate
-                            ? 0
-                            : constraints.maxHeight * 0.15),
+                Center(
+                  child: AspectRatio(
+                    aspectRatio:
+                        storyBloc.getIsStoryTemplate ? (9 / 16) : (4 / 5),
                     child: RepaintBoundary(
                       key: globalKey,
                       child: Container(
@@ -198,8 +195,8 @@ class _CreateEditFilterTemplateScreenState
                         ),
                       ),
                     ),
-                  );
-                }),
+                  ),
+                ),
                 _buildToolBar(storyBloc),
                 storyBloc.getTextEnabled
                     ? const SizedBox()
@@ -1018,7 +1015,7 @@ class _CreateEditFilterTemplateScreenState
         double myMaxHeightTop = constraints.maxHeight -
             (storyBloc.getIsStoryTemplate
                 ? constraints.maxHeight * 0.85
-                : constraints.biggest.height * 0.92); //580
+                : constraints.biggest.height * 0.88); //580
 
         double myMaxHeightBottom = storyBloc.getIsStoryTemplate
             ? (constraints.maxHeight -

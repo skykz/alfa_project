@@ -49,21 +49,16 @@ class _HomeMainScreenState extends State<HomeMainScreen> {
         body: Stack(
           fit: StackFit.expand,
           children: [
-            LayoutBuilder(
-              builder: (BuildContext context, BoxConstraints constraints) {
-                return Padding(
-                  padding: EdgeInsets.symmetric(
-                      vertical: storyBloc.getIsStoryTemplate
-                          ? 0
-                          : constraints.maxHeight * 0.15),
-                  child: RepaintBoundary(
-                    key: globalKey,
-                    child: Scaffold(
-                      backgroundColor: widget.mainColor,
-                    ),
+            Center(
+              child: AspectRatio(
+                aspectRatio: storyBloc.getIsStoryTemplate ? (9 / 16) : (4 / 5),
+                child: RepaintBoundary(
+                  key: globalKey,
+                  child: Scaffold(
+                    backgroundColor: widget.mainColor,
                   ),
-                );
-              },
+                ),
+              ),
             ),
             Positioned(
               top: 0,
