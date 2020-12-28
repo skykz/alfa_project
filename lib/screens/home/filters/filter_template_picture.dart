@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:alfa_project/components/styles/app_style.dart';
 import 'package:alfa_project/core/data/consts/app_const.dart';
 import 'package:alfa_project/provider/filter_bloc.dart';
+import 'package:alfa_project/provider/story_bloc.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -28,6 +29,12 @@ class _FilterImageScreenState extends State<FilterImageScreen> {
       keepPage: false,
       viewportFraction: 0.85,
     );
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final storyBloc = Provider.of<StoryBloc>(context, listen: false);
+
+      final filterBloc = Provider.of<FilterBloc>(context, listen: false);
+      filterBloc.getTemplates(context, storyBloc.getIsStoryTemplate);
+    });
   }
 
   @override
@@ -40,115 +47,121 @@ class _FilterImageScreenState extends State<FilterImageScreen> {
   Widget build(BuildContext context) {
     final bloc = Provider.of<FilterBloc>(context, listen: true);
 
-    return SafeArea(
-      child: Scaffold(
-        appBar: AppBar(
-          backgroundColor: Colors.white,
-          iconTheme: IconThemeData(
-            color: AppStyle.colorDark,
-          ),
-          leading: IconButton(
-              icon: const Icon(Icons.arrow_back_ios_rounded),
-              onPressed: () {
-                Navigator.pop(context);
-              }),
-          title: Text(
-            'Выберете рамку',
-            style: TextStyle(
+    return WillPopScope(
+      onWillPop: () async => bloc.setClearForListTemplates(),
+      child: SafeArea(
+        child: Scaffold(
+          appBar: AppBar(
+            backgroundColor: Colors.white,
+            iconTheme: IconThemeData(
               color: AppStyle.colorDark,
             ),
+            leading: IconButton(
+                icon: const Icon(Icons.arrow_back_ios_rounded),
+                onPressed: () {
+                  Navigator.pop(context);
+                  bloc.setClearForListTemplates();
+                }),
+            title: Text(
+              'Выберете рамку',
+              style: TextStyle(
+                color: AppStyle.colorDark,
+              ),
+            ),
+            elevation: 10,
+            shadowColor: Colors.grey[300],
+            centerTitle: true,
           ),
-          elevation: 10,
-          shadowColor: Colors.grey[300],
-          centerTitle: true,
-        ),
-        body: Column(
-          children: [
-            bloc.getLoading
-                ? const Expanded(
-                    child: Center(
-                      child: SizedBox(
-                        height: 30,
-                        width: 30,
-                        child: CircularProgressIndicator(
-                          strokeWidth: 2,
-                          backgroundColor: Colors.white,
+          body: Column(
+            children: [
+              bloc.getLoading
+                  ? const Expanded(
+                      child: Center(
+                        child: SizedBox(
+                          height: 30,
+                          width: 30,
+                          child: CircularProgressIndicator(
+                            strokeWidth: 2,
+                            backgroundColor: Colors.white,
+                          ),
                         ),
                       ),
-                    ),
-                  )
-                : Expanded(
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 20),
-                      child: Center(
-                        child: Container(
-                          child: PageView.builder(
-                            onPageChanged: (value) {
-                              setState(() {
-                                currentpage = value;
-                              });
-                            },
-                            itemCount: bloc.getListTemplates['data'].length,
-                            controller: controller,
-                            itemBuilder: (context, index) =>
-                                templateBuilder(index, bloc.getListTemplates),
+                    )
+                  : Expanded(
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 20),
+                        child: Center(
+                          child: Container(
+                            child: PageView.builder(
+                              onPageChanged: (value) {
+                                setState(() {
+                                  currentpage = value;
+                                });
+                              },
+                              itemCount: bloc.getListTemplates == null
+                                  ? 0
+                                  : bloc.getListTemplates.length,
+                              controller: controller,
+                              itemBuilder: (context, index) =>
+                                  templateBuilder(index, bloc.getListTemplates),
+                            ),
                           ),
                         ),
                       ),
                     ),
-                  ),
-            Padding(
-              padding: const EdgeInsets.all(5),
-              child: Builder(
-                builder: (ctx) => Padding(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 40, vertical: 30),
-                  child: FlatButton(
-                    color: AppStyle.colorRed,
-                    onPressed: () =>
-                        _showSelectFile(bloc, Platform.isAndroid, context),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(4),
-                    ),
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 14),
-                      child: SizedBox(
-                        height: 25,
-                        width: double.infinity,
-                        child: Center(
-                          child: Consumer<FilterBloc>(
-                              builder: (context, bloc, child) {
-                            return Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                const Text(
-                                  'Выбрать',
-                                  style: TextStyle(
-                                    fontSize: 20,
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.w300,
+              Padding(
+                padding: const EdgeInsets.all(5),
+                child: Builder(
+                  builder: (ctx) => Padding(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 40, vertical: 30),
+                    child: FlatButton(
+                      color: AppStyle.colorRed,
+                      onPressed: () =>
+                          _showSelectFile(bloc, Platform.isAndroid, context),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(4),
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 14),
+                        child: SizedBox(
+                          height: 25,
+                          width: double.infinity,
+                          child: Center(
+                            child: Consumer<FilterBloc>(
+                                builder: (context, bloc, child) {
+                              return Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  const Text(
+                                    'Выбрать',
+                                    style: TextStyle(
+                                      fontSize: 20,
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.w300,
+                                    ),
                                   ),
-                                ),
-                                const SizedBox(
-                                  width: 5,
-                                ),
-                                const Icon(
-                                  Icons.arrow_forward_rounded,
-                                  size: 25,
-                                  color: Colors.white,
-                                ),
-                              ],
-                            );
-                          }),
+                                  const SizedBox(
+                                    width: 5,
+                                  ),
+                                  const Icon(
+                                    Icons.arrow_forward_rounded,
+                                    size: 25,
+                                    color: Colors.white,
+                                  ),
+                                ],
+                              );
+                            }),
+                          ),
                         ),
                       ),
                     ),
                   ),
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
@@ -179,7 +192,7 @@ class _FilterImageScreenState extends State<FilterImageScreen> {
           vertical: 15,
         ),
         child: CachedNetworkImage(
-          imageUrl: BASE_URL_IMAGE + filterImageData['data'][index]['icon'],
+          imageUrl: BASE_URL_IMAGE + filterImageData[index]['icon'],
           imageBuilder: (context, imageProvider) => InkWell(
             borderRadius: BorderRadius.circular(8),
             onTap: () => {},
@@ -259,7 +272,7 @@ class _FilterImageScreenState extends State<FilterImageScreen> {
                             filterBloc.setImageLoading(true);
                             filterBloc.getCamerImage(
                                 context,
-                                filterBloc.getListTemplates['data'][currentpage]
+                                filterBloc.getListTemplates[currentpage]
                                     ['url']);
                           }),
                       ListTile(
@@ -268,10 +281,8 @@ class _FilterImageScreenState extends State<FilterImageScreen> {
                         title: const Text('Галлерея'),
                         onTap: () {
                           filterBloc.setImageLoading(true);
-                          filterBloc.pickFileFromGallery(
-                              context,
-                              filterBloc.getListTemplates['data'][currentpage]
-                                  ['url']);
+                          filterBloc.pickFileFromGallery(context,
+                              filterBloc.getListTemplates[currentpage]['url']);
                         },
                       ),
                     ],
@@ -298,8 +309,8 @@ class _FilterImageScreenState extends State<FilterImageScreen> {
                 ),
               ),
               onPressed: () {
-                filterBloc.pickFileFromGallery(context,
-                    filterBloc.getListTemplates['data'][currentpage]['url']);
+                filterBloc.pickFileFromGallery(
+                    context, filterBloc.getListTemplates[currentpage]['url']);
               },
             ),
             CupertinoActionSheetAction(
@@ -309,8 +320,8 @@ class _FilterImageScreenState extends State<FilterImageScreen> {
                   color: Colors.blue,
                 ),
               ),
-              onPressed: () => filterBloc.getCamerImage(context,
-                  filterBloc.getListTemplates['data'][currentpage]['url']),
+              onPressed: () => filterBloc.getCamerImage(
+                  context, filterBloc.getListTemplates[currentpage]['url']),
             )
           ],
           cancelButton: CupertinoActionSheetAction(

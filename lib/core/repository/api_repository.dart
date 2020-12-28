@@ -1,9 +1,7 @@
 import 'dart:core';
 
 import 'package:alfa_project/core/network/network_call.dart';
-import 'package:alfa_project/provider/story_bloc.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
 class AlfaApi {
   static AlfaApi _instance = AlfaApi.internal();
@@ -51,15 +49,12 @@ class AlfaApi {
   }
 
   Future<dynamic> getImage(int categoryId, [BuildContext context]) async {
-    final storyBloc = Provider.of<StoryBloc>(context, listen: false);
-
     dynamic response = await _networkCall.doRequestMain(
       path: GET_IMAGE,
       method: 'GET',
       context: context,
       requestParams: {
         "category": "${categoryId.toString()}",
-        "type": storyBloc.getIsStoryTemplate ? "story" : "post",
       },
     );
     return response;

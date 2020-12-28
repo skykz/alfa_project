@@ -26,7 +26,7 @@ class MyApp extends StatelessWidget {
           create: (context) => StoryBloc(),
         ),
         ChangeNotifierProvider<FilterBloc>(
-          create: (context) => FilterBloc(context),
+          create: (context) => FilterBloc(),
         ),
       ],
       child: MaterialApp(

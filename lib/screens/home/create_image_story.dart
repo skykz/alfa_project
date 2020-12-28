@@ -85,7 +85,6 @@ class _CreateEditTemplateScreenState extends State<CreateEditTemplateScreen> {
   @override
   Widget build(BuildContext context) {
     final storyBloc = Provider.of<StoryBloc>(context);
-    final height = MediaQuery.of(context).size.height;
 
     return WillPopScope(
       onWillPop: () async => displayCustomDialog(

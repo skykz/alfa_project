@@ -16,8 +16,8 @@ import 'package:image/image.dart' as imageLib;
 class FilterBloc extends ChangeNotifier {
   AlfaApi _alfaApi = AlfaApi();
 
-  dynamic _listTemplates;
-  dynamic get getListTemplates => _listTemplates;
+  List<dynamic> _listTemplates = List();
+  List<dynamic> get getListTemplates => _listTemplates;
   bool _isLoading = false;
   bool _isLoadingImage = false;
   bool get getImageLoading => _isLoadingImage;
@@ -34,22 +34,25 @@ class FilterBloc extends ChangeNotifier {
     SkylineFilter(),
   ];
 
-  FilterBloc(BuildContext context) {
-    getTemplates(context);
-  }
-
-  getTemplates(BuildContext context) {
+  getTemplates(BuildContext context, bool isType) {
+    String type = isType ? 'story' : 'post';
     setLoading(true);
     _alfaApi.getCategory().then((value) {
       if (value != null) {
         for (var i = 0; i < value.length; i++) {
           if (value[i]['name'] == 'template')
-            _alfaApi.getImage(value[i]['id'], context).then((value) {
-              if (value != null) {
-                this._listTemplates = value;
+            _alfaApi.getImage(value[i]['id'], context).then((val) {
+              if (val != null) {
+                inspect(type);
+                for (int j = 0; j < val['data'].length; j++)
+                  if (val['data'][j]['type'] == type) {
+                    this._listTemplates.add(val['data'][j]);
+                    log('$val');
+                  }
+
+                notifyListeners();
               }
             }).whenComplete(() => setLoading(false));
-          notifyListeners();
         }
       }
     });
@@ -60,11 +63,16 @@ class FilterBloc extends ChangeNotifier {
     notifyListeners();
   }
 
+  setClearForListTemplates() {
+    this._listTemplates = List();
+    notifyListeners();
+  }
+
   setClearFilterData() {
     this._file = null;
     this._isLoading = false;
     this._isLoadingImage = false;
-    this._listTemplates = null;
+    this._listTemplates = List();
     notifyListeners();
   }
 
