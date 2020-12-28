@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:alfa_project/components/styles/app_style.dart';
 import 'package:alfa_project/components/widgets/custom_dialog.dart';
 import 'package:alfa_project/core/data/models/dialog_type.dart';
 import 'package:flutter/cupertino.dart';
@@ -78,4 +79,20 @@ Future<bool> displayCustomDialog(
                 cancelOptionText: negativeText,
                 confirmOptionText: positiveText,
               ));
+}
+
+String setBackgroundImage(bool isStory, Color colorBack) {
+  if (isStory) {
+    if (colorBack == AppStyle.colorRed) {
+      return 'assets/images/png/story_red.png';
+    } else {
+      return 'assets/images/png/story_white.png';
+    }
+  } else {
+    if (colorBack == AppStyle.colorRed) {
+      return 'assets/images/png/post_red.png';
+    } else {
+      return 'assets/images/png/post_white.png';
+    }
+  }
 }

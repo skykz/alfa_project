@@ -115,6 +115,10 @@ class _CreateEditTemplateScreenState extends State<CreateTextTemplateScreen> {
                         child: Stack(
                           fit: StackFit.expand,
                           children: [
+                            Image.asset(
+                              setBackgroundImage(storyBloc.getIsStoryTemplate,
+                                  storyBloc.getBackColor),
+                            ),
                             _buildTextWidget(),
                             storyBloc.getImageUrl != null
                                 ? _buildMainImage()
@@ -462,231 +466,83 @@ class _CreateEditTemplateScreenState extends State<CreateTextTemplateScreen> {
       top: 10,
       left: 10,
       right: 10,
-      child: AnimatedSwitcher(
-        duration: const Duration(milliseconds: 300),
-        transitionBuilder: (Widget child, Animation<double> animation) =>
-            ScaleTransition(
-          scale: animation,
-          child: child,
-        ),
-        child: storyBloc.getTextPositionSaved
-            ? Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 5),
-                    child: Column(
-                      children: [
-                        SizedBox(
-                          height: 40,
-                          width: 40,
-                          child: BounceButton(
-                            onPressed: () {
-                              if (storyBloc.getImagePositionState == false)
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => SearchPickerScreen(
-                                      isText: false,
-                                      isTextToImage: false,
-                                    ),
-                                  ),
-                                );
-                              else
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => StickerTextPicker(
-                                      isDecoration: true,
-                                      isTextBase: false,
-                                      title: "",
-                                      text: "",
-                                    ),
-                                  ),
-                                );
-                            },
-                            iconImagePath: IconsClass.stickerIcon,
-                          ),
-                        ),
-                        Text(
-                          'Стикеры',
-                          style: TextStyle(
-                            fontSize: 12,
-                            fontWeight: FontWeight.w300,
-                          ),
-                        )
-                      ],
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 5),
-                    child: Column(
-                      children: [
-                        SizedBox(
-                          height: 40,
-                          width: 40,
-                          child: BounceButton(
-                            onPressed: () => displayCustomDialog(
-                                context,
-                                "Вы точно хотите покинуть эту страницу?\n",
-                                DialogType.AlertDialog,
-                                true,
-                                null,
-                                _goBack),
-                            iconImagePath: IconsClass.closeIcon,
-                          ),
-                        ),
-                        Text(
-                          'Удалить',
-                          style: TextStyle(
-                            fontSize: 12,
-                            fontWeight: FontWeight.w300,
-                            color: AppStyle.colorDark,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              )
-            : storyBloc.getTitle == null
-                ? Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Column(
+      child: Container(
+        color: storyBloc.getIsStoryTemplate
+            ? storyBloc.getBackColor == AppStyle.colorRed
+                ? Color(0xffEF3124)
+                : Color(0xffF3F4F5)
+            : Colors.transparent,
+        child: AnimatedSwitcher(
+          duration: const Duration(milliseconds: 300),
+          transitionBuilder: (Widget child, Animation<double> animation) =>
+              ScaleTransition(
+            scale: animation,
+            child: child,
+          ),
+          child: storyBloc.getTextPositionSaved
+              ? Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 5),
+                      child: Column(
                         children: [
                           SizedBox(
                             height: 40,
                             width: 40,
                             child: BounceButton(
                               onPressed: () {
-                                Navigator.push(
+                                if (storyBloc.getImagePositionState == false)
+                                  Navigator.push(
                                     context,
                                     MaterialPageRoute(
                                       builder: (context) => SearchPickerScreen(
-                                        isText: true,
-                                        isTextToImage: true,
+                                        isText: false,
+                                        isTextToImage: false,
                                       ),
-                                    ));
-                              },
-                              iconImagePath: IconsClass.libraryIcon,
-                            ),
-                          ),
-                          Text(
-                            'База',
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                              color: AppStyle.colorDark,
-                              fontSize: 12,
-                              fontWeight: FontWeight.w300,
-                            ),
-                          )
-                        ],
-                      ),
-                      Column(
-                        children: [
-                          SizedBox(
-                            height: 40,
-                            width: 40,
-                            child: BounceButton(
-                              onPressed: () => storyBloc.setFontSize(),
-                              iconImagePath: IconsClass.textSizeIcon,
-                            ),
-                          ),
-                          Text(
-                            'Размер',
-                            style: TextStyle(
-                              color: AppStyle.colorDark,
-                              fontSize: 12,
-                              fontWeight: FontWeight.w300,
-                            ),
-                          )
-                        ],
-                      ),
-                      Column(
-                        children: [
-                          SizedBox(
-                            height: 40,
-                            width: 40,
-                            child: BounceButton(
-                              onPressed: () {
-                                storyBloc.setTextAlign();
-                              },
-                              iconImagePath: IconsClass.textAlignIcon,
-                            ),
-                          ),
-                          Text(
-                            'Ровнять',
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                              color: AppStyle.colorDark,
-                              fontSize: 12,
-                              fontWeight: FontWeight.w300,
-                            ),
-                          )
-                        ],
-                      ),
-                      Column(
-                        children: [
-                          SizedBox(
-                            height: 40,
-                            width: 40,
-                            child: BounceButton(
-                              onPressed: () {
-                                storyBloc.setTextColor();
-                              },
-                              iconImagePath: IconsClass.fillColorIcon,
-                            ),
-                          ),
-                          Text(
-                            'Цвет',
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                              fontSize: 12,
-                              color: AppStyle.colorDark,
-                              fontWeight: FontWeight.w300,
-                            ),
-                          )
-                        ],
-                      ),
-                      Column(
-                        children: [
-                          SizedBox(
-                            height: 40,
-                            width: 40,
-                            child: BounceButton(
-                              onPressed: () => storyBloc.setFontCustomWeight(),
-                              iconImagePath: IconsClass.boldIcon,
-                            ),
-                          ),
-                          Text(
-                            'Толщина',
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                              fontSize: 12,
-                              color: AppStyle.colorDark,
-                              fontWeight: FontWeight.w300,
-                            ),
-                          )
-                        ],
-                      ),
-                      Column(
-                        children: [
-                          SizedBox(
-                            height: 40,
-                            width: 40,
-                            child: BounceButton(
-                              onPressed: () {
-                                storyBloc.setUndoTextState(false);
-                                Navigator.pushReplacement(
-                                  context,
-                                  FadeRouteBuilder(
-                                    page: HomeMainScreen(
-                                      mainColor: storyBloc.getBackColor,
                                     ),
-                                  ),
-                                );
+                                  );
+                                else
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => StickerTextPicker(
+                                        isDecoration: true,
+                                        isTextBase: false,
+                                        title: "",
+                                        text: "",
+                                      ),
+                                    ),
+                                  );
                               },
+                              iconImagePath: IconsClass.stickerIcon,
+                            ),
+                          ),
+                          Text(
+                            'Стикеры',
+                            style: TextStyle(
+                              fontSize: 12,
+                              fontWeight: FontWeight.w300,
+                            ),
+                          )
+                        ],
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 5),
+                      child: Column(
+                        children: [
+                          SizedBox(
+                            height: 40,
+                            width: 40,
+                            child: BounceButton(
+                              onPressed: () => displayCustomDialog(
+                                  context,
+                                  "Вы точно хотите покинуть эту страницу?\n",
+                                  DialogType.AlertDialog,
+                                  true,
+                                  null,
+                                  _goBack),
                               iconImagePath: IconsClass.closeIcon,
                             ),
                           ),
@@ -700,110 +556,268 @@ class _CreateEditTemplateScreenState extends State<CreateTextTemplateScreen> {
                           ),
                         ],
                       ),
-                    ],
-                  )
-                : Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      Column(
-                        children: [
-                          SizedBox(
-                            height: 40,
-                            width: 40,
-                            child: BounceButton(
-                              onPressed: () {
-                                storyBloc.setTextAlign();
-                              },
-                              iconImagePath: IconsClass.textAlignIcon,
-                            ),
-                          ),
-                          Text(
-                            'Ровнять',
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                              color: AppStyle.colorDark,
-                              fontSize: 12,
-                              fontWeight: FontWeight.w300,
-                            ),
-                          )
-                        ],
-                      ),
-                      Column(
-                        children: [
-                          SizedBox(
-                            height: 40,
-                            width: 40,
-                            child: BounceButton(
-                              onPressed: () {
-                                storyBloc.setTextColor();
-                              },
-                              iconImagePath: IconsClass.fillColorIcon,
-                            ),
-                          ),
-                          Text(
-                            'Цвет',
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                              fontSize: 12,
-                              color: AppStyle.colorDark,
-                              fontWeight: FontWeight.w300,
-                            ),
-                          )
-                        ],
-                      ),
-                      Column(
-                        children: [
-                          SizedBox(
-                            height: 40,
-                            width: 40,
-                            child: BounceButton(
-                              onPressed: () => storyBloc.setTextBaseFontSize(),
-                              iconImagePath: IconsClass.textSizeIcon,
-                            ),
-                          ),
-                          Text(
-                            'Размер',
-                            style: TextStyle(
-                              color: AppStyle.colorDark,
-                              fontSize: 12,
-                              fontWeight: FontWeight.w300,
-                            ),
-                          )
-                        ],
-                      ),
-                      Expanded(
-                        child: Align(
-                          alignment: Alignment.centerRight,
-                          child: Column(
-                            children: [
-                              SizedBox(
-                                height: 40,
-                                width: 40,
-                                child: BounceButton(
-                                  onPressed: () => displayCustomDialog(
+                    ),
+                  ],
+                )
+              : storyBloc.getTitle == null
+                  ? Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Column(
+                          children: [
+                            SizedBox(
+                              height: 40,
+                              width: 40,
+                              child: BounceButton(
+                                onPressed: () {
+                                  Navigator.push(
                                       context,
-                                      "Вы точно хотите покинуть эту страницу?\n",
-                                      DialogType.AlertDialog,
-                                      true,
-                                      null,
-                                      _goBack),
-                                  iconImagePath: IconsClass.closeIcon,
-                                ),
+                                      MaterialPageRoute(
+                                        builder: (context) =>
+                                            SearchPickerScreen(
+                                          isText: true,
+                                          isTextToImage: true,
+                                        ),
+                                      ));
+                                },
+                                iconImagePath: IconsClass.libraryIcon,
                               ),
-                              Text(
-                                'Удалить',
-                                style: TextStyle(
-                                  fontSize: 12,
-                                  fontWeight: FontWeight.w300,
-                                  color: AppStyle.colorDark,
-                                ),
+                            ),
+                            Text(
+                              'База',
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                color: AppStyle.colorDark,
+                                fontSize: 12,
+                                fontWeight: FontWeight.w300,
                               ),
-                            ],
+                            )
+                          ],
+                        ),
+                        Column(
+                          children: [
+                            SizedBox(
+                              height: 40,
+                              width: 40,
+                              child: BounceButton(
+                                onPressed: () => storyBloc.setFontSize(),
+                                iconImagePath: IconsClass.textSizeIcon,
+                              ),
+                            ),
+                            Text(
+                              'Размер',
+                              style: TextStyle(
+                                color: AppStyle.colorDark,
+                                fontSize: 12,
+                                fontWeight: FontWeight.w300,
+                              ),
+                            )
+                          ],
+                        ),
+                        Column(
+                          children: [
+                            SizedBox(
+                              height: 40,
+                              width: 40,
+                              child: BounceButton(
+                                onPressed: () {
+                                  storyBloc.setTextAlign();
+                                },
+                                iconImagePath: IconsClass.textAlignIcon,
+                              ),
+                            ),
+                            Text(
+                              'Ровнять',
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                color: AppStyle.colorDark,
+                                fontSize: 12,
+                                fontWeight: FontWeight.w300,
+                              ),
+                            )
+                          ],
+                        ),
+                        Column(
+                          children: [
+                            SizedBox(
+                              height: 40,
+                              width: 40,
+                              child: BounceButton(
+                                onPressed: () {
+                                  storyBloc.setTextColor();
+                                },
+                                iconImagePath: IconsClass.fillColorIcon,
+                              ),
+                            ),
+                            Text(
+                              'Цвет',
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                fontSize: 12,
+                                color: AppStyle.colorDark,
+                                fontWeight: FontWeight.w300,
+                              ),
+                            )
+                          ],
+                        ),
+                        Column(
+                          children: [
+                            SizedBox(
+                              height: 40,
+                              width: 40,
+                              child: BounceButton(
+                                onPressed: () =>
+                                    storyBloc.setFontCustomWeight(),
+                                iconImagePath: IconsClass.boldIcon,
+                              ),
+                            ),
+                            Text(
+                              'Толщина',
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                fontSize: 12,
+                                color: AppStyle.colorDark,
+                                fontWeight: FontWeight.w300,
+                              ),
+                            )
+                          ],
+                        ),
+                        Column(
+                          children: [
+                            SizedBox(
+                              height: 40,
+                              width: 40,
+                              child: BounceButton(
+                                onPressed: () {
+                                  storyBloc.setUndoTextState(false);
+                                  Navigator.pushReplacement(
+                                    context,
+                                    FadeRouteBuilder(
+                                      page: HomeMainScreen(
+                                        mainColor: storyBloc.getBackColor,
+                                      ),
+                                    ),
+                                  );
+                                },
+                                iconImagePath: IconsClass.closeIcon,
+                              ),
+                            ),
+                            Text(
+                              'Удалить',
+                              style: TextStyle(
+                                fontSize: 12,
+                                fontWeight: FontWeight.w300,
+                                color: AppStyle.colorDark,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    )
+                  : Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        Column(
+                          children: [
+                            SizedBox(
+                              height: 40,
+                              width: 40,
+                              child: BounceButton(
+                                onPressed: () {
+                                  storyBloc.setTextAlign();
+                                },
+                                iconImagePath: IconsClass.textAlignIcon,
+                              ),
+                            ),
+                            Text(
+                              'Ровнять',
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                color: AppStyle.colorDark,
+                                fontSize: 12,
+                                fontWeight: FontWeight.w300,
+                              ),
+                            )
+                          ],
+                        ),
+                        Column(
+                          children: [
+                            SizedBox(
+                              height: 40,
+                              width: 40,
+                              child: BounceButton(
+                                onPressed: () {
+                                  storyBloc.setTextColor();
+                                },
+                                iconImagePath: IconsClass.fillColorIcon,
+                              ),
+                            ),
+                            Text(
+                              'Цвет',
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                fontSize: 12,
+                                color: AppStyle.colorDark,
+                                fontWeight: FontWeight.w300,
+                              ),
+                            )
+                          ],
+                        ),
+                        Column(
+                          children: [
+                            SizedBox(
+                              height: 40,
+                              width: 40,
+                              child: BounceButton(
+                                onPressed: () =>
+                                    storyBloc.setTextBaseFontSize(),
+                                iconImagePath: IconsClass.textSizeIcon,
+                              ),
+                            ),
+                            Text(
+                              'Размер',
+                              style: TextStyle(
+                                color: AppStyle.colorDark,
+                                fontSize: 12,
+                                fontWeight: FontWeight.w300,
+                              ),
+                            )
+                          ],
+                        ),
+                        Expanded(
+                          child: Align(
+                            alignment: Alignment.centerRight,
+                            child: Column(
+                              children: [
+                                SizedBox(
+                                  height: 40,
+                                  width: 40,
+                                  child: BounceButton(
+                                    onPressed: () => displayCustomDialog(
+                                        context,
+                                        "Вы точно хотите покинуть эту страницу?\n",
+                                        DialogType.AlertDialog,
+                                        true,
+                                        null,
+                                        _goBack),
+                                    iconImagePath: IconsClass.closeIcon,
+                                  ),
+                                ),
+                                Text(
+                                  'Удалить',
+                                  style: TextStyle(
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.w300,
+                                    color: AppStyle.colorDark,
+                                  ),
+                                ),
+                              ],
+                            ),
                           ),
                         ),
-                      ),
-                    ],
-                  ),
+                      ],
+                    ),
+        ),
       ),
     );
   }
@@ -964,7 +978,7 @@ class _CreateEditTemplateScreenState extends State<CreateTextTemplateScreen> {
           double myMaxHeightTop = constraints.maxHeight -
               (storyBloc.getIsStoryTemplate
                   ? constraints.maxHeight * 0.85
-                  : constraints.biggest.height * 0.88); //580
+                  : constraints.biggest.height * 0.85); //580
 
           double myMaxHeightBottom = storyBloc.getIsStoryTemplate
               ? (constraints.maxHeight -
@@ -1004,7 +1018,7 @@ class _CreateEditTemplateScreenState extends State<CreateTextTemplateScreen> {
                         ? math.min(storyBloc.textHeightContainer,
                             constraints.maxHeight * 0.7)
                         : math.min(storyBloc.textHeightContainer,
-                            constraints.maxHeight * 0.82),
+                            constraints.maxHeight * 0.73),
                     width: math.min(
                         storyBloc.textWidthContainer, constraints.maxWidth),
                     decoration: BoxDecoration(

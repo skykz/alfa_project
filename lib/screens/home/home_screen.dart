@@ -56,6 +56,8 @@ class _HomeMainScreenState extends State<HomeMainScreen> {
                   key: globalKey,
                   child: Scaffold(
                     backgroundColor: widget.mainColor,
+                    body: Image.asset(setBackgroundImage(
+                        storyBloc.getIsStoryTemplate, widget.mainColor)),
                   ),
                 ),
               ),

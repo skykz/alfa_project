@@ -1015,7 +1015,7 @@ class _CreateEditFilterTemplateScreenState
         double myMaxHeightTop = constraints.maxHeight -
             (storyBloc.getIsStoryTemplate
                 ? constraints.maxHeight * 0.85
-                : constraints.biggest.height * 0.88); //580
+                : constraints.biggest.height * 0.85); //580
 
         double myMaxHeightBottom = storyBloc.getIsStoryTemplate
             ? (constraints.maxHeight -
@@ -1054,7 +1054,7 @@ class _CreateEditFilterTemplateScreenState
                       ? math.min(storyBloc.textHeightContainer,
                           constraints.maxHeight * 0.7)
                       : math.min(storyBloc.textHeightContainer,
-                          constraints.maxHeight * 0.82),
+                          constraints.maxHeight * 0.73),
                   width: math.min(
                       storyBloc.textWidthContainer, constraints.maxWidth),
                   decoration: BoxDecoration(
