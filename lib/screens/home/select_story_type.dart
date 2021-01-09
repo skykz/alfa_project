@@ -2,7 +2,6 @@ import 'package:alfa_project/components/styles/app_style.dart';
 import 'package:alfa_project/provider/story_bloc.dart';
 import 'package:alfa_project/screens/home/select_template.dart';
 import 'package:flutter/material.dart';
-import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 
 class SelectTypeTemplate extends StatefulWidget {
@@ -19,19 +18,18 @@ class _SelectTypeTemplateState extends State<SelectTypeTemplate> {
   @override
   void initState() {
     super.initState();
-    _permissionFileWrite();
   }
 
-  _permissionFileWrite() async {
-    var status = await Permission.storage.status;
-    if (!status.isGranted) {
-      await Permission.storage.request();
-    } else {
-      setState(() {
-        isGranted = true;
-      });
-    }
-  }
+  // _permissionFileWrite() async {
+  //   var status = await Permission.storage.status;
+  //   if (!status.isGranted) {
+  //     await Permission.storage.request();
+  //   } else {
+  //     setState(() {
+  //       isGranted = true;
+  //     });
+  //   }
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -175,19 +173,15 @@ class _SelectTypeTemplateState extends State<SelectTypeTemplate> {
                     child: FlatButton(
                       color: AppStyle.colorRed,
                       onPressed: () {
-                        if (isGranted) {
-                          final homeModel =
-                              Provider.of<StoryBloc>(context, listen: false);
-                          homeModel.setTypeOfAlfa(isFirstContainerSelected);
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => SelectTemplateScreen(),
-                            ),
-                          );
-                        } else {
-                          _permissionFileWrite();
-                        }
+                        final homeModel =
+                            Provider.of<StoryBloc>(context, listen: false);
+                        homeModel.setTypeOfAlfa(isFirstContainerSelected);
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => SelectTemplateScreen(),
+                          ),
+                        );
                       },
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(4),

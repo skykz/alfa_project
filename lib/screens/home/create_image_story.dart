@@ -86,15 +86,15 @@ class _CreateEditTemplateScreenState extends State<CreateEditTemplateScreen> {
   Widget build(BuildContext context) {
     final storyBloc = Provider.of<StoryBloc>(context);
 
-    return WillPopScope(
-      onWillPop: () async => displayCustomDialog(
-          context,
-          "Вы точно хотите покинуть эту страницу?\n",
-          DialogType.AlertDialog,
-          true,
-          null,
-          _goBack),
-      child: SafeArea(
+    return SafeArea(
+      child: WillPopScope(
+        onWillPop: () async => displayCustomDialog(
+            context,
+            "Вы точно хотите покинуть эту страницу?\n",
+            DialogType.AlertDialog,
+            true,
+            null,
+            _goBack),
         child: Scaffold(
           resizeToAvoidBottomPadding: false,
           body: !storyBloc.getLoading
