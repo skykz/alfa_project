@@ -18,12 +18,12 @@ class AlfaApi {
   static const GET_LAST_IMAGE = 'img_last';
 
   // get text and search text from server
-  static const GET_TEXT = 'text';
+  static const GET_TEXT_ID = 'text_id';
   static const SEARCH_TEXT = 'search_text';
 
   // get categories
   static const GET_CATEGORY = 'category';
-  static const GET_TEMPLATE_BY_CATEGORY = '';
+  static const GET_TEXT_CATEGORY = 'text_category';
 
   Future<String> authLogin(String email, String password,
       [BuildContext context]) async {
@@ -70,10 +70,22 @@ class AlfaApi {
     return response;
   }
 
-  Future<dynamic> getText([BuildContext context]) async {
+  Future<dynamic> getTextBaseCategory([BuildContext context]) async {
     dynamic response = await _networkCall.doRequestMain(
-      path: GET_TEXT,
+      path: GET_TEXT_CATEGORY,
       method: 'GET',
+      context: context,
+    );
+    return response;
+  }
+
+  Future<dynamic> getTextId(int _id, [BuildContext context]) async {
+    dynamic response = await _networkCall.doRequestMain(
+      path: GET_TEXT_ID,
+      method: 'GET',
+      requestParams: {
+        'category': _id,
+      },
       context: context,
     );
     return response;

@@ -4,11 +4,12 @@ import 'app.dart';
 
 void main() {
   SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
-    systemNavigationBarColor: Colors.grey, // navigation bar color
     statusBarIconBrightness: Brightness.dark,
-    statusBarBrightness: Brightness.dark,
-
-    statusBarColor: Colors.white, // status bar color
+    statusBarBrightness: Brightness.light,
+    systemNavigationBarColor: Colors.white,
+    statusBarColor: Colors.white,
   ));
+  // SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.light);
+
   runApp(MyApp());
 }

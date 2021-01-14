@@ -7,7 +7,9 @@ import 'package:alfa_project/provider/story_bloc.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
+import 'package:sizer/sizer.dart';
 
 class FilterImageScreen extends StatefulWidget {
   const FilterImageScreen({Key key}) : super(key: key);
@@ -49,119 +51,119 @@ class _FilterImageScreenState extends State<FilterImageScreen> {
 
     return WillPopScope(
       onWillPop: () async => bloc.setClearForListTemplates(),
-      child: SafeArea(
-        child: Scaffold(
-          appBar: AppBar(
-            backgroundColor: Colors.white,
-            iconTheme: IconThemeData(
-              color: AppStyle.colorDark,
-            ),
-            leading: IconButton(
-                icon: const Icon(Icons.arrow_back_ios_rounded),
-                onPressed: () {
-                  Navigator.pop(context);
-                  bloc.setClearForListTemplates();
-                }),
-            title: Text(
-              'Выберете рамку',
-              style: TextStyle(
-                color: AppStyle.colorDark,
-              ),
-            ),
-            elevation: 10,
-            shadowColor: Colors.grey[300],
-            centerTitle: true,
+      child: Scaffold(
+        appBar: AppBar(
+          brightness: Brightness.light,
+          backgroundColor: Colors.white,
+          iconTheme: IconThemeData(
+            color: AppStyle.colorDark,
           ),
-          body: Column(
-            children: [
-              bloc.getLoading
-                  ? const Expanded(
-                      child: Center(
-                        child: SizedBox(
-                          height: 30,
-                          width: 30,
-                          child: CircularProgressIndicator(
-                            strokeWidth: 2,
-                            backgroundColor: Colors.white,
-                          ),
+          leading: IconButton(
+              icon: const Icon(Icons.arrow_back_ios_rounded),
+              onPressed: () {
+                Navigator.pop(context);
+                bloc.setClearForListTemplates();
+              }),
+          title: Text(
+            'Выберите рамку',
+            style: TextStyle(
+              fontFamily: Platform.isIOS ? 'SF Pro Display' : '',
+              fontWeight: FontWeight.bold,
+              color: AppStyle.colorDark,
+              fontSize: 14.0.sp,
+            ),
+          ),
+          elevation: 10,
+          shadowColor: Colors.grey[300],
+          centerTitle: true,
+        ),
+        body: Column(
+          children: [
+            bloc.getLoading
+                ? const Expanded(
+                    child: Center(
+                      child: SizedBox(
+                        height: 30,
+                        width: 30,
+                        child: CircularProgressIndicator(
+                          strokeWidth: 2,
+                          backgroundColor: Colors.white,
                         ),
                       ),
-                    )
-                  : Expanded(
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 20),
-                        child: Center(
-                          child: Container(
-                            child: PageView.builder(
-                              onPageChanged: (value) {
-                                setState(() {
-                                  currentpage = value;
-                                });
-                              },
-                              itemCount: bloc.getListTemplates == null
-                                  ? 0
-                                  : bloc.getListTemplates.length,
-                              controller: controller,
-                              itemBuilder: (context, index) =>
-                                  templateBuilder(index, bloc.getListTemplates),
-                            ),
+                    ),
+                  )
+                : Expanded(
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 20),
+                      child: Center(
+                        child: Container(
+                          child: PageView.builder(
+                            onPageChanged: (value) {
+                              setState(() {
+                                currentpage = value;
+                              });
+                            },
+                            itemCount: bloc.getListTemplates == null
+                                ? 0
+                                : bloc.getListTemplates.length,
+                            controller: controller,
+                            itemBuilder: (context, index) =>
+                                templateBuilder(index, bloc.getListTemplates),
                           ),
                         ),
                       ),
                     ),
-              Padding(
-                padding: const EdgeInsets.all(5),
-                child: Builder(
-                  builder: (ctx) => Padding(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 40, vertical: 30),
-                    child: FlatButton(
-                      color: AppStyle.colorRed,
-                      onPressed: () =>
-                          _showSelectFile(bloc, Platform.isAndroid, context),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(4),
-                      ),
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 14),
-                        child: SizedBox(
-                          height: 25,
-                          width: double.infinity,
-                          child: Center(
-                            child: Consumer<FilterBloc>(
-                                builder: (context, bloc, child) {
-                              return Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  const Text(
-                                    'Выбрать',
-                                    style: TextStyle(
-                                      fontSize: 20,
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.w300,
-                                    ),
-                                  ),
-                                  const SizedBox(
-                                    width: 5,
-                                  ),
-                                  const Icon(
-                                    Icons.arrow_forward_rounded,
-                                    size: 25,
+                  ),
+            Padding(
+              padding: const EdgeInsets.all(5),
+              child: Builder(
+                builder: (ctx) => Padding(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 40, vertical: 30),
+                  child: FlatButton(
+                    color: AppStyle.colorRed,
+                    onPressed: () =>
+                        _showSelectFile(bloc, Platform.isAndroid, context),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(4),
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 14),
+                      child: SizedBox(
+                        width: double.infinity,
+                        child: Center(
+                          child: Consumer<FilterBloc>(
+                              builder: (context, bloc, child) {
+                            return Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                const Text(
+                                  'Дальше',
+                                  style: TextStyle(
+                                    fontSize: 22,
                                     color: Colors.white,
+                                    fontWeight: FontWeight.w300,
                                   ),
-                                ],
-                              );
-                            }),
-                          ),
+                                ),
+                                Padding(
+                                  padding:
+                                      const EdgeInsets.only(top: 3, left: 5),
+                                  child: SvgPicture.asset(
+                                    'assets/images/svg/arrow_r.svg',
+                                  ),
+                                ),
+                              ],
+                            );
+                          }),
                         ),
                       ),
                     ),
                   ),
                 ),
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );
@@ -298,6 +300,7 @@ class _FilterImageScreenState extends State<FilterImageScreen> {
             'Выберите вариант',
             style: TextStyle(
               fontSize: 18,
+              fontFamily: 'SF Pro Display Regular',
             ),
           ),
           actions: <Widget>[
@@ -305,6 +308,7 @@ class _FilterImageScreenState extends State<FilterImageScreen> {
               child: const Text(
                 'Галлерея',
                 style: TextStyle(
+                  fontFamily: 'SF Pro Display Regular',
                   color: Colors.blue,
                 ),
               ),
@@ -317,6 +321,7 @@ class _FilterImageScreenState extends State<FilterImageScreen> {
               child: const Text(
                 'Камера',
                 style: TextStyle(
+                  fontFamily: 'SF Pro Display Regular',
                   color: Colors.blue,
                 ),
               ),
@@ -325,7 +330,12 @@ class _FilterImageScreenState extends State<FilterImageScreen> {
             )
           ],
           cancelButton: CupertinoActionSheetAction(
-            child: const Text('Отменить'),
+            child: const Text(
+              'Отменить',
+              style: TextStyle(
+                fontFamily: 'SF Pro Display Regular',
+              ),
+            ),
             onPressed: () {
               Navigator.pop(context);
             },

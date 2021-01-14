@@ -4,6 +4,7 @@ import 'package:alfa_project/utils/common_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
+import 'package:sizer/sizer.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({Key key}) : super(key: key);
@@ -21,12 +22,14 @@ class _LoginScreenState extends State<LoginScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        brightness: Brightness.light,
         centerTitle: true,
         backgroundColor: Colors.white,
         title: Text(
           'Авторизуйтесь',
           style: TextStyle(
-            fontSize: 20,
+            fontFamily: 'SF Pro Display',
+            fontSize: 18.0.sp,
             fontWeight: FontWeight.bold,
             color: AppStyle.colorDark,
           ),

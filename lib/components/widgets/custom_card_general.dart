@@ -1,3 +1,6 @@
+import 'dart:io';
+import 'package:sizer/sizer.dart';
+
 import 'package:flutter/material.dart';
 
 class CardGeneralWidget extends StatelessWidget {
@@ -57,7 +60,8 @@ class CardGeneralWidget extends StatelessWidget {
                 title,
                 style: TextStyle(
                   color: colorText,
-                  fontSize: 25,
+                  fontSize: 20.0.sp,
+                  fontFamily: Platform.isIOS ? 'SF Pro Display' : '',
                   fontWeight: FontWeight.bold,
                 ),
               ),

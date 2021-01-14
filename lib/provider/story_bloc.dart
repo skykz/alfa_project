@@ -63,13 +63,13 @@ class StoryBloc extends ChangeNotifier {
   TextAlign _align = TextAlign.center;
   TextAlign get getAlign => _align;
 
-  Color _color = AppStyle.colorRed;
+  Color _color = AppStyle.colorDark;
   Color get getTextColor => _color;
 
   double _textWidthContainer = 150;
   double get textWidthContainer => _textWidthContainer;
 
-  double _textHeightContainer = 150;
+  double _textHeightContainer = 100;
   double get textHeightContainer => _textHeightContainer;
 
   String _title;
@@ -118,7 +118,7 @@ class StoryBloc extends ChangeNotifier {
   int _indexFontSizebody = 0;
   int _indexTextBaseFontSizebody = 0;
 
-  setTypeOfAlfa(bool val) {
+  setTypeOfTemplate(bool val) {
     this._isStoryTemplate = val;
     notifyListeners();
   }
@@ -213,13 +213,34 @@ class StoryBloc extends ChangeNotifier {
     notifyListeners();
   }
 
+  setUndoTextBase(bool val) {
+    this._title = null;
+    this._body = null;
+    this._color = AppStyle.colorDark;
+    this._textWidthContainer = 150;
+    this._textHeightContainer = 150;
+    this._fontWeightFirst = FontWeight.normal;
+    this._fontWeightSecond = FontWeight.normal;
+    this._titleFontSize = 22;
+    this._bodyFontSize = 12;
+    this._titleTextBaseFontSize = 22;
+    this._bodyTextBaseFontSize = 12;
+    _textAlign = CrossAxisAlignment.start;
+    _align = TextAlign.start;
+    offset = Offset(100, 100);
+    this._indexFontSizeTitle = 0;
+    this._indexTextBaseFontSizebody = 0;
+    this._indexFontSizebody = 0;
+    notifyListeners();
+  }
+
   setUndoTextState(bool val) {
     this._isTextPositionSaved = val;
     this._isTextEnabled = val;
     this._currentTextPosition = Matrix4.identity();
     this._title = null;
     this._body = null;
-    this._color = AppStyle.colorRed;
+    this._color = AppStyle.colorDark;
     this._textWidthContainer = 150;
     this._textHeightContainer = 150;
     this._fontWeightFirst = FontWeight.normal;
@@ -258,7 +279,6 @@ class StoryBloc extends ChangeNotifier {
   void setClearStoryData() {
     this._currentImagePosition = Matrix4.identity();
     this._align = TextAlign.center;
-    this._color = AppStyle.colorRed;
     this._isTextEnabled = false;
     this._textAlign = CrossAxisAlignment.center;
     this._isTextEnabled = false;
@@ -267,7 +287,7 @@ class StoryBloc extends ChangeNotifier {
     this._isImagePositionSaved = false;
     this._title = null;
     this._body = null;
-    this._color = AppStyle.colorRed;
+    this._color = AppStyle.colorDark;
     this._textWidthContainer = 150;
     this._textHeightContainer = 150;
     this._fontWeightFirst = FontWeight.normal;
@@ -288,6 +308,7 @@ class StoryBloc extends ChangeNotifier {
     this._indexFontSizeTitle = 0;
     this._indexTextBaseFontSizebody = 0;
     this._indexFontSizebody = 0;
+    this._isStoryTemplate = false;
     setSavingState(false);
     log('all data cleared');
     notifyListeners();

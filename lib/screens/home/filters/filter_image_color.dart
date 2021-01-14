@@ -8,6 +8,7 @@ import 'package:image/image.dart' as imageLib;
 import 'package:path_provider/path_provider.dart';
 import 'package:photofilters/filters/filters.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:sizer/sizer.dart';
 
 import 'create_edit_filters_template.dart';
 
@@ -110,124 +111,126 @@ class _PhotoFilterSelectorState extends State<PhotoFilterSelector> {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        appBar: AppBar(
-          title: Text(
-            "Выберите фильтр",
-            style: TextStyle(
-              color: AppStyle.colorDark,
-            ),
-          ),
-          leading: IconButton(
-            icon: const Icon(Icons.arrow_back_ios_rounded),
-            onPressed: () {
-              Navigator.pop(context);
-            },
-          ),
-          actions: <Widget>[
-            loading
-                ? Padding(
-                    padding: const EdgeInsets.only(right: 10),
-                    child: Center(
-                      child: SizedBox(
-                        width: 25,
-                        height: 25,
-                        child: Center(
-                          child: !Platform.isIOS
-                              ? const CircularProgressIndicator(
-                                  strokeWidth: 2,
-                                  backgroundColor: Colors.white,
-                                )
-                              : const CupertinoActivityIndicator(
-                                  radius: 10,
-                                ),
-                        ),
-                      ),
-                    ),
-                  )
-                : IconButton(
-                    icon: Icon(
-                      Icons.check_rounded,
-                      size: 32,
-                      color: AppStyle.colorRed,
-                    ),
-                    onPressed: () async {
-                      setState(() {
-                        loading = true;
-                      });
-                      await saveFilteredImage();
-                    },
-                  )
-          ],
-          elevation: 10,
-          shadowColor: Colors.grey[300],
-          centerTitle: true,
-          backgroundColor: Colors.white,
-          iconTheme: IconThemeData(
+    return Scaffold(
+      appBar: AppBar(
+        brightness: Brightness.light,
+        title: Text(
+          "Выберите фильтр",
+          style: TextStyle(
+            fontFamily: Platform.isIOS ? 'SF Pro Display' : '',
+            fontWeight: FontWeight.bold,
+            fontSize: 14.0.sp,
             color: AppStyle.colorDark,
           ),
         ),
-        body: Container(
-          width: double.infinity,
-          height: double.infinity,
-          child: loading
-              ? widget.loader
-              : Column(
-                  mainAxisSize: MainAxisSize.max,
-                  children: [
-                    Expanded(
-                      flex: 7,
-                      child: Container(
-                        width: double.infinity,
-                        height: double.infinity,
-                        padding: const EdgeInsets.all(12.0),
-                        child: Padding(
-                          padding: const EdgeInsets.only(top: 8),
-                          child: _buildFilteredImage(
-                            _filter,
-                            image,
-                            filename,
-                          ),
-                        ),
-                      ),
-                    ),
-                    Expanded(
-                      flex: 2,
-                      child: SizedBox(
-                        child: ListView.builder(
-                          scrollDirection: Axis.horizontal,
-                          itemCount: widget.filters.length,
-                          addAutomaticKeepAlives: true,
-                          itemBuilder: (BuildContext context, int index) {
-                            return InkWell(
-                              child: Padding(
-                                padding: const EdgeInsets.all(8),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: <Widget>[
-                                    _buildFilterThumbnail(widget.filters[index],
-                                        image, filename, index),
-                                    const SizedBox(
-                                      height: 7,
-                                    ),
-                                    Text(
-                                      widget.filters[index].name,
-                                    )
-                                  ],
-                                ),
-                              ),
-                              onTap: () => setState(() {
-                                _filter = widget.filters[index];
-                              }),
-                            );
-                          },
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back_ios_rounded),
+          onPressed: () {
+            Navigator.pop(context);
+          },
         ),
+        actions: <Widget>[
+          loading
+              ? Padding(
+                  padding: const EdgeInsets.only(right: 10),
+                  child: Center(
+                    child: SizedBox(
+                      width: 25,
+                      height: 25,
+                      child: Center(
+                        child: !Platform.isIOS
+                            ? const CircularProgressIndicator(
+                                strokeWidth: 2,
+                                backgroundColor: Colors.white,
+                              )
+                            : const CupertinoActivityIndicator(
+                                radius: 10,
+                              ),
+                      ),
+                    ),
+                  ),
+                )
+              : IconButton(
+                  icon: Icon(
+                    Icons.check_rounded,
+                    size: 32,
+                    color: AppStyle.colorRed,
+                  ),
+                  onPressed: () async {
+                    setState(() {
+                      loading = true;
+                    });
+                    await saveFilteredImage();
+                  },
+                )
+        ],
+        elevation: 10,
+        shadowColor: Colors.grey[300],
+        centerTitle: true,
+        backgroundColor: Colors.white,
+        iconTheme: IconThemeData(
+          color: AppStyle.colorDark,
+        ),
+      ),
+      body: Container(
+        width: double.infinity,
+        height: double.infinity,
+        child: loading
+            ? widget.loader
+            : Column(
+                mainAxisSize: MainAxisSize.max,
+                children: [
+                  Expanded(
+                    flex: 7,
+                    child: Container(
+                      width: double.infinity,
+                      height: double.infinity,
+                      padding: const EdgeInsets.all(12.0),
+                      child: Padding(
+                        padding: const EdgeInsets.only(top: 8),
+                        child: _buildFilteredImage(
+                          _filter,
+                          image,
+                          filename,
+                        ),
+                      ),
+                    ),
+                  ),
+                  Expanded(
+                    flex: 2,
+                    child: SizedBox(
+                      child: ListView.builder(
+                        scrollDirection: Axis.horizontal,
+                        itemCount: widget.filters.length,
+                        addAutomaticKeepAlives: true,
+                        itemBuilder: (BuildContext context, int index) {
+                          return InkWell(
+                            child: Padding(
+                              padding: const EdgeInsets.all(8),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: <Widget>[
+                                  _buildFilterThumbnail(widget.filters[index],
+                                      image, filename, index),
+                                  const SizedBox(
+                                    height: 7,
+                                  ),
+                                  Text(
+                                    widget.filters[index].name,
+                                  )
+                                ],
+                              ),
+                            ),
+                            onTap: () => setState(() {
+                              _filter = widget.filters[index];
+                            }),
+                          );
+                        },
+                      ),
+                    ),
+                  ),
+                ],
+              ),
       ),
     );
   }

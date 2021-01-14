@@ -38,6 +38,7 @@ dependencies:
   #file permission
   #for compressing and resizing image
   flutter_native_image: 0.0.5+3
+  sizer: 1.1.8
 
 dev_dependencies:
   flutter_test:
@@ -75,3 +76,12 @@ flutter:
         - asset: assets/alfa_fonts/Styrene A LC-Regular.otf
         - asset: assets/alfa_fonts/Styrene A LC-Thin Italic.otf
         - asset: assets/alfa_fonts/Styrene A LC-Thin.otf
+
+    - family: SF Pro Display
+      fonts:
+        - asset: assets/cupertino/FontsFree-Net-SFProDisplay-Bold.ttf
+        - asset: assets/cupertino/FontsFree-Net-SFProDisplay-Regular.ttf
+
+    - family: SF Pro Display Regular
+      fonts:
+        - asset: assets/cupertino/FontsFree-Net-SFProDisplay-Regular.ttf

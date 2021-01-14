@@ -3,13 +3,14 @@ import 'dart:io';
 import 'package:alfa_project/components/styles/app_style.dart';
 import 'package:alfa_project/provider/auth_bloc.dart';
 import 'package:alfa_project/provider/filter_bloc.dart';
-import 'package:alfa_project/provider/search_text_image.dart';
+import 'package:alfa_project/provider/search_text_img_bloc.dart';
 import 'package:alfa_project/provider/story_bloc.dart';
 import 'package:alfa_project/screens/auth/login_screen.dart';
 import 'package:alfa_project/screens/home/select_story_type.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:sizer/sizer_util.dart';
 
 class MyApp extends StatelessWidget {
   @override
@@ -29,35 +30,41 @@ class MyApp extends StatelessWidget {
           create: (context) => FilterBloc(),
         ),
       ],
-      child: MaterialApp(
-        debugShowCheckedModeBanner: false,
-        theme: ThemeData(
-          primarySwatch: Colors.red,
-          platform:
-              Platform.isIOS ? TargetPlatform.iOS : TargetPlatform.android,
-          scaffoldBackgroundColor: AppStyle.mainbgColor,
-          visualDensity: VisualDensity.adaptivePlatformDensity,
-        ),
-        home: FutureBuilder(
-            future: SharedPreferences.getInstance(),
-            builder: (BuildContext context, snapshot) {
-              if (snapshot.data == null)
-                return const Scaffold(
-                  body: Center(
-                    child: SizedBox(
-                      width: 30,
-                      height: 30,
-                      child: CircularProgressIndicator(),
-                    ),
-                  ),
-                );
-              bool isLogged = snapshot.data.getBool('isReminder') ?? false;
-              if (isLogged)
-                return SelectTypeTemplate();
-              else
-                return LoginScreen();
-            }),
-      ),
+      child: LayoutBuilder(builder: (context, constraints) {
+        return OrientationBuilder(builder: (context, orientation) {
+          SizerUtil().init(constraints, orientation);
+          return MaterialApp(
+            debugShowCheckedModeBanner: false,
+            theme: ThemeData(
+              brightness: Brightness.light,
+              primarySwatch: Colors.red,
+              platform:
+                  Platform.isIOS ? TargetPlatform.iOS : TargetPlatform.android,
+              scaffoldBackgroundColor: AppStyle.mainbgColor,
+              visualDensity: VisualDensity.adaptivePlatformDensity,
+            ),
+            home: FutureBuilder(
+                future: SharedPreferences.getInstance(),
+                builder: (BuildContext context, snapshot) {
+                  if (snapshot.data == null)
+                    return const Scaffold(
+                      body: Center(
+                        child: SizedBox(
+                          width: 30,
+                          height: 30,
+                          child: CircularProgressIndicator(),
+                        ),
+                      ),
+                    );
+                  bool isLogged = snapshot.data.getBool('isReminder') ?? false;
+                  if (isLogged)
+                    return SelectTypeTemplate();
+                  else
+                    return LoginScreen();
+                }),
+          );
+        });
+      }),
     );
   }
 }

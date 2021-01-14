@@ -173,17 +173,32 @@ class CustomActionDialog extends StatelessWidget {
     switch (val) {
       case DialogType.AlertDialog:
         return CupertinoAlertDialog(
-          title: Text(this.title),
+          title: Text(
+            this.title,
+            style: TextStyle(
+              fontFamily: 'SF Pro Display',
+            ),
+          ),
           actions: <Widget>[
             CupertinoDialogAction(
               isDefaultAction: true,
               isDestructiveAction: true,
-              child: Text("Да"),
+              child: Text(
+                "Да",
+                style: TextStyle(
+                  fontFamily: 'SF Pro Display',
+                ),
+              ),
               onPressed: onPressed,
             ),
             CupertinoDialogAction(
               isDefaultAction: true,
-              child: Text("Нет"),
+              child: Text(
+                "Нет",
+                style: TextStyle(
+                  fontFamily: 'SF Pro Display',
+                ),
+              ),
               onPressed: () => Navigator.pop(context),
             ),
           ],
@@ -191,16 +206,35 @@ class CustomActionDialog extends StatelessWidget {
         break;
       case DialogType.InfoDialog:
         return CupertinoAlertDialog(
-          title: Text(isSuccess
-              ? "Картинка успешно сохранена!"
-              : "Ошибка при сохранении картинки!"),
-          content: Text(isSuccess
-              ? "Можете посмотреть в галереи."
-              : "Повторите попытку еще раз, проверьте еще раз доступ."),
+          title: Text(
+            isSuccess
+                ? "Картинка успешно сохранена!"
+                : "Ошибка при сохранении картинки!",
+            style: TextStyle(
+              fontFamily: 'SF Pro Display',
+            ),
+          ),
+          content: Padding(
+            padding: const EdgeInsets.symmetric(vertical: 7),
+            child: Text(
+              isSuccess
+                  ? "Можете посмотреть в галереи."
+                  : "Повторите попытку еще раз, проверьте еще раз доступ.",
+              style: TextStyle(
+                letterSpacing: 0.5,
+                fontFamily: 'SF Pro Display',
+              ),
+            ),
+          ),
           actions: <Widget>[
             CupertinoDialogAction(
               isDefaultAction: true,
-              child: Text("Ок"),
+              child: Text(
+                "ОK",
+                style: TextStyle(
+                  fontFamily: 'SF Pro Display',
+                ),
+              ),
               onPressed: onPressed,
             ),
           ],

@@ -1,7 +1,9 @@
 import 'package:alfa_project/components/widgets/bounce_button.dart';
-import 'package:alfa_project/provider/search_text_image.dart';
+import 'package:alfa_project/provider/search_text_img_bloc.dart';
 import 'package:alfa_project/screens/search/picker_image_text.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
+import 'package:sizer/sizer.dart';
 import 'package:flutter/services.dart';
 
 import 'package:alfa_project/components/icons/custom_icons.dart';
@@ -10,7 +12,12 @@ import 'package:provider/provider.dart';
 class SearchPickerScreen extends StatefulWidget {
   final bool isText;
   final bool isTextToImage;
-  SearchPickerScreen({Key key, this.isText, this.isTextToImage})
+  final bool isDecorationCategory;
+  SearchPickerScreen(
+      {Key key,
+      this.isText,
+      this.isTextToImage,
+      this.isDecorationCategory = false})
       : super(key: key);
 
   @override
@@ -38,86 +45,103 @@ class _SearchPickerScreenState extends State<SearchPickerScreen> {
 
   Future _getTextBase() async {
     final bloc = Provider.of<SearchTextImageBloc>(context, listen: false);
-    return await bloc.getTextBase();
+    return await bloc.getTextBaseCategory();
+  }
+
+  _setClear() {
+    final bloc = Provider.of<SearchTextImageBloc>(context, listen: false);
+    bloc.setClearData();
   }
 
   @override
   Widget build(BuildContext context) {
     final mainTextStyle = TextStyle(
       color: Colors.white,
-      fontSize: 17,
-      fontWeight: FontWeight.w300,
+      fontFamily: 'SF Pro Display Regular',
+      fontSize: 13.0.sp,
     );
-    final bloc = Provider.of<SearchTextImageBloc>(context, listen: true);
 
-    return SafeArea(
-      child: WillPopScope(
-        onWillPop: () async => false,
-        child: Scaffold(
-          backgroundColor: Color(0xFF6E7886).withOpacity(0.8),
-          resizeToAvoidBottomPadding: false,
-          body: Column(
-            children: [
-              Padding(
-                padding: const EdgeInsets.only(left: 19, top: 5),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      widget.isText ? 'База текстов' : 'Стикеры',
-                      style: TextStyle(
-                        fontSize: 24,
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: SizedBox(
-                        height: 35,
-                        width: 35,
-                        child: BounceButton(
-                          onPressed: () {
-                            bloc.setClearData();
-                            Navigator.pop(context);
-                          },
-                          iconImagePath: IconsClass.closeIcon,
-                        ),
-                      ),
-                    ),
-                  ],
+    return WillPopScope(
+      onWillPop: () async => false,
+      child: Scaffold(
+        backgroundColor: Color(0xFF6E7886).withOpacity(0.8),
+        resizeToAvoidBottomPadding: false,
+        appBar: AppBar(
+          leadingWidth: 0,
+          primary: true,
+          elevation: 0,
+          centerTitle: false,
+          title: Text(
+            widget.isText ? 'База текстов' : 'Стикеры',
+            style: TextStyle(
+              fontSize: 24,
+              color: Colors.white,
+              fontFamily: 'SF Pro Display',
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          automaticallyImplyLeading: false,
+          backgroundColor: Colors.transparent,
+          actions: [
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: SizedBox(
+                height: 35,
+                width: 35,
+                child: BounceButton(
+                  onPressed: () {
+                    _setClear();
+                    Navigator.pop(context);
+                  },
+                  iconImagePath: IconsClass.closeIcon,
                 ),
               ),
+            ),
+          ],
+        ),
+        body: Consumer<SearchTextImageBloc>(
+          builder: (context, bloc, child) => Column(
+            children: [
               widget.isText
                   ? Padding(
                       padding: const EdgeInsets.symmetric(
                           horizontal: 18, vertical: 16),
                       child: Container(
                         decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(4),
+                          borderRadius: BorderRadius.circular(5),
                           color: Color.fromRGBO(255, 255, 255, 0.1),
                         ),
                         child: TextField(
                             cursorColor: Colors.white,
                             cursorWidth: 2,
                             cursorRadius: Radius.circular(3),
+                            textAlign: TextAlign.start,
                             style: TextStyle(
                               fontSize: 18,
                               color: Colors.grey[300],
                             ),
                             decoration: InputDecoration(
                               border: InputBorder.none,
+                              isDense: true,
+                              contentPadding:
+                                  EdgeInsets.symmetric(vertical: 12),
                               hintText: 'Поиск',
-                              icon: Padding(
-                                padding: const EdgeInsets.only(left: 5),
-                                child: const Icon(
-                                  Icons.search,
-                                  color: Colors.grey,
+                              prefixIcon: SizedBox(
+                                height: 10,
+                                child: Padding(
+                                  padding:
+                                      const EdgeInsets.symmetric(vertical: 12),
+                                  child: SvgPicture.asset(
+                                    'assets/images/svg/search.svg',
+                                    height: 0,
+                                    width: 0,
+                                  ),
                                 ),
                               ),
+                              alignLabelWithHint: false,
                               hintStyle: TextStyle(
-                                color: Colors.grey[200],
-                                fontSize: 15,
+                                color: Colors.white,
+                                fontSize: 16,
                                 fontWeight: FontWeight.w300,
                               ),
                             ),
@@ -133,7 +157,7 @@ class _SearchPickerScreenState extends State<SearchPickerScreen> {
                       ),
                     )
                   : const SizedBox(
-                      height: 30,
+                      height: 10,
                     ),
               bloc.getSearchText.length == 0
                   ? FutureBuilder(
@@ -150,15 +174,47 @@ class _SearchPickerScreenState extends State<SearchPickerScreen> {
                               ),
                             ),
                           );
-                        // log('${snapshot.data}');
                         return Expanded(
                           child: ListView.builder(
                               shrinkWrap: true,
                               addAutomaticKeepAlives: true,
                               itemCount: snapshot.data.length,
                               itemBuilder: (_, index) {
-                                if (snapshot.data[index]['id'] == 116)
-                                  return SizedBox();
+                                if (this.widget.isDecorationCategory) {
+                                  if (snapshot.data[index]['id'] == 107)
+                                    return SizedBox();
+                                  if (snapshot.data[index]['id'] == 108)
+                                    return SizedBox();
+                                  if (snapshot.data[index]['id'] == 109)
+                                    return SizedBox();
+                                  if (snapshot.data[index]['id'] == 110)
+                                    return SizedBox();
+                                  if (snapshot.data[index]['id'] == 111)
+                                    return SizedBox();
+                                  if (snapshot.data[index]['id'] == 112)
+                                    return SizedBox();
+                                  if (snapshot.data[index]['id'] == 113)
+                                    return SizedBox();
+                                  if (snapshot.data[index]['id'] == 114)
+                                    return SizedBox();
+                                  if (snapshot.data[index]['id'] == 117)
+                                    return SizedBox();
+                                  if (snapshot.data[index]['id'] == 118)
+                                    return SizedBox();
+                                } else {
+                                  if (snapshot.data[index]['id'] == 116)
+                                    return SizedBox();
+                                  if (snapshot.data[index]['id'] == 111)
+                                    return SizedBox();
+                                  if (snapshot.data[index]['id'] == 121)
+                                    return SizedBox();
+                                  if (snapshot.data[index]['id'] == 120)
+                                    return SizedBox();
+                                  if (snapshot.data[index]['id'] == 119)
+                                    return SizedBox();
+                                  if (snapshot.data[index]['id'] == 115)
+                                    return SizedBox();
+                                }
                                 return Column(
                                   children: [
                                     ListTile(
@@ -167,10 +223,12 @@ class _SearchPickerScreenState extends State<SearchPickerScreen> {
                                         MaterialPageRoute(
                                           builder: (context) =>
                                               StickerTextPicker(
+                                            isDecoration:
+                                                widget.isDecorationCategory,
                                             isTextToImage: widget.isTextToImage,
                                             id: snapshot.data[index]['id'],
                                             title: widget.isText
-                                                ? snapshot.data[index]['title']
+                                                ? snapshot.data[index]['text']
                                                 : snapshot.data[index]['text'],
                                             isTextBase:
                                                 widget.isText ? true : false,
@@ -180,17 +238,17 @@ class _SearchPickerScreenState extends State<SearchPickerScreen> {
                                       ),
                                       title: Text(
                                         widget.isText
-                                            ? '${snapshot.data[index]['title']}'
+                                            ? '${snapshot.data[index]['text']}'
                                             : '${snapshot.data[index]['text']}',
                                         style: mainTextStyle,
                                       ),
-                                      trailing: const SizedBox(
+                                      trailing: SizedBox(
                                         width: 20,
                                         child: Center(
                                           child: Icon(
-                                            Icons.arrow_forward_ios_rounded,
+                                            Icons.arrow_forward_ios,
                                             color: Colors.white,
-                                            size: 20,
+                                            size: 15.0.sp,
                                           ),
                                         ),
                                       ),
@@ -211,7 +269,7 @@ class _SearchPickerScreenState extends State<SearchPickerScreen> {
                     )
                   : Expanded(
                       child: ListView.separated(
-                          itemCount: bloc.getSearchText['data'].length,
+                          itemCount: bloc.getSearchText.length,
                           shrinkWrap: true,
                           separatorBuilder: (context, index) => Divider(
                                 thickness: 1,
@@ -228,20 +286,18 @@ class _SearchPickerScreenState extends State<SearchPickerScreen> {
                                     builder: (context) => StickerTextPicker(
                                       isTextToImage: widget.isTextToImage,
                                       isTextBase: true,
-                                      id: bloc.getSearchText['data'][i]['id'],
-                                      title: bloc.getSearchText['data'][i]
-                                          ['title'],
-                                      text: bloc.getSearchText['data'][i]
-                                          ['text'],
+                                      id: bloc.getSearchText[i]['id'],
+                                      title: bloc.getSearchText[i]['title'],
+                                      text: bloc.getSearchText[i]['text'],
                                     ),
                                   ),
                                 );
                               },
                               title: Text(
-                                '${bloc.getSearchText['data'][i]['title']}',
+                                '${bloc.getSearchText[i]['title']}',
                                 style: TextStyle(
                                   color: Colors.white,
-                                  fontSize: 23,
+                                  fontSize: 18.0.sp,
                                   fontWeight: FontWeight.bold,
                                 ),
                               ),
@@ -249,10 +305,10 @@ class _SearchPickerScreenState extends State<SearchPickerScreen> {
                                 padding:
                                     const EdgeInsets.symmetric(vertical: 8),
                                 child: Text(
-                                  '${bloc.getSearchText['data'][i]['text']}',
+                                  '${bloc.getSearchText[i]['text']}',
                                   style: TextStyle(
                                     color: Colors.white,
-                                    fontSize: 15,
+                                    fontSize: 11.0.sp,
                                     fontWeight: FontWeight.w300,
                                   ),
                                 ),
@@ -271,7 +327,7 @@ class _SearchPickerScreenState extends State<SearchPickerScreen> {
     final bloc = Provider.of<SearchTextImageBloc>(context, listen: false);
 
     if (val.length != 0) {
-      bloc.searchText(val, context);
+      bloc.searchText(val.trim(), context);
     } else {
       bloc.setClearData();
     }

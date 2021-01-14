@@ -17,8 +17,12 @@ class SearchTextImageBloc extends ChangeNotifier {
     return await _alfaApi.getCategory();
   }
 
-  Future getTextBase() async {
-    return await _alfaApi.getText();
+  Future getTextBaseCategory() async {
+    return await _alfaApi.getTextBaseCategory();
+  }
+
+  Future getTextId(int _id) async {
+    return await _alfaApi.getTextId(_id);
   }
 
   Future getImages(int catId, BuildContext context) async {
@@ -33,7 +37,7 @@ class SearchTextImageBloc extends ChangeNotifier {
   searchText(String query, BuildContext context) async {
     setLoadingState(true);
     _alfaApi.getSearchText(query.trim(), context).then((value) {
-      if (value != null) setSearchedData(value);
+      if (value != null) setSearchedData(value['data']);
     }).whenComplete(() => setLoadingState(false));
   }
 

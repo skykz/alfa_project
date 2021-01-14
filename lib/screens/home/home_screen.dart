@@ -3,6 +3,7 @@ import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:alfa_project/components/icons/custom_icons.dart';
+import 'package:alfa_project/components/styles/app_style.dart';
 import 'package:alfa_project/components/widgets/bounce_button.dart';
 import 'package:alfa_project/components/widgets/fade_transition.dart';
 import 'package:alfa_project/core/data/models/dialog_type.dart';
@@ -15,6 +16,7 @@ import 'package:flutter_native_image/flutter_native_image.dart';
 import 'package:gallery_saver/gallery_saver.dart';
 import 'package:path_provider/path_provider.dart';
 import 'dart:ui' as ui;
+import 'package:sizer/sizer.dart';
 
 import 'package:provider/provider.dart';
 
@@ -44,161 +46,195 @@ class _HomeMainScreenState extends State<HomeMainScreen> {
   @override
   Widget build(BuildContext context) {
     final storyBloc = Provider.of<StoryBloc>(context);
-    return SafeArea(
-      child: Scaffold(
-        body: Stack(
-          fit: StackFit.expand,
-          children: [
-            Center(
-              child: AspectRatio(
-                aspectRatio: storyBloc.getIsStoryTemplate ? (9 / 16) : (4 / 5),
-                child: RepaintBoundary(
-                  key: globalKey,
-                  child: Scaffold(
-                    backgroundColor: widget.mainColor,
-                    body: Image.asset(setBackgroundImage(
-                        storyBloc.getIsStoryTemplate, widget.mainColor)),
+    return Container(
+      color: storyBloc.getBackColor,
+      child: SafeArea(
+        child: Scaffold(
+          body: Container(
+            color: widget.mainColor,
+            child: Stack(
+              fit: StackFit.expand,
+              children: [
+                Center(
+                  child: Align(
+                    alignment: storyBloc.getIsStoryTemplate
+                        ? Alignment.bottomCenter
+                        : Alignment.center,
+                    child: Container(
+                      decoration: BoxDecoration(boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withOpacity(0.3),
+                          blurRadius: 10,
+                        ),
+                      ]),
+                      child: AspectRatio(
+                        aspectRatio:
+                            storyBloc.getIsStoryTemplate ? (9 / 16) : (4 / 5),
+                        child: RepaintBoundary(
+                          key: globalKey,
+                          child: Scaffold(
+                            backgroundColor: widget.mainColor,
+                            body: Image.asset(
+                              setBackgroundImage(storyBloc.getIsStoryTemplate,
+                                  widget.mainColor),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
                   ),
                 ),
-              ),
-            ),
-            Positioned(
-              top: 0,
-              left: 0,
-              right: 0,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  IconButton(
-                    icon: const Icon(
-                      Icons.arrow_back_ios_rounded,
-                      color: Colors.black54,
+                Positioned(
+                  top: 10,
+                  left: 0,
+                  right: 0,
+                  child: Padding(
+                    padding: const EdgeInsets.only(right: 15),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        IconButton(
+                          icon: Icon(
+                            Icons.arrow_back_ios_rounded,
+                            color: AppStyle.colorDark,
+                          ),
+                          onPressed: () => Navigator.pop(context),
+                        ),
+                        Row(
+                          children: [
+                            Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 25),
+                              child: Column(
+                                children: [
+                                  SizedBox(
+                                    height: 40,
+                                    width: 40,
+                                    child: BounceButton(
+                                      onPressed: () {
+                                        Navigator.pushReplacement(
+                                          context,
+                                          FadeRouteBuilder(
+                                            page: CreateTextTemplateScreen(),
+                                          ),
+                                        );
+                                      },
+                                      iconImagePath: storyBloc.getBackColor ==
+                                              AppStyle.colorRed
+                                          ? IconsClass.textSelectIcon
+                                          : IconsClass.textSelectIconDark,
+                                    ),
+                                  ),
+                                  Text(
+                                    'Текст',
+                                    style: TextStyle(
+                                      fontSize: 8.0.sp,
+                                      fontWeight: FontWeight.w400,
+                                      color: Color(0xff172A3F),
+                                    ),
+                                  )
+                                ],
+                              ),
+                            ),
+                            Column(
+                              children: [
+                                SizedBox(
+                                  height: 40,
+                                  width: 40,
+                                  child: BounceButton(
+                                    onPressed: () {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) =>
+                                              SearchPickerScreen(
+                                            isText: false,
+                                            isTextToImage: true,
+                                          ),
+                                        ),
+                                      );
+                                    },
+                                    iconImagePath: storyBloc.getBackColor ==
+                                            AppStyle.colorRed
+                                        ? IconsClass.stickerIcon
+                                        : IconsClass.stickerIconDark,
+                                  ),
+                                ),
+                                Text(
+                                  'Стикеры',
+                                  style: TextStyle(
+                                    fontSize: 8.0.sp,
+                                    fontWeight: FontWeight.w400,
+                                    color: Color(0xff172A3F),
+                                  ),
+                                )
+                              ],
+                            ),
+                          ],
+                        )
+                      ],
                     ),
-                    onPressed: () => Navigator.pop(context),
                   ),
-                  Row(
+                ),
+                Positioned(
+                  bottom: 0,
+                  right: 0,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
                     children: [
                       Padding(
                         padding: const EdgeInsets.symmetric(
-                            horizontal: 7, vertical: 5),
+                            vertical: 15, horizontal: 10),
                         child: Column(
                           children: [
                             SizedBox(
-                              height: 40,
-                              width: 40,
+                              height: 45,
+                              width: 45,
                               child: BounceButton(
-                                onPressed: () {
-                                  Navigator.pushReplacement(
-                                    context,
-                                    FadeRouteBuilder(
-                                      page: CreateTextTemplateScreen(),
-                                    ),
-                                  );
-                                },
-                                iconImagePath: IconsClass.textSelectIcon,
+                                onPressed: _capturePng,
+                                iconImagePath:
+                                    storyBloc.getBackColor == AppStyle.colorRed
+                                        ? IconsClass.saveIcon
+                                        : IconsClass.saveIconDark,
                               ),
                             ),
-                            const Text(
-                              'Текст',
+                            Text(
+                              'Сохранить',
                               style: TextStyle(
-                                fontSize: 12,
-                                fontWeight: FontWeight.w300,
-                              ),
-                            )
-                          ],
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 7, vertical: 5),
-                        child: Column(
-                          children: [
-                            SizedBox(
-                              height: 40,
-                              width: 40,
-                              child: BounceButton(
-                                onPressed: () {
-                                  Navigator.pushReplacement(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) => SearchPickerScreen(
-                                        isText: false,
-                                        isTextToImage: true,
-                                      ),
-                                    ),
-                                  );
-                                },
-                                iconImagePath: IconsClass.stickerIcon,
+                                fontSize: 8.0.sp,
+                                fontWeight: FontWeight.w400,
+                                color: Color(0xff172A3F),
                               ),
                             ),
-                            const Text(
-                              'Стикеры',
-                              style: TextStyle(
-                                fontSize: 12,
-                                fontWeight: FontWeight.w300,
-                              ),
-                            )
                           ],
                         ),
                       ),
                     ],
-                  )
-                ],
-              ),
-            ),
-            Positioned(
-              bottom: 0,
-              right: 0,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.symmetric(
-                        vertical: 15, horizontal: 10),
-                    child: Column(
-                      children: [
-                        SizedBox(
-                          height: 45,
-                          width: 45,
-                          child: BounceButton(
-                            onPressed: _capturePng,
-                            iconImagePath: IconsClass.saveIcon,
-                          ),
-                        ),
-                        const Text(
-                          'Сохранить',
-                          style: TextStyle(
-                            fontSize: 12,
-                            fontWeight: FontWeight.w300,
-                          ),
-                        ),
-                      ],
-                    ),
                   ),
-                ],
-              ),
-            ),
-            StreamBuilder(
-              stream: storyBloc.getLoadingStream,
-              builder: (BuildContext context, AsyncSnapshot snapshot) {
-                if (snapshot.data == false) return const SizedBox();
-                return Container(
-                  color: Colors.grey.withOpacity(0.5),
-                  child: const Center(
-                    child: SizedBox(
-                      height: 30,
-                      width: 30,
-                      child: CircularProgressIndicator(
-                        strokeWidth: 2,
-                        backgroundColor: Colors.white,
+                ),
+                StreamBuilder(
+                  stream: storyBloc.getLoadingStream,
+                  builder: (BuildContext context, AsyncSnapshot snapshot) {
+                    if (snapshot.data == false) return const SizedBox();
+                    return Container(
+                      color: Colors.grey.withOpacity(0.5),
+                      child: const Center(
+                        child: SizedBox(
+                          height: 30,
+                          width: 30,
+                          child: CircularProgressIndicator(
+                            strokeWidth: 2,
+                            backgroundColor: Colors.white,
+                          ),
+                        ),
                       ),
-                    ),
-                  ),
-                );
-              },
+                    );
+                  },
+                ),
+              ],
             ),
-          ],
+          ),
         ),
       ),
     );

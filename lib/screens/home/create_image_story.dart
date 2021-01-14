@@ -2,14 +2,12 @@ import 'dart:async';
 import 'dart:developer';
 import 'dart:io';
 import 'dart:typed_data';
-
 import 'package:alfa_project/components/icons/custom_icons.dart';
 import 'package:alfa_project/components/styles/app_style.dart';
 import 'package:alfa_project/components/widgets/bounce_button.dart';
 import 'package:alfa_project/core/data/consts/app_const.dart';
 import 'package:alfa_project/core/data/models/dialog_type.dart';
 import 'package:alfa_project/provider/story_bloc.dart';
-import 'package:alfa_project/screens/search/picker_image_text.dart';
 import 'package:alfa_project/screens/search/search_image_text.dart';
 import 'package:alfa_project/utils/common_utils.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -22,6 +20,7 @@ import 'package:matrix_gesture_detector/matrix_gesture_detector.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
 import 'dart:ui' as ui;
+import 'package:sizer/sizer.dart';
 
 import '../../app.dart';
 import 'dart:math' as math;
@@ -96,6 +95,7 @@ class _CreateEditTemplateScreenState extends State<CreateEditTemplateScreen> {
             null,
             _goBack),
         child: Scaffold(
+          backgroundColor: storyBloc.getBackColor,
           resizeToAvoidBottomPadding: false,
           body: !storyBloc.getLoading
               ? Column(
@@ -125,14 +125,18 @@ class _CreateEditTemplateScreenState extends State<CreateEditTemplateScreen> {
                                         storyBloc.setLoading(true);
                                         storyBloc.setTextEnabled(true);
                                       },
-                                      iconImagePath: IconsClass.textSelectIcon,
+                                      iconImagePath: storyBloc.getBackColor ==
+                                              AppStyle.colorRed
+                                          ? IconsClass.textSelectIcon
+                                          : IconsClass.textSelectIconDark,
                                     ),
                                   ),
-                                  const Text(
+                                  Text(
                                     'Текст',
                                     style: TextStyle(
-                                      fontSize: 12,
-                                      fontWeight: FontWeight.w300,
+                                      fontSize: 8.0.sp,
+                                      fontWeight: FontWeight.w400,
+                                      color: Color(0xff172A3F),
                                     ),
                                   )
                                 ],
@@ -159,14 +163,18 @@ class _CreateEditTemplateScreenState extends State<CreateEditTemplateScreen> {
                                           ),
                                         );
                                       },
-                                      iconImagePath: IconsClass.stickerIcon,
+                                      iconImagePath: storyBloc.getBackColor ==
+                                              AppStyle.colorRed
+                                          ? IconsClass.stickerIcon
+                                          : IconsClass.stickerIconDark,
                                     ),
                                   ),
-                                  const Text(
+                                  Text(
                                     'Стикеры',
                                     style: TextStyle(
-                                      fontSize: 10,
-                                      fontWeight: FontWeight.w300,
+                                      fontSize: 8.0.sp,
+                                      fontWeight: FontWeight.w400,
+                                      color: Color(0xff172A3F),
                                     ),
                                   )
                                 ],
@@ -190,14 +198,18 @@ class _CreateEditTemplateScreenState extends State<CreateEditTemplateScreen> {
                                 child: BounceButton(
                                   isShadow: true,
                                   onPressed: _capturePng,
-                                  iconImagePath: IconsClass.saveIcon,
+                                  iconImagePath: storyBloc.getBackColor ==
+                                          AppStyle.colorRed
+                                      ? IconsClass.saveIcon
+                                      : IconsClass.saveIconDark,
                                 ),
                               ),
-                              const Text(
+                              Text(
                                 'Сохранить',
                                 style: TextStyle(
-                                  fontSize: 11,
-                                  fontWeight: FontWeight.w300,
+                                  fontSize: 8.0.sp,
+                                  fontWeight: FontWeight.w400,
+                                  color: Color(0xff172A3F),
                                 ),
                               ),
                             ],
@@ -212,29 +224,44 @@ class _CreateEditTemplateScreenState extends State<CreateEditTemplateScreen> {
                   child: Stack(
                     children: [
                       Center(
-                        child: AspectRatio(
-                          aspectRatio:
-                              storyBloc.getIsStoryTemplate ? (9 / 16) : (4 / 5),
-                          child: RepaintBoundary(
-                            key: globalKey,
-                            child: Container(
-                              color: storyBloc.getBackColor,
-                              child: Stack(
-                                fit: StackFit.expand,
-                                children: [
-                                  Image.asset(
-                                    setBackgroundImage(
-                                        storyBloc.getIsStoryTemplate,
-                                        storyBloc.getBackColor),
+                        child: Align(
+                          alignment: storyBloc.getIsStoryTemplate
+                              ? Alignment.bottomCenter
+                              : Alignment.center,
+                          child: Container(
+                            decoration:
+                                BoxDecoration(color: Colors.red, boxShadow: [
+                              BoxShadow(
+                                color: Colors.black.withOpacity(0.3),
+                                blurRadius: 10,
+                              ),
+                            ]),
+                            child: AspectRatio(
+                              aspectRatio: storyBloc.getIsStoryTemplate
+                                  ? (9 / 16)
+                                  : (4 / 5),
+                              child: RepaintBoundary(
+                                key: globalKey,
+                                child: Container(
+                                  color: storyBloc.getBackColor,
+                                  child: Stack(
+                                    fit: StackFit.expand,
+                                    children: [
+                                      Image.asset(
+                                        setBackgroundImage(
+                                            storyBloc.getIsStoryTemplate,
+                                            storyBloc.getBackColor),
+                                      ),
+                                      widget.imageUrl != null
+                                          ? _buildMainImage()
+                                          : const SizedBox(),
+                                      storyBloc.getTextEnabled
+                                          ? _buildTextWidget(storyBloc)
+                                          : const SizedBox(),
+                                      _buildDecoImage(),
+                                    ],
                                   ),
-                                  widget.imageUrl != null
-                                      ? _buildMainImage()
-                                      : const SizedBox(),
-                                  storyBloc.getTextEnabled
-                                      ? _buildTextWidget(storyBloc)
-                                      : const SizedBox(),
-                                  _buildDecoImage(),
-                                ],
+                                ),
                               ),
                             ),
                           ),
@@ -246,7 +273,7 @@ class _CreateEditTemplateScreenState extends State<CreateEditTemplateScreen> {
                           : !storyBloc.getImagePositionState
                               ? Positioned(
                                   top: 10,
-                                  right: 10,
+                                  right: 15,
                                   child: Column(
                                     children: [
                                       SizedBox(
@@ -260,15 +287,19 @@ class _CreateEditTemplateScreenState extends State<CreateEditTemplateScreen> {
                                               true,
                                               null,
                                               _goBack),
-                                          iconImagePath: IconsClass.closeIcon,
+                                          iconImagePath:
+                                              storyBloc.getBackColor ==
+                                                      AppStyle.colorRed
+                                                  ? IconsClass.closeIcon
+                                                  : IconsClass.closeIconDark,
                                         ),
                                       ),
                                       Text(
                                         'Закрыть',
                                         style: TextStyle(
-                                          fontSize: 12,
-                                          fontWeight: FontWeight.w300,
-                                          color: Colors.black87,
+                                          fontSize: 8.0.sp,
+                                          fontWeight: FontWeight.w400,
+                                          color: Color(0xff172A3F),
                                         ),
                                       )
                                     ],
@@ -276,40 +307,85 @@ class _CreateEditTemplateScreenState extends State<CreateEditTemplateScreen> {
                                 )
                               : Positioned(
                                   top: 10,
-                                  right: 10,
-                                  child: Row(
-                                    children: [
-                                      Padding(
-                                        padding: const EdgeInsets.symmetric(
-                                            horizontal: 5),
-                                        child: Column(
-                                          children: [
-                                            SizedBox(
-                                              height: 40,
-                                              width: 40,
-                                              child: BounceButton(
-                                                onPressed: () {
-                                                  storyBloc
-                                                      .setTextEnabled(true);
-                                                },
-                                                iconImagePath:
-                                                    IconsClass.textSizeIcon,
-                                              ),
+                                  right: 0,
+                                  left: 0,
+                                  child: Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 15),
+                                    child: Row(
+                                      children: [
+                                        Expanded(
+                                          child: Align(
+                                            alignment: Alignment.centerLeft,
+                                            child: Column(
+                                              children: [
+                                                SizedBox(
+                                                  height: 40,
+                                                  width: 40,
+                                                  child: BounceButton(
+                                                    onPressed: () =>
+                                                        displayCustomDialog(
+                                                            context,
+                                                            "Вы точно хотите покинуть эту страницу?\n",
+                                                            DialogType
+                                                                .AlertDialog,
+                                                            true,
+                                                            null,
+                                                            _goBack),
+                                                    iconImagePath: storyBloc
+                                                                .getBackColor ==
+                                                            AppStyle.colorRed
+                                                        ? IconsClass.closeIcon
+                                                        : IconsClass
+                                                            .closeIconDark,
+                                                  ),
+                                                ),
+                                                Text(
+                                                  'Закрыть',
+                                                  style: TextStyle(
+                                                    fontSize: 8.0.sp,
+                                                    fontWeight: FontWeight.w400,
+                                                    color: Color(0xff172A3F),
+                                                  ),
+                                                ),
+                                              ],
                                             ),
-                                            Text(
-                                              'Текст',
-                                              style: TextStyle(
-                                                fontSize: 12,
-                                                fontWeight: FontWeight.w300,
-                                              ),
-                                            )
-                                          ],
+                                          ),
                                         ),
-                                      ),
-                                      Padding(
-                                        padding: const EdgeInsets.symmetric(
-                                            horizontal: 5),
-                                        child: Column(
+                                        Padding(
+                                          padding: const EdgeInsets.symmetric(
+                                              horizontal: 25),
+                                          child: Column(
+                                            children: [
+                                              SizedBox(
+                                                height: 40,
+                                                width: 40,
+                                                child: BounceButton(
+                                                  onPressed: () {
+                                                    storyBloc
+                                                        .setTextEnabled(true);
+                                                  },
+                                                  iconImagePath: storyBloc
+                                                              .getBackColor ==
+                                                          AppStyle.colorRed
+                                                      ? IconsClass
+                                                          .textSelectIcon
+                                                      : IconsClass
+                                                          .textSelectIconDark,
+                                                ),
+                                              ),
+                                              Text(
+                                                'Текст',
+                                                style: TextStyle(
+                                                  fontSize: 8.0.sp,
+                                                  fontWeight: FontWeight.w400,
+                                                  color: Color(0xff172A3F),
+                                                ),
+                                              )
+                                            ],
+                                          ),
+                                        ),
+                                        Column(
                                           children: [
                                             SizedBox(
                                               height: 40,
@@ -320,35 +396,40 @@ class _CreateEditTemplateScreenState extends State<CreateEditTemplateScreen> {
                                                     context,
                                                     MaterialPageRoute(
                                                       builder: (context) =>
-                                                          StickerTextPicker(
-                                                        isDecoration: true,
-                                                        isTextBase: false,
-                                                        title: "",
-                                                        text: "",
+                                                          SearchPickerScreen(
+                                                        isText: false,
+                                                        isDecorationCategory:
+                                                            true,
+                                                        isTextToImage: false,
                                                       ),
                                                     ),
                                                   );
                                                 },
                                                 iconImagePath:
-                                                    IconsClass.stickerIcon,
+                                                    storyBloc.getBackColor ==
+                                                            AppStyle.colorRed
+                                                        ? IconsClass.stickerIcon
+                                                        : IconsClass
+                                                            .stickerIconDark,
                                               ),
                                             ),
                                             Text(
                                               'Стикеры',
                                               style: TextStyle(
-                                                fontSize: 12,
-                                                fontWeight: FontWeight.w300,
+                                                fontSize: 8.0.sp,
+                                                fontWeight: FontWeight.w400,
+                                                color: Color(0xff172A3F),
                                               ),
                                             )
                                           ],
                                         ),
-                                      ),
-                                    ],
+                                      ],
+                                    ),
                                   ),
                                 ),
                       Positioned(
                         bottom: 10,
-                        right: 10,
+                        right: 15,
                         child: !storyBloc.getTextEnabled
                             ? storyBloc.getImagePositionState
                                 ? Column(
@@ -358,15 +439,19 @@ class _CreateEditTemplateScreenState extends State<CreateEditTemplateScreen> {
                                         width: 45,
                                         child: BounceButton(
                                           onPressed: _capturePng,
-                                          iconImagePath: IconsClass.saveIcon,
+                                          iconImagePath:
+                                              storyBloc.getBackColor ==
+                                                      AppStyle.colorRed
+                                                  ? IconsClass.saveIcon
+                                                  : IconsClass.saveIconDark,
                                         ),
                                       ),
                                       Text(
                                         'Сохранить',
                                         style: TextStyle(
-                                          fontSize: 12,
-                                          fontWeight: FontWeight.w300,
-                                          color: AppStyle.colorDark,
+                                          fontSize: 8.0.sp,
+                                          fontWeight: FontWeight.w400,
+                                          color: Color(0xff172A3F),
                                         ),
                                       )
                                     ],
@@ -381,15 +466,19 @@ class _CreateEditTemplateScreenState extends State<CreateEditTemplateScreen> {
                                             storyBloc
                                                 .setImagePositionState(true);
                                           },
-                                          iconImagePath: IconsClass.doneIcon,
+                                          iconImagePath:
+                                              storyBloc.getBackColor ==
+                                                      AppStyle.colorRed
+                                                  ? IconsClass.doneIcon
+                                                  : IconsClass.doneIconDark,
                                         ),
                                       ),
                                       Text(
                                         'Готово',
                                         style: TextStyle(
-                                          fontSize: 12,
-                                          fontWeight: FontWeight.w300,
-                                          color: AppStyle.colorDark,
+                                          fontSize: 8.0.sp,
+                                          fontWeight: FontWeight.w400,
+                                          color: Color(0xff172A3F),
                                         ),
                                       )
                                     ],
@@ -402,15 +491,19 @@ class _CreateEditTemplateScreenState extends State<CreateEditTemplateScreen> {
                                         width: 45,
                                         child: BounceButton(
                                           onPressed: _capturePng,
-                                          iconImagePath: IconsClass.saveIcon,
+                                          iconImagePath:
+                                              storyBloc.getBackColor ==
+                                                      AppStyle.colorRed
+                                                  ? IconsClass.saveIcon
+                                                  : IconsClass.saveIconDark,
                                         ),
                                       ),
                                       Text(
                                         'Сохранить',
                                         style: TextStyle(
-                                          fontSize: 12,
-                                          fontWeight: FontWeight.w300,
-                                          color: AppStyle.colorDark,
+                                          fontSize: 8.0.sp,
+                                          fontWeight: FontWeight.w400,
+                                          color: Color(0xff172A3F),
                                         ),
                                       )
                                     ],
@@ -425,15 +518,19 @@ class _CreateEditTemplateScreenState extends State<CreateEditTemplateScreen> {
                                             storyBloc.setTextPosition(true);
                                             FocusScope.of(context).unfocus();
                                           },
-                                          iconImagePath: IconsClass.doneIcon,
+                                          iconImagePath:
+                                              storyBloc.getBackColor ==
+                                                      AppStyle.colorRed
+                                                  ? IconsClass.doneIcon
+                                                  : IconsClass.doneIconDark,
                                         ),
                                       ),
                                       Text(
                                         'Готово',
                                         style: TextStyle(
-                                          fontSize: 12,
-                                          fontWeight: FontWeight.w300,
-                                          color: AppStyle.colorDark,
+                                          fontSize: 8.0.sp,
+                                          fontWeight: FontWeight.w400,
+                                          color: Color(0xff172A3F),
                                         ),
                                       )
                                     ],
@@ -442,7 +539,7 @@ class _CreateEditTemplateScreenState extends State<CreateEditTemplateScreen> {
                       storyBloc.getImagePositionState
                           ? Positioned(
                               bottom: 10,
-                              left: 10,
+                              left: 15,
                               child: Column(
                                 children: [
                                   SizedBox(
@@ -457,15 +554,18 @@ class _CreateEditTemplateScreenState extends State<CreateEditTemplateScreen> {
                                         else
                                           storyBloc.setUndoImageState(false);
                                       },
-                                      iconImagePath: IconsClass.undoIcon,
+                                      iconImagePath: storyBloc.getBackColor ==
+                                              AppStyle.colorRed
+                                          ? IconsClass.undoIcon
+                                          : IconsClass.undoIconDark,
                                     ),
                                   ),
                                   Text(
                                     'Вернуть',
                                     style: TextStyle(
-                                      fontSize: 12,
-                                      fontWeight: FontWeight.w300,
-                                      color: AppStyle.colorDark,
+                                      fontSize: 8.0.sp,
+                                      fontWeight: FontWeight.w400,
+                                      color: Color(0xff172A3F),
                                     ),
                                   )
                                 ],
@@ -475,34 +575,38 @@ class _CreateEditTemplateScreenState extends State<CreateEditTemplateScreen> {
                       storyBloc.getTextEnabled
                           ? Positioned(
                               bottom: 10,
-                              left: 10,
+                              left: 15,
                               child: Column(
                                 children: [
                                   SizedBox(
                                     height: 45,
                                     width: 45,
                                     child: BounceButton(
-                                      onPressed: () {
-                                        if (storyBloc
-                                                .getChildrenStickers.length >
-                                            0) {
-                                          storyBloc.removeLastWidgetChildren();
-                                        } else {
-                                          storyBloc.setUndoTextState(false);
-                                          if (storyBloc.getImagePositionState ==
-                                              false)
-                                            storyBloc.setLoading(false);
-                                        }
-                                      },
-                                      iconImagePath: IconsClass.undoIcon,
-                                    ),
+                                        onPressed: () {
+                                          if (storyBloc
+                                                  .getChildrenStickers.length >
+                                              0) {
+                                            storyBloc
+                                                .removeLastWidgetChildren();
+                                          } else {
+                                            storyBloc.setUndoTextState(false);
+                                            if (storyBloc
+                                                    .getImagePositionState ==
+                                                false)
+                                              storyBloc.setLoading(false);
+                                          }
+                                        },
+                                        iconImagePath: storyBloc.getBackColor ==
+                                                AppStyle.colorRed
+                                            ? IconsClass.undoIcon
+                                            : IconsClass.undoIconDark),
                                   ),
                                   Text(
                                     'Вернуть',
                                     style: TextStyle(
-                                      fontSize: 12,
-                                      fontWeight: FontWeight.w300,
-                                      color: AppStyle.colorDark,
+                                      fontSize: 8.0.sp,
+                                      fontWeight: FontWeight.w400,
+                                      color: Color(0xff172A3F),
                                     ),
                                   )
                                 ],
@@ -513,16 +617,16 @@ class _CreateEditTemplateScreenState extends State<CreateEditTemplateScreen> {
                           ? storyBloc.getTextPositionSaved
                               ? const SizedBox()
                               : Positioned(
-                                  bottom: 40,
-                                  left: 50,
-                                  right: 50,
+                                  bottom: 70,
+                                  left: 55,
+                                  right: 55,
                                   child: Column(
                                     children: [
                                       SliderTheme(
                                         data: SliderTheme.of(context).copyWith(
                                           thumbShape: RoundSliderThumbShape(
                                             elevation: 10,
-                                            enabledThumbRadius: 8,
+                                            enabledThumbRadius: 10,
                                             pressedElevation: 12,
                                           ),
                                         ),
@@ -540,13 +644,13 @@ class _CreateEditTemplateScreenState extends State<CreateEditTemplateScreen> {
                                         ),
                                       ),
                                       SizedBox(
-                                        height: 16,
+                                        height: 38,
                                         child: SliderTheme(
                                           data:
                                               SliderTheme.of(context).copyWith(
                                             thumbShape: RoundSliderThumbShape(
                                               elevation: 10,
-                                              enabledThumbRadius: 8,
+                                              enabledThumbRadius: 10,
                                               pressedElevation: 12,
                                             ),
                                           ),
@@ -600,14 +704,11 @@ class _CreateEditTemplateScreenState extends State<CreateEditTemplateScreen> {
   Widget _buildToolBar(StoryBloc storyBloc) {
     return Positioned(
       top: 10,
-      left: 10,
-      right: 10,
+      left: 0,
+      right: 0,
       child: Container(
-        color: storyBloc.getIsStoryTemplate
-            ? storyBloc.getBackColor == AppStyle.colorRed
-                ? Color(0xffEF3124)
-                : Color(0xffF3F4F5)
-            : Colors.transparent,
+        color: Colors.transparent,
+        padding: const EdgeInsets.symmetric(horizontal: 15),
         child: AnimatedSwitcher(
           duration: const Duration(milliseconds: 300),
           transitionBuilder: (Widget child, Animation<double> animation) =>
@@ -620,7 +721,7 @@ class _CreateEditTemplateScreenState extends State<CreateEditTemplateScreen> {
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
                     Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 5),
+                      padding: const EdgeInsets.symmetric(horizontal: 25),
                       child: Column(
                         children: [
                           SizedBox(
@@ -631,56 +732,59 @@ class _CreateEditTemplateScreenState extends State<CreateEditTemplateScreen> {
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                    builder: (context) => StickerTextPicker(
-                                      isDecoration: true,
-                                      isTextBase: false,
-                                      title: "",
-                                      text: "",
+                                    builder: (context) => SearchPickerScreen(
+                                      isText: false,
+                                      isDecorationCategory: true,
+                                      isTextToImage: false,
                                     ),
                                   ),
                                 );
                               },
-                              iconImagePath: IconsClass.stickerIcon,
+                              iconImagePath:
+                                  storyBloc.getBackColor == AppStyle.colorRed
+                                      ? IconsClass.stickerIcon
+                                      : IconsClass.stickerIconDark,
                             ),
                           ),
                           Text(
                             'Стикеры',
                             style: TextStyle(
-                              fontSize: 12,
-                              fontWeight: FontWeight.w300,
+                              fontSize: 8.0.sp,
+                              fontWeight: FontWeight.w400,
+                              color: Color(0xff172A3F),
                             ),
                           )
                         ],
                       ),
                     ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 5),
-                      child: Column(
-                        children: [
-                          SizedBox(
-                            height: 40,
-                            width: 40,
-                            child: BounceButton(
-                              onPressed: () => displayCustomDialog(
-                                  context,
-                                  "Вы точно хотите покинуть эту страницу?\n",
-                                  DialogType.AlertDialog,
-                                  true,
-                                  null,
-                                  _goBack),
-                              iconImagePath: IconsClass.closeIcon,
-                            ),
+                    Column(
+                      children: [
+                        SizedBox(
+                          height: 40,
+                          width: 40,
+                          child: BounceButton(
+                            onPressed: () => displayCustomDialog(
+                                context,
+                                "Вы точно хотите покинуть эту страницу?\n",
+                                DialogType.AlertDialog,
+                                true,
+                                null,
+                                _goBack),
+                            iconImagePath:
+                                storyBloc.getBackColor == AppStyle.colorRed
+                                    ? IconsClass.closeIcon
+                                    : IconsClass.closeIconDark,
                           ),
-                          Text(
-                            'Удалить',
-                            style: TextStyle(
-                              fontSize: 12,
-                              fontWeight: FontWeight.w300,
-                              color: AppStyle.colorDark,
-                            ),
+                        ),
+                        Text(
+                          'Закрыть',
+                          style: TextStyle(
+                            fontSize: 8.0.sp,
+                            fontWeight: FontWeight.w400,
+                            color: Color(0xff172A3F),
                           ),
-                        ],
-                      ),
+                        ),
+                      ],
                     ),
                   ],
                 )
@@ -707,16 +811,19 @@ class _CreateEditTemplateScreenState extends State<CreateEditTemplateScreen> {
                                         ),
                                       );
                                     },
-                                    iconImagePath: IconsClass.libraryIcon,
+                                    iconImagePath: storyBloc.getBackColor ==
+                                            AppStyle.colorRed
+                                        ? IconsClass.libraryIcon
+                                        : IconsClass.libraryIconDark,
                                   ),
                                 ),
                                 Text(
                                   'База',
                                   textAlign: TextAlign.center,
                                   style: TextStyle(
-                                    color: AppStyle.colorDark,
-                                    fontSize: 12,
-                                    fontWeight: FontWeight.w300,
+                                    fontSize: 8.0.sp,
+                                    fontWeight: FontWeight.w400,
+                                    color: Color(0xff172A3F),
                                   ),
                                 )
                               ],
@@ -728,15 +835,18 @@ class _CreateEditTemplateScreenState extends State<CreateEditTemplateScreen> {
                                   width: 40,
                                   child: BounceButton(
                                     onPressed: () => storyBloc.setFontSize(),
-                                    iconImagePath: IconsClass.textSizeIcon,
+                                    iconImagePath: storyBloc.getBackColor ==
+                                            AppStyle.colorRed
+                                        ? IconsClass.textSizeIcon
+                                        : IconsClass.textSizeIconDark,
                                   ),
                                 ),
                                 Text(
                                   'Размер',
                                   style: TextStyle(
-                                    color: AppStyle.colorDark,
-                                    fontSize: 12,
-                                    fontWeight: FontWeight.w300,
+                                    fontSize: 8.0.sp,
+                                    fontWeight: FontWeight.w400,
+                                    color: Color(0xff172A3F),
                                   ),
                                 )
                               ],
@@ -750,7 +860,10 @@ class _CreateEditTemplateScreenState extends State<CreateEditTemplateScreen> {
                                     onPressed: () {
                                       storyBloc.setTextAlign();
                                     },
-                                    iconImagePath: IconsClass.textAlignIcon,
+                                    iconImagePath: storyBloc.getBackColor ==
+                                            AppStyle.colorRed
+                                        ? IconsClass.textAlignIcon
+                                        : IconsClass.textAlignIconDark,
                                   ),
                                 ),
                                 FittedBox(
@@ -759,9 +872,9 @@ class _CreateEditTemplateScreenState extends State<CreateEditTemplateScreen> {
                                     'Ровнять',
                                     textAlign: TextAlign.center,
                                     style: TextStyle(
-                                      color: AppStyle.colorDark,
-                                      fontSize: 12,
-                                      fontWeight: FontWeight.w300,
+                                      fontSize: 8.0.sp,
+                                      fontWeight: FontWeight.w400,
+                                      color: Color(0xff172A3F),
                                     ),
                                   ),
                                 )
@@ -776,16 +889,19 @@ class _CreateEditTemplateScreenState extends State<CreateEditTemplateScreen> {
                                     onPressed: () {
                                       storyBloc.setTextColor();
                                     },
-                                    iconImagePath: IconsClass.fillColorIcon,
+                                    iconImagePath: storyBloc.getBackColor ==
+                                            AppStyle.colorRed
+                                        ? IconsClass.fillColorIcon
+                                        : IconsClass.fillColorIconDark,
                                   ),
                                 ),
                                 Text(
                                   'Цвет',
                                   textAlign: TextAlign.center,
                                   style: TextStyle(
-                                    fontSize: 12,
-                                    color: AppStyle.colorDark,
-                                    fontWeight: FontWeight.w300,
+                                    fontSize: 8.0.sp,
+                                    fontWeight: FontWeight.w400,
+                                    color: Color(0xff172A3F),
                                   ),
                                 )
                               ],
@@ -798,16 +914,19 @@ class _CreateEditTemplateScreenState extends State<CreateEditTemplateScreen> {
                                   child: BounceButton(
                                     onPressed: () =>
                                         storyBloc.setFontCustomWeight(),
-                                    iconImagePath: IconsClass.boldIcon,
+                                    iconImagePath: storyBloc.getBackColor ==
+                                            AppStyle.colorRed
+                                        ? IconsClass.boldIcon
+                                        : IconsClass.boldIconDark,
                                   ),
                                 ),
                                 Text(
                                   'Толщина',
                                   textAlign: TextAlign.center,
                                   style: TextStyle(
-                                    fontSize: 12,
-                                    color: AppStyle.colorDark,
-                                    fontWeight: FontWeight.w300,
+                                    fontSize: 8.0.sp,
+                                    fontWeight: FontWeight.w400,
+                                    color: Color(0xff172A3F),
                                   ),
                                 )
                               ],
@@ -823,15 +942,18 @@ class _CreateEditTemplateScreenState extends State<CreateEditTemplateScreen> {
                                       if (storyBloc.getImagePositionState ==
                                           false) storyBloc.setLoading(false);
                                     },
-                                    iconImagePath: IconsClass.closeIcon,
+                                    iconImagePath: storyBloc.getBackColor ==
+                                            AppStyle.colorRed
+                                        ? IconsClass.closeIcon
+                                        : IconsClass.closeIconDark,
                                   ),
                                 ),
                                 Text(
                                   'Удалить',
                                   style: TextStyle(
-                                    fontSize: 12,
-                                    fontWeight: FontWeight.w300,
-                                    color: AppStyle.colorDark,
+                                    fontSize: 8.0.sp,
+                                    fontWeight: FontWeight.w400,
+                                    color: Color(0xff172A3F),
                                   ),
                                 ),
                               ],
@@ -850,7 +972,10 @@ class _CreateEditTemplateScreenState extends State<CreateEditTemplateScreen> {
                                     onPressed: () {
                                       storyBloc.setTextAlign();
                                     },
-                                    iconImagePath: IconsClass.textAlignIcon,
+                                    iconImagePath: storyBloc.getBackColor ==
+                                            AppStyle.colorRed
+                                        ? IconsClass.textAlignIcon
+                                        : IconsClass.textAlignIconDark,
                                   ),
                                 ),
                                 FittedBox(
@@ -859,9 +984,9 @@ class _CreateEditTemplateScreenState extends State<CreateEditTemplateScreen> {
                                     'Ровнять',
                                     textAlign: TextAlign.center,
                                     style: TextStyle(
-                                      color: AppStyle.colorDark,
-                                      fontSize: 12,
-                                      fontWeight: FontWeight.w300,
+                                      fontSize: 8.0.sp,
+                                      fontWeight: FontWeight.w400,
+                                      color: Color(0xff172A3F),
                                     ),
                                   ),
                                 )
@@ -869,7 +994,7 @@ class _CreateEditTemplateScreenState extends State<CreateEditTemplateScreen> {
                             ),
                             Padding(
                               padding:
-                                  const EdgeInsets.symmetric(horizontal: 8),
+                                  const EdgeInsets.symmetric(horizontal: 25),
                               child: Column(
                                 children: [
                                   SizedBox(
@@ -879,16 +1004,19 @@ class _CreateEditTemplateScreenState extends State<CreateEditTemplateScreen> {
                                       onPressed: () {
                                         storyBloc.setTextColor();
                                       },
-                                      iconImagePath: IconsClass.fillColorIcon,
+                                      iconImagePath: storyBloc.getBackColor ==
+                                              AppStyle.colorRed
+                                          ? IconsClass.fillColorIcon
+                                          : IconsClass.fillColorIconDark,
                                     ),
                                   ),
                                   Text(
                                     'Цвет',
                                     textAlign: TextAlign.center,
                                     style: TextStyle(
-                                      fontSize: 12,
-                                      color: AppStyle.colorDark,
-                                      fontWeight: FontWeight.w300,
+                                      fontSize: 8.0.sp,
+                                      fontWeight: FontWeight.w400,
+                                      color: Color(0xff172A3F),
                                     ),
                                   )
                                 ],
@@ -902,15 +1030,18 @@ class _CreateEditTemplateScreenState extends State<CreateEditTemplateScreen> {
                                   child: BounceButton(
                                     onPressed: () =>
                                         storyBloc.setTextBaseFontSize(),
-                                    iconImagePath: IconsClass.textSizeIcon,
+                                    iconImagePath: storyBloc.getBackColor ==
+                                            AppStyle.colorRed
+                                        ? IconsClass.textSizeIcon
+                                        : IconsClass.textSizeIconDark,
                                   ),
                                 ),
                                 Text(
                                   'Размер',
                                   style: TextStyle(
-                                    color: AppStyle.colorDark,
-                                    fontSize: 12,
-                                    fontWeight: FontWeight.w300,
+                                    fontSize: 8.0.sp,
+                                    fontWeight: FontWeight.w400,
+                                    color: Color(0xff172A3F),
                                   ),
                                 )
                               ],
@@ -924,22 +1055,21 @@ class _CreateEditTemplateScreenState extends State<CreateEditTemplateScreen> {
                                       height: 40,
                                       width: 40,
                                       child: BounceButton(
-                                        onPressed: () => displayCustomDialog(
-                                            context,
-                                            "Вы точно хотите покинуть эту страницу?\n",
-                                            DialogType.AlertDialog,
-                                            true,
-                                            null,
-                                            _goBack),
-                                        iconImagePath: IconsClass.closeIcon,
+                                        onPressed: () {
+                                          storyBloc.setUndoTextState(false);
+                                        },
+                                        iconImagePath: storyBloc.getBackColor ==
+                                                AppStyle.colorRed
+                                            ? IconsClass.closeIcon
+                                            : IconsClass.closeIconDark,
                                       ),
                                     ),
                                     Text(
                                       'Удалить',
                                       style: TextStyle(
-                                        fontSize: 12,
-                                        fontWeight: FontWeight.w300,
-                                        color: AppStyle.colorDark,
+                                        fontSize: 8.0.sp,
+                                        fontWeight: FontWeight.w400,
+                                        color: Color(0xff172A3F),
                                       ),
                                     ),
                                   ],
@@ -1162,7 +1292,7 @@ class _CreateEditTemplateScreenState extends State<CreateEditTemplateScreen> {
                   ),
                   child: storyBloc.getTitle == null
                       ? Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
+                          mainAxisAlignment: MainAxisAlignment.start,
                           mainAxisSize: MainAxisSize.min,
                           crossAxisAlignment: storyBloc.getTextAlignment,
                           children: [
@@ -1173,6 +1303,7 @@ class _CreateEditTemplateScreenState extends State<CreateEditTemplateScreen> {
                                   color: storyBloc.getTextColorFirst,
                                   fontSize: storyBloc.getTitleFontSize,
                                   fontFamily: 'Styrene A LC',
+                                  height: 1,
                                   fontWeight:
                                       storyBloc.getCustomTextWeightFirst,
                                 ),
@@ -1182,6 +1313,7 @@ class _CreateEditTemplateScreenState extends State<CreateEditTemplateScreen> {
                                 maxLines: null,
                                 cursorColor: storyBloc.getTextColorFirst,
                                 decoration: InputDecoration(
+                                  isDense: true, // and add this line
                                   contentPadding: EdgeInsets.all(0),
                                   fillColor: Colors.blue,
                                   border: InputBorder.none,
@@ -1206,6 +1338,7 @@ class _CreateEditTemplateScreenState extends State<CreateEditTemplateScreen> {
                                   color: storyBloc.getTextColorSecond,
                                   fontSize: storyBloc.getBodyFontSize,
                                   fontFamily: 'Styrene A LC',
+                                  height: 1.2,
                                   fontWeight:
                                       storyBloc.getCustomTextWeightSecond,
                                 ),
@@ -1214,6 +1347,9 @@ class _CreateEditTemplateScreenState extends State<CreateEditTemplateScreen> {
                                 decoration: InputDecoration(
                                   fillColor: Colors.blue,
                                   border: InputBorder.none,
+                                  isDense: true, // and add this line
+                                  contentPadding:
+                                      EdgeInsets.symmetric(vertical: 10),
                                   hintText: storyBloc.getTextPositionSaved
                                       ? ''
                                       : 'Напишите что-нибудь...',

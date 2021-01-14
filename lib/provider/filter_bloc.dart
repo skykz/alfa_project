@@ -47,7 +47,6 @@ class FilterBloc extends ChangeNotifier {
                 for (int j = 0; j < val['data'].length; j++)
                   if (val['data'][j]['type'] == type) {
                     this._listTemplates.add(val['data'][j]);
-                    log('$val');
                   }
 
                 notifyListeners();

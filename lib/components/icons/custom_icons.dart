@@ -17,4 +17,28 @@ class IconsClass {
   static Image textSizeIcon =
       Image.asset('assets/images/png/icon_txt_size.png');
   static Image undoIcon = Image.asset('assets/images/png/icon_undo.png');
+
+//Dark
+  static Image doneIconDark =
+      Image.asset('assets/images/png/icon_done_dark.png');
+  static Image boldIconDark =
+      Image.asset('assets/images/png/icon_bold_dark.png');
+  static Image closeIconDark =
+      Image.asset('assets/images/png/icon_close_dark.png');
+  static Image fillColorIconDark =
+      Image.asset('assets/images/png/icon_color_dark.png');
+  static Image libraryIconDark =
+      Image.asset('assets/images/png/icon_lib_dark.png');
+  static Image saveIconDark =
+      Image.asset('assets/images/png/icon_save_dark.png');
+  static Image stickerIconDark =
+      Image.asset('assets/images/png/icon_sticker_dark.png');
+  static Image textAlignIconDark =
+      Image.asset('assets/images/png/icon_alignment_dark.png');
+  static Image textSelectIconDark =
+      Image.asset('assets/images/png/icon_text_dark.png');
+  static Image textSizeIconDark =
+      Image.asset('assets/images/png/icon_txt_size_dark.png');
+  static Image undoIconDark =
+      Image.asset('assets/images/png/icon_undo_dark.png');
 }
