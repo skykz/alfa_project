@@ -182,7 +182,9 @@ class _SelectTemplateScreenState extends State<SelectTemplateScreen> {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => FilterImageScreen(),
+            builder: (context) => FilterImageScreen(
+              isStory: storyBloc.getIsStoryTemplate,
+            ),
           ),
         );
         break;

@@ -1,3 +1,4 @@
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:alfa_project/components/styles/app_style.dart';
@@ -72,9 +73,7 @@ class _SelectTypeTemplateState extends State<SelectTypeTemplate> {
                 Consumer<StoryBloc>(
                   builder: (context, value, child) => GestureDetector(
                     onTap: () {
-                      if (!value.getIsStoryTemplate) {
-                        value.setTypeOfTemplate(true);
-                      }
+                      value.setTypeOfTemplate(true);
                     },
                     child: Container(
                       height: height * 0.35,
@@ -123,9 +122,7 @@ class _SelectTypeTemplateState extends State<SelectTypeTemplate> {
                 Consumer<StoryBloc>(
                   builder: (context, value, child) => GestureDetector(
                     onTap: () {
-                      if (value.getIsStoryTemplate) {
-                        value.setTypeOfTemplate(false);
-                      }
+                      value.setTypeOfTemplate(false);
                     },
                     child: Container(
                       height: height * 0.28,
@@ -184,6 +181,8 @@ class _SelectTypeTemplateState extends State<SelectTypeTemplate> {
                   child: FlatButton(
                     color: AppStyle.colorRed,
                     onPressed: () {
+                      final va = Provider.of<StoryBloc>(context, listen: false);
+                      inspect(va.getIsStoryTemplate);
                       Navigator.push(
                         context,
                         MaterialPageRoute(

@@ -80,7 +80,8 @@ class FilterBloc extends ChangeNotifier {
     notifyListeners();
   }
 
-  pickFileFromGallery(BuildContext context, String templateStringUrl) async {
+  pickFileFromGallery(
+      BuildContext context, bool val, String templateStringUrl) async {
     String fileName;
     final picker = ImagePicker();
     final pickedFile = await picker.getImage(source: ImageSource.gallery);
@@ -95,7 +96,7 @@ class FilterBloc extends ChangeNotifier {
       if (file.path != null) {
         fileName = basename(file.path);
         final imageMain = imageLib.decodeImage(file.readAsBytesSync());
-        _goToFilterScreen(context, imageMain, templateStringUrl, fileName);
+        _goToFilterScreen(context, imageMain, templateStringUrl, val, fileName);
       }
       setImageLoading(false);
     } else {
@@ -108,7 +109,8 @@ class FilterBloc extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future getCamerImage(BuildContext context, String templateStringUrl) async {
+  Future getCamerImage(
+      BuildContext context, bool val, String templateStringUrl) async {
     File _image;
     String fileName;
 
@@ -127,7 +129,7 @@ class FilterBloc extends ChangeNotifier {
         fileName = basename(file.path);
         final imageMain = imageLib.decodeImage(file.readAsBytesSync());
         final image = imageLib.copyResize(imageMain, width: 800);
-        _goToFilterScreen(context, image, templateStringUrl, fileName);
+        _goToFilterScreen(context, image, templateStringUrl, val, fileName);
       }
     } else {
       setImageLoading(false);
@@ -138,7 +140,7 @@ class FilterBloc extends ChangeNotifier {
   }
 
   _goToFilterScreen(BuildContext context, imageMain, String templateStringUrl,
-      String fileName) {
+      bool val, String fileName) {
     setImageLoading(false);
 
     Navigator.push(
@@ -146,6 +148,7 @@ class FilterBloc extends ChangeNotifier {
       MaterialPageRoute(
         builder: (context) => PhotoFilterSelector(
           image: imageMain,
+          isStory: val,
           filters: _filters,
           templateId: templateStringUrl,
           appBarColor: AppStyle.colorRed,

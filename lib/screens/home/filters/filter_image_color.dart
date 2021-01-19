@@ -69,14 +69,17 @@ class PhotoFilterSelector extends StatefulWidget {
   final String filename;
   final bool circleShape;
 
+  final bool isStory;
+
   const PhotoFilterSelector({
     Key key,
     @required this.filters,
     @required this.image,
     this.templateId,
+    this.isStory,
     // @required this.imagePreview,
     this.appBarColor = Colors.blue,
-    this.loader = const Center(child: CircularProgressIndicator()),
+    this.loader = const Center(child: const CircularProgressIndicator()),
     this.fit = BoxFit.fill,
     @required this.filename,
     this.circleShape = false,
@@ -315,6 +318,7 @@ class _PhotoFilterSelectorState extends State<PhotoFilterSelector> {
       context,
       MaterialPageRoute(
         builder: (context) => CreateEditFilterTemplateScreen(
+          isStory: this.widget.isStory,
           templateImageId: widget.templateId,
           filteredImage: imageFile,
         ),

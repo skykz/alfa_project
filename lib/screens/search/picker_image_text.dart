@@ -56,7 +56,7 @@ class StickerTextPicker extends StatelessWidget {
         ),
         centerTitle: true,
         title: Text(
-          isDecoration ? 'Декорация' : '$title',
+          isDecoration ? '$title' : '$title',
           textAlign: TextAlign.center,
           overflow: TextOverflow.ellipsis,
           style: TextStyle(

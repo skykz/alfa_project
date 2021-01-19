@@ -680,14 +680,18 @@ class _CreateEditTemplateScreenState extends State<CreateEditTemplateScreen> {
                           if (snapshot.data == false) return const SizedBox();
                           return Container(
                             color: Colors.grey.withOpacity(0.5),
-                            child: const Center(
+                            child: Center(
                               child: SizedBox(
                                 height: 30,
                                 width: 30,
-                                child: CircularProgressIndicator(
-                                  strokeWidth: 2,
-                                  backgroundColor: Colors.white,
-                                ),
+                                child: Platform.isAndroid
+                                    ? const CircularProgressIndicator(
+                                        strokeWidth: 2,
+                                        backgroundColor: Colors.white,
+                                      )
+                                    : const CupertinoActivityIndicator(
+                                        radius: 15,
+                                      ),
                               ),
                             ),
                           );

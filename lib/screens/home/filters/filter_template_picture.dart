@@ -12,7 +12,8 @@ import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
 
 class FilterImageScreen extends StatefulWidget {
-  const FilterImageScreen({Key key}) : super(key: key);
+  final bool isStory;
+  const FilterImageScreen({Key key, this.isStory}) : super(key: key);
 
   @override
   _FilterImageScreenState createState() => _FilterImageScreenState();
@@ -274,6 +275,7 @@ class _FilterImageScreenState extends State<FilterImageScreen> {
                             filterBloc.setImageLoading(true);
                             filterBloc.getCamerImage(
                                 context,
+                                this.widget.isStory,
                                 filterBloc.getListTemplates[currentpage]
                                     ['url']);
                           }),
@@ -283,7 +285,9 @@ class _FilterImageScreenState extends State<FilterImageScreen> {
                         title: const Text('Галлерея'),
                         onTap: () {
                           filterBloc.setImageLoading(true);
-                          filterBloc.pickFileFromGallery(context,
+                          filterBloc.pickFileFromGallery(
+                              context,
+                              this.widget.isStory,
                               filterBloc.getListTemplates[currentpage]['url']);
                         },
                       ),
@@ -313,8 +317,8 @@ class _FilterImageScreenState extends State<FilterImageScreen> {
                 ),
               ),
               onPressed: () {
-                filterBloc.pickFileFromGallery(
-                    context, filterBloc.getListTemplates[currentpage]['url']);
+                filterBloc.pickFileFromGallery(context, this.widget.isStory,
+                    filterBloc.getListTemplates[currentpage]['url']);
               },
             ),
             CupertinoActionSheetAction(
@@ -326,7 +330,9 @@ class _FilterImageScreenState extends State<FilterImageScreen> {
                 ),
               ),
               onPressed: () => filterBloc.getCamerImage(
-                  context, filterBloc.getListTemplates[currentpage]['url']),
+                  context,
+                  this.widget.isStory,
+                  filterBloc.getListTemplates[currentpage]['url']),
             )
           ],
           cancelButton: CupertinoActionSheetAction(

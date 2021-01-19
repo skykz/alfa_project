@@ -28,9 +28,11 @@ import '../../../app.dart';
 class CreateEditFilterTemplateScreen extends StatefulWidget {
   final String templateImageId;
   final File filteredImage;
+  final bool isStory;
 
   CreateEditFilterTemplateScreen({
     this.templateImageId,
+    this.isStory,
     this.filteredImage,
   });
 
@@ -42,8 +44,6 @@ class CreateEditFilterTemplateScreen extends StatefulWidget {
 class _CreateEditFilterTemplateScreenState
     extends State<CreateEditFilterTemplateScreen> {
   final globalKey = GlobalKey();
-  double _valueWidth;
-  double _valueHeight;
 
   @override
   void initState() {
@@ -51,8 +51,6 @@ class _CreateEditFilterTemplateScreenState
     WidgetsBinding.instance.addPostFrameCallback((_) {
       final storyBloc = Provider.of<StoryBloc>(context, listen: false);
       storyBloc.setSavingState(false);
-      _valueWidth = MediaQuery.of(context).size.width;
-      _valueHeight = MediaQuery.of(context).size.height;
     });
   }
 
@@ -84,10 +82,8 @@ class _CreateEditFilterTemplateScreenState
 
   @override
   Widget build(BuildContext context) {
-    final storyBloc = Provider.of<StoryBloc>(context, listen: true);
     final width = MediaQuery.of(context).size.width;
 
-    log("Story type is ${storyBloc.getIsStoryTemplate}");
     return Container(
       color: AppStyle.colorWhite,
       child: SafeArea(
@@ -100,454 +96,435 @@ class _CreateEditFilterTemplateScreenState
               null,
               _goBack),
           child: Scaffold(
-            backgroundColor: storyBloc.getBackColor,
+            backgroundColor: AppStyle.colorWhite,
             resizeToAvoidBottomPadding: false,
-            body: GestureDetector(
-              onTap: () => FocusScope.of(context).unfocus(),
-              child: Stack(
-                children: [
-                  Center(
-                    child: Align(
-                      alignment: storyBloc.getIsStoryTemplate
-                          ? Alignment.bottomCenter
-                          : Alignment.center,
-                      child: Container(
-                        decoration: BoxDecoration(boxShadow: [
-                          BoxShadow(
-                            color: Colors.black.withOpacity(0.3),
-                            blurRadius: 10,
-                          ),
-                        ]),
-                        child: AspectRatio(
-                          aspectRatio:
-                              storyBloc.getIsStoryTemplate ? (9 / 16) : (4 / 5),
-                          child: RepaintBoundary(
-                            key: globalKey,
-                            child: Container(
-                              color: const Color.fromRGBO(237, 237, 237, 1),
-                              child: Stack(
-                                fit: StackFit.expand,
-                                children: [
-                                  MatrixGestureDetector(
-                                    shouldRotate:
-                                        !storyBloc.getImagePositionState,
-                                    shouldScale:
-                                        !storyBloc.getImagePositionState,
-                                    shouldTranslate:
-                                        !storyBloc.getImagePositionState,
-                                    onMatrixUpdate: (m, tm, sm, rm) {
-                                      storyBloc.notifierPicture.value = m;
-                                    },
-                                    child: !storyBloc.getImagePositionState
-                                        ? AnimatedBuilder(
-                                            animation:
-                                                storyBloc.notifierPicture,
-                                            builder: (ctx, child) {
-                                              return Transform(
-                                                transform: storyBloc
-                                                    .notifierPicture.value,
-                                                child: Stack(
-                                                  fit: StackFit.expand,
-                                                  children: <Widget>[
-                                                    Image(
+            body: Consumer<StoryBloc>(builder: (context, storyBloc, child) {
+              return GestureDetector(
+                onTap: () => FocusScope.of(context).unfocus(),
+                child: Stack(
+                  children: [
+                    Center(
+                      child: Align(
+                        alignment: this.widget.isStory
+                            ? Alignment.bottomCenter
+                            : Alignment.center,
+                        child: Container(
+                          decoration: BoxDecoration(boxShadow: [
+                            BoxShadow(
+                              color: Colors.black.withOpacity(0.3),
+                              blurRadius: 10,
+                            ),
+                          ]),
+                          child: AspectRatio(
+                            aspectRatio:
+                                this.widget.isStory ? (9 / 16) : (4 / 5),
+                            child: RepaintBoundary(
+                              key: globalKey,
+                              child: Container(
+                                color: const Color.fromRGBO(237, 237, 237, 1),
+                                child: Stack(
+                                  fit: StackFit.expand,
+                                  children: [
+                                    MatrixGestureDetector(
+                                      shouldRotate:
+                                          !storyBloc.getImagePositionState,
+                                      shouldScale:
+                                          !storyBloc.getImagePositionState,
+                                      shouldTranslate:
+                                          !storyBloc.getImagePositionState,
+                                      onMatrixUpdate: (m, tm, sm, rm) {
+                                        storyBloc.notifierPicture.value = m;
+                                      },
+                                      child: !storyBloc.getImagePositionState
+                                          ? AnimatedBuilder(
+                                              animation:
+                                                  storyBloc.notifierPicture,
+                                              builder: (ctx, child) {
+                                                return Transform(
+                                                  transform: storyBloc
+                                                      .notifierPicture.value,
+                                                  child: Stack(
+                                                    fit: StackFit.expand,
+                                                    children: <Widget>[
+                                                      Image(
+                                                          image: FileImage(widget
+                                                              .filteredImage)),
+                                                    ],
+                                                  ),
+                                                );
+                                              },
+                                            )
+                                          : StreamBuilder(
+                                              stream: storyBloc.getPosition,
+                                              builder: (BuildContext context,
+                                                  AsyncSnapshot snapshot) {
+                                                return Transform(
+                                                  transform: storyBloc
+                                                      .getCurrenImagePosition,
+                                                  child: Stack(
+                                                    fit: StackFit.expand,
+                                                    children: <Widget>[
+                                                      Image(
                                                         image: FileImage(widget
-                                                            .filteredImage)),
-                                                  ],
-                                                ),
-                                              );
-                                            },
-                                          )
-                                        : StreamBuilder(
-                                            stream: storyBloc.getPosition,
-                                            builder: (BuildContext context,
-                                                AsyncSnapshot snapshot) {
-                                              return Transform(
-                                                transform: storyBloc
-                                                    .getCurrenImagePosition,
-                                                child: Stack(
-                                                  fit: StackFit.expand,
-                                                  children: <Widget>[
-                                                    Image(
-                                                      image: FileImage(
-                                                          widget.filteredImage),
-                                                    ),
-                                                  ],
-                                                ),
-                                              );
-                                            },
-                                          ),
-                                  ),
-                                  IgnorePointer(
-                                    ignoring: true,
-                                    child: CachedNetworkImage(
-                                      imageUrl: BASE_URL_IMAGE +
-                                          widget.templateImageId,
-                                      imageBuilder: (context, imageProvider) =>
-                                          InkWell(
-                                        borderRadius: BorderRadius.circular(8),
-                                        onTap: () => {},
-                                        child: Container(
-                                          height: width,
-                                          width: double.infinity,
-                                          decoration: BoxDecoration(
-                                            image: DecorationImage(
-                                              image: imageProvider,
-                                              fit: BoxFit.fill,
+                                                            .filteredImage),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                );
+                                              },
+                                            ),
+                                    ),
+                                    IgnorePointer(
+                                      ignoring: true,
+                                      child: CachedNetworkImage(
+                                        imageUrl: BASE_URL_IMAGE +
+                                            widget.templateImageId,
+                                        imageBuilder:
+                                            (context, imageProvider) => InkWell(
+                                          borderRadius:
+                                              BorderRadius.circular(8),
+                                          onTap: () => {},
+                                          child: Container(
+                                            height: width,
+                                            width: double.infinity,
+                                            decoration: BoxDecoration(
+                                              image: DecorationImage(
+                                                image: imageProvider,
+                                                fit: BoxFit.fill,
+                                              ),
                                             ),
                                           ),
                                         ),
-                                      ),
-                                      placeholder: (context, url) => Center(
-                                        child: const CircularProgressIndicator(
-                                          strokeWidth: 2,
-                                          backgroundColor: Colors.white,
+                                        placeholder: (context, url) => Center(
+                                          child:
+                                              const CircularProgressIndicator(
+                                            strokeWidth: 2,
+                                            backgroundColor: Colors.white,
+                                          ),
                                         ),
+                                        errorWidget: (context, url, error) =>
+                                            const Icon(Icons.error),
                                       ),
-                                      errorWidget: (context, url, error) =>
-                                          const Icon(Icons.error),
                                     ),
-                                  ),
-                                  storyBloc.getTextEnabled
-                                      ? _buildTextWidget(storyBloc)
-                                      : const SizedBox(),
-                                  _buildDecoImage(),
-                                ],
+                                    storyBloc.getTextEnabled
+                                        ? _buildTextWidget(storyBloc)
+                                        : const SizedBox(),
+                                    _buildDecoImage(),
+                                  ],
+                                ),
                               ),
                             ),
                           ),
                         ),
                       ),
                     ),
-                  ),
-                  _buildToolBar(storyBloc),
-                  storyBloc.getTextEnabled
-                      ? const SizedBox()
-                      : storyBloc.getImagePositionState
-                          ? Positioned(
-                              top: 10,
-                              left: 15,
-                              child: Column(
-                                children: [
-                                  SizedBox(
-                                    height: 40,
-                                    width: 40,
-                                    child: BounceButton(
-                                      onPressed: () => displayCustomDialog(
-                                          context,
-                                          "Вы точно хотите покинуть эту страницу?\n",
-                                          DialogType.AlertDialog,
-                                          true,
-                                          null,
-                                          _goBack),
-                                      iconImagePath: IconsClass.closeIconDark,
-                                    ),
-                                  ),
-                                  Text(
-                                    'Закрыть',
-                                    style: TextStyle(
-                                      fontSize: 8.0.sp,
-                                      fontWeight: FontWeight.w400,
-                                      color: Color(0xff172A3F),
-                                    ),
-                                  )
-                                ],
-                              ),
-                            )
-                          : SizedBox(),
-                  storyBloc.getTextEnabled
-                      ? const SizedBox()
-                      : !storyBloc.getImagePositionState
-                          ? Positioned(
-                              top: 10,
-                              right: 15,
-                              child: Column(
-                                children: [
-                                  SizedBox(
-                                    height: 40,
-                                    width: 40,
-                                    child: BounceButton(
-                                      onPressed: () {
-                                        storyBloc.setClearStoryData();
-                                        Navigator.pop(context);
-                                      },
-                                      iconImagePath: IconsClass.closeIconDark,
-                                    ),
-                                  ),
-                                  Text(
-                                    'Закрыть',
-                                    style: TextStyle(
-                                      fontSize: 8.0.sp,
-                                      fontWeight: FontWeight.w400,
-                                      color: Color(0xff172A3F),
-                                    ),
-                                  )
-                                ],
-                              ),
-                            )
-                          : Positioned(
-                              top: 10,
-                              right: 15,
-                              child: Row(
-                                children: [
-                                  Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                        horizontal: 20),
-                                    child: Column(
-                                      children: [
-                                        SizedBox(
-                                          height: 40,
-                                          width: 40,
-                                          child: BounceButton(
-                                            onPressed: () {
-                                              storyBloc.setTextEnabled(true);
-                                            },
-                                            iconImagePath:
-                                                IconsClass.textSelectIconDark,
-                                          ),
-                                        ),
-                                        Text(
-                                          'Текст',
-                                          style: TextStyle(
-                                            fontSize: 8.0.sp,
-                                            fontWeight: FontWeight.w400,
-                                            color: Color(0xff172A3F),
-                                          ),
-                                        )
-                                      ],
-                                    ),
-                                  ),
-                                  Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                        horizontal: 5),
-                                    child: Column(
-                                      children: [
-                                        SizedBox(
-                                          height: 40,
-                                          width: 40,
-                                          child: BounceButton(
-                                            onPressed: () {
-                                              Navigator.push(
-                                                context,
-                                                MaterialPageRoute(
-                                                  builder: (context) =>
-                                                      SearchPickerScreen(
-                                                    isText: false,
-                                                    isDecorationCategory: true,
-                                                    isTextToImage: false,
-                                                  ),
-                                                ),
-                                              );
-                                            },
-                                            iconImagePath:
-                                                IconsClass.stickerIconDark,
-                                          ),
-                                        ),
-                                        Text(
-                                          'Стикеры',
-                                          style: TextStyle(
-                                            fontSize: 8.0.sp,
-                                            fontWeight: FontWeight.w400,
-                                            color: Color(0xff172A3F),
-                                          ),
-                                        )
-                                      ],
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                  Positioned(
-                    bottom: 10,
-                    right: 15,
-                    child: !storyBloc.getTextEnabled
-                        ? storyBloc.getImagePositionState
-                            ? Column(
-                                children: [
-                                  SizedBox(
-                                    height: 45,
-                                    width: 45,
-                                    child: BounceButton(
-                                      onPressed: _capturePng,
-                                      iconImagePath: IconsClass.saveIconDark,
-                                    ),
-                                  ),
-                                  Text(
-                                    'Сохранить',
-                                    style: TextStyle(
-                                      fontSize: 8.0.sp,
-                                      fontWeight: FontWeight.w400,
-                                      color: Color(0xff172A3F),
-                                    ),
-                                  )
-                                ],
-                              )
-                            : Column(
-                                children: [
-                                  SizedBox(
-                                    height: 45,
-                                    width: 45,
-                                    child: BounceButton(
-                                      onPressed: () {
-                                        storyBloc.setImagePositionState(true);
-                                      },
-                                      iconImagePath: IconsClass.doneIconDark,
-                                    ),
-                                  ),
-                                  Text(
-                                    'Готово',
-                                    style: TextStyle(
-                                      fontSize: 8.0.sp,
-                                      fontWeight: FontWeight.w400,
-                                      color: Color(0xff172A3F),
-                                    ),
-                                  )
-                                ],
-                              )
-                        : storyBloc.getTextPositionSaved
-                            ? Column(
-                                children: [
-                                  SizedBox(
-                                    height: 45,
-                                    width: 45,
-                                    child: BounceButton(
-                                      onPressed: _capturePng,
-                                      iconImagePath: IconsClass.saveIconDark,
-                                    ),
-                                  ),
-                                  Text(
-                                    'Сохранить',
-                                    style: TextStyle(
-                                      fontSize: 8.0.sp,
-                                      fontWeight: FontWeight.w400,
-                                      color: Color(0xff172A3F),
-                                    ),
-                                  )
-                                ],
-                              )
-                            : Column(
-                                children: [
-                                  SizedBox(
-                                    height: 45,
-                                    width: 45,
-                                    child: BounceButton(
-                                      onPressed: () {
-                                        storyBloc.setTextPosition(true);
-                                        FocusScope.of(context).unfocus();
-                                      },
-                                      iconImagePath: IconsClass.doneIconDark,
-                                    ),
-                                  ),
-                                  Text(
-                                    'Готово',
-                                    style: TextStyle(
-                                      fontSize: 8.0.sp,
-                                      fontWeight: FontWeight.w400,
-                                      color: Color(0xff172A3F),
-                                    ),
-                                  )
-                                ],
-                              ),
-                  ),
-                  storyBloc.getImagePositionState
-                      ? Positioned(
-                          bottom: 10,
-                          left: 15,
-                          child: Column(
-                            children: [
-                              SizedBox(
-                                height: 45,
-                                width: 45,
-                                child: BounceButton(
-                                  onPressed: () {
-                                    if (storyBloc.getChildrenStickers.length >
-                                        0)
-                                      storyBloc.removeLastWidgetChildren();
-                                    else
-                                      storyBloc.setUndoImageState(false);
-                                  },
-                                  iconImagePath: IconsClass.undoIconDark,
-                                ),
-                              ),
-                              Text(
-                                'Вернуть',
-                                style: TextStyle(
-                                  fontSize: 8.0.sp,
-                                  fontWeight: FontWeight.w400,
-                                  color: Color(0xff172A3F),
-                                ),
-                              )
-                            ],
-                          ),
-                        )
-                      : const SizedBox(),
-                  storyBloc.getTextEnabled
-                      ? Positioned(
-                          bottom: 10,
-                          left: 15,
-                          child: Column(
-                            children: [
-                              SizedBox(
-                                height: 45,
-                                width: 45,
-                                child: BounceButton(
-                                  onPressed: () {
-                                    if (storyBloc.getChildrenStickers.length >
-                                        0) {
-                                      storyBloc.removeLastWidgetChildren();
-                                    } else {
-                                      storyBloc.setUndoTextState(false);
-                                      if (storyBloc.getImagePositionState ==
-                                          false) storyBloc.setLoading(false);
-                                    }
-                                  },
-                                  iconImagePath: IconsClass.undoIconDark,
-                                ),
-                              ),
-                              Text(
-                                'Вернуть',
-                                style: TextStyle(
-                                  fontSize: 8.0.sp,
-                                  fontWeight: FontWeight.w400,
-                                  color: Color(0xff172A3F),
-                                ),
-                              )
-                            ],
-                          ),
-                        )
-                      : const SizedBox(),
-                  storyBloc.getTextEnabled
-                      ? storyBloc.getTextPositionSaved
-                          ? const SizedBox()
-                          : Positioned(
-                              bottom: 70,
-                              left: 55,
-                              right: 55,
-                              child: Column(
-                                children: [
-                                  SliderTheme(
-                                    data: SliderTheme.of(context).copyWith(
-                                      thumbShape: RoundSliderThumbShape(
-                                        elevation: 10,
-                                        enabledThumbRadius: 10,
-                                        pressedElevation: 12,
+                    _buildToolBar(storyBloc),
+                    storyBloc.getTextEnabled
+                        ? const SizedBox()
+                        : storyBloc.getImagePositionState
+                            ? Positioned(
+                                top: 10,
+                                left: 15,
+                                child: Column(
+                                  children: [
+                                    SizedBox(
+                                      height: 40,
+                                      width: 40,
+                                      child: BounceButton(
+                                        onPressed: () => displayCustomDialog(
+                                            context,
+                                            "Вы точно хотите покинуть эту страницу?\n",
+                                            DialogType.AlertDialog,
+                                            true,
+                                            null,
+                                            _goBack),
+                                        iconImagePath: IconsClass.closeIconDark,
                                       ),
                                     ),
-                                    child: Slider(
-                                      activeColor: Colors.white,
-                                      inactiveColor:
-                                          Colors.white.withOpacity(0.5),
-                                      value: storyBloc.textWidthContainer,
-                                      max: _valueWidth * 0.75,
-                                      min: 100,
-                                      onChanged: (newValue) {
-                                        storyBloc
-                                            .setTextWidthContainer(newValue);
-                                      },
+                                    Text(
+                                      'Закрыть',
+                                      style: TextStyle(
+                                        fontSize: 8.0.sp,
+                                        fontWeight: FontWeight.w400,
+                                        color: Color(0xff172A3F),
+                                      ),
+                                    )
+                                  ],
+                                ),
+                              )
+                            : const SizedBox(),
+                    storyBloc.getTextEnabled
+                        ? const SizedBox()
+                        : !storyBloc.getImagePositionState
+                            ? Positioned(
+                                top: 10,
+                                right: 15,
+                                child: Column(
+                                  children: [
+                                    SizedBox(
+                                      height: 40,
+                                      width: 40,
+                                      child: BounceButton(
+                                        onPressed: () {
+                                          storyBloc.setClearStoryData();
+                                          Navigator.pop(context);
+                                        },
+                                        iconImagePath: IconsClass.closeIconDark,
+                                      ),
                                     ),
+                                    Text(
+                                      'Закрыть',
+                                      style: TextStyle(
+                                        fontSize: 8.0.sp,
+                                        fontWeight: FontWeight.w400,
+                                        color: Color(0xff172A3F),
+                                      ),
+                                    )
+                                  ],
+                                ),
+                              )
+                            : Positioned(
+                                top: 10,
+                                right: 15,
+                                child: Row(
+                                  children: [
+                                    Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 20),
+                                      child: Column(
+                                        children: [
+                                          SizedBox(
+                                            height: 40,
+                                            width: 40,
+                                            child: BounceButton(
+                                              onPressed: () {
+                                                storyBloc.setTextEnabled(true);
+                                              },
+                                              iconImagePath:
+                                                  IconsClass.textSelectIconDark,
+                                            ),
+                                          ),
+                                          Text(
+                                            'Текст',
+                                            style: TextStyle(
+                                              fontSize: 8.0.sp,
+                                              fontWeight: FontWeight.w400,
+                                              color: Color(0xff172A3F),
+                                            ),
+                                          )
+                                        ],
+                                      ),
+                                    ),
+                                    Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 5),
+                                      child: Column(
+                                        children: [
+                                          SizedBox(
+                                            height: 40,
+                                            width: 40,
+                                            child: BounceButton(
+                                              onPressed: () {
+                                                Navigator.push(
+                                                  context,
+                                                  MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        SearchPickerScreen(
+                                                      isText: false,
+                                                      isDecorationCategory:
+                                                          true,
+                                                      isTextToImage: false,
+                                                    ),
+                                                  ),
+                                                );
+                                              },
+                                              iconImagePath:
+                                                  IconsClass.stickerIconDark,
+                                            ),
+                                          ),
+                                          Text(
+                                            'Стикеры',
+                                            style: TextStyle(
+                                              fontSize: 8.0.sp,
+                                              fontWeight: FontWeight.w400,
+                                              color: Color(0xff172A3F),
+                                            ),
+                                          )
+                                        ],
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                    Positioned(
+                      bottom: 10,
+                      right: 15,
+                      child: !storyBloc.getTextEnabled
+                          ? storyBloc.getImagePositionState
+                              ? Column(
+                                  children: [
+                                    SizedBox(
+                                      height: 45,
+                                      width: 45,
+                                      child: BounceButton(
+                                        onPressed: _capturePng,
+                                        iconImagePath: IconsClass.saveIconDark,
+                                      ),
+                                    ),
+                                    Text(
+                                      'Сохранить',
+                                      style: TextStyle(
+                                        fontSize: 8.0.sp,
+                                        fontWeight: FontWeight.w400,
+                                        color: Color(0xff172A3F),
+                                      ),
+                                    )
+                                  ],
+                                )
+                              : Column(
+                                  children: [
+                                    SizedBox(
+                                      height: 45,
+                                      width: 45,
+                                      child: BounceButton(
+                                        onPressed: () {
+                                          storyBloc.setImagePositionState(true);
+                                        },
+                                        iconImagePath: IconsClass.doneIconDark,
+                                      ),
+                                    ),
+                                    Text(
+                                      'Готово',
+                                      style: TextStyle(
+                                        fontSize: 8.0.sp,
+                                        fontWeight: FontWeight.w400,
+                                        color: Color(0xff172A3F),
+                                      ),
+                                    )
+                                  ],
+                                )
+                          : storyBloc.getTextPositionSaved
+                              ? Column(
+                                  children: [
+                                    SizedBox(
+                                      height: 45,
+                                      width: 45,
+                                      child: BounceButton(
+                                        onPressed: _capturePng,
+                                        iconImagePath: IconsClass.saveIconDark,
+                                      ),
+                                    ),
+                                    Text(
+                                      'Сохранить',
+                                      style: TextStyle(
+                                        fontSize: 8.0.sp,
+                                        fontWeight: FontWeight.w400,
+                                        color: Color(0xff172A3F),
+                                      ),
+                                    )
+                                  ],
+                                )
+                              : Column(
+                                  children: [
+                                    SizedBox(
+                                      height: 45,
+                                      width: 45,
+                                      child: BounceButton(
+                                        onPressed: () {
+                                          storyBloc.setTextPosition(true);
+                                          FocusScope.of(context).unfocus();
+                                        },
+                                        iconImagePath: IconsClass.doneIconDark,
+                                      ),
+                                    ),
+                                    Text(
+                                      'Готово',
+                                      style: TextStyle(
+                                        fontSize: 8.0.sp,
+                                        fontWeight: FontWeight.w400,
+                                        color: Color(0xff172A3F),
+                                      ),
+                                    )
+                                  ],
+                                ),
+                    ),
+                    storyBloc.getImagePositionState
+                        ? Positioned(
+                            bottom: 10,
+                            left: 15,
+                            child: Column(
+                              children: [
+                                SizedBox(
+                                  height: 45,
+                                  width: 45,
+                                  child: BounceButton(
+                                    onPressed: () {
+                                      if (storyBloc.getChildrenStickers.length >
+                                          0)
+                                        storyBloc.removeLastWidgetChildren();
+                                      else
+                                        storyBloc.setUndoImageState(false);
+                                    },
+                                    iconImagePath: IconsClass.undoIconDark,
                                   ),
-                                  SizedBox(
-                                    height: 38,
-                                    child: SliderTheme(
+                                ),
+                                Text(
+                                  'Вернуть',
+                                  style: TextStyle(
+                                    fontSize: 8.0.sp,
+                                    fontWeight: FontWeight.w400,
+                                    color: Color(0xff172A3F),
+                                  ),
+                                )
+                              ],
+                            ),
+                          )
+                        : const SizedBox(),
+                    storyBloc.getTextEnabled
+                        ? Positioned(
+                            bottom: 10,
+                            left: 15,
+                            child: Column(
+                              children: [
+                                SizedBox(
+                                  height: 45,
+                                  width: 45,
+                                  child: BounceButton(
+                                    onPressed: () {
+                                      if (storyBloc.getChildrenStickers.length >
+                                          0) {
+                                        storyBloc.removeLastWidgetChildren();
+                                      } else {
+                                        storyBloc.setUndoTextState(false);
+                                        if (storyBloc.getImagePositionState ==
+                                            false) storyBloc.setLoading(false);
+                                      }
+                                    },
+                                    iconImagePath: IconsClass.undoIconDark,
+                                  ),
+                                ),
+                                Text(
+                                  'Вернуть',
+                                  style: TextStyle(
+                                    fontSize: 8.0.sp,
+                                    fontWeight: FontWeight.w400,
+                                    color: Color(0xff172A3F),
+                                  ),
+                                )
+                              ],
+                            ),
+                          )
+                        : const SizedBox(),
+                    storyBloc.getTextEnabled
+                        ? storyBloc.getTextPositionSaved
+                            ? const SizedBox()
+                            : Positioned(
+                                bottom: 70,
+                                left: 55,
+                                right: 55,
+                                child: Column(
+                                  children: [
+                                    SliderTheme(
                                       data: SliderTheme.of(context).copyWith(
                                         thumbShape: RoundSliderThumbShape(
                                           elevation: 10,
@@ -556,45 +533,72 @@ class _CreateEditFilterTemplateScreenState
                                         ),
                                       ),
                                       child: Slider(
-                                        value: storyBloc.textHeightContainer,
                                         activeColor: Colors.white,
                                         inactiveColor:
                                             Colors.white.withOpacity(0.5),
-                                        max: _valueHeight * 0.75,
+                                        value: storyBloc.textWidthContainer,
+                                        max: width * 0.75,
                                         min: 100,
                                         onChanged: (newValue) {
                                           storyBloc
-                                              .setTextHeightContainer(newValue);
+                                              .setTextWidthContainer(newValue);
                                         },
                                       ),
                                     ),
-                                  ),
-                                ],
+                                    SizedBox(
+                                      height: 38,
+                                      child: SliderTheme(
+                                        data: SliderTheme.of(context).copyWith(
+                                          thumbShape: RoundSliderThumbShape(
+                                            elevation: 10,
+                                            enabledThumbRadius: 10,
+                                            pressedElevation: 12,
+                                          ),
+                                        ),
+                                        child: Slider(
+                                          value: storyBloc.textHeightContainer,
+                                          activeColor: Colors.white,
+                                          inactiveColor:
+                                              Colors.white.withOpacity(0.5),
+                                          max: MediaQuery.of(context)
+                                                  .size
+                                                  .height *
+                                              0.75,
+                                          min: 100,
+                                          onChanged: (newValue) {
+                                            storyBloc.setTextHeightContainer(
+                                                newValue);
+                                          },
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              )
+                        : const SizedBox(),
+                    StreamBuilder(
+                      stream: storyBloc.getLoadingStream,
+                      builder: (BuildContext context, AsyncSnapshot snapshot) {
+                        if (snapshot.data == false) return const SizedBox();
+                        return Container(
+                          color: Colors.grey.withOpacity(0.5),
+                          child: const Center(
+                            child: SizedBox(
+                              height: 30,
+                              width: 30,
+                              child: CircularProgressIndicator(
+                                strokeWidth: 2,
+                                backgroundColor: Colors.white,
                               ),
-                            )
-                      : const SizedBox(),
-                  StreamBuilder(
-                    stream: storyBloc.getLoadingStream,
-                    builder: (BuildContext context, AsyncSnapshot snapshot) {
-                      if (snapshot.data == false) return const SizedBox();
-                      return Container(
-                        color: Colors.grey.withOpacity(0.5),
-                        child: const Center(
-                          child: SizedBox(
-                            height: 30,
-                            width: 30,
-                            child: CircularProgressIndicator(
-                              strokeWidth: 2,
-                              backgroundColor: Colors.white,
                             ),
                           ),
-                        ),
-                      );
-                    },
-                  ),
-                ],
-              ),
-            ),
+                        );
+                      },
+                    ),
+                  ],
+                ),
+              );
+            }),
           ),
         ),
       ),
@@ -973,8 +977,8 @@ class _CreateEditFilterTemplateScreenState
     return Future.delayed(const Duration(milliseconds: 30), () async {
       RenderRepaintBoundary boundary =
           globalKey.currentContext.findRenderObject();
-      ui.Image image = await boundary.toImage(
-          pixelRatio: storyBloc.getIsStoryTemplate ? 3 : 5);
+      ui.Image image =
+          await boundary.toImage(pixelRatio: this.widget.isStory ? 3 : 5);
       ByteData byteData =
           await image.toByteData(format: ui.ImageByteFormat.png);
       Uint8List pngBytes = byteData.buffer.asUint8List();
@@ -994,7 +998,7 @@ class _CreateEditFilterTemplateScreenState
       File compressedFile = await FlutterNativeImage.compressImage(file.path,
           percentage: 0,
           quality: 100,
-          targetWidth: storyBloc.getIsStoryTemplate ? 1080 : 1536,
+          targetWidth: this.widget.isStory ? 1080 : 1536,
           targetHeight: 1920);
 
       GallerySaver.saveImage(compressedFile.path).then((value) {
@@ -1047,11 +1051,11 @@ class _CreateEditFilterTemplateScreenState
             constraints.maxWidth * 0.06;
 
         double myMaxHeightTop = constraints.maxHeight -
-            (storyBloc.getIsStoryTemplate
+            (this.widget.isStory
                 ? constraints.maxHeight * 0.85
                 : constraints.biggest.height * 0.85); //580
 
-        double myMaxHeightBottom = storyBloc.getIsStoryTemplate
+        double myMaxHeightBottom = this.widget.isStory
             ? (constraints.maxHeight -
                 math.min(storyBloc.textHeightContainer,
                     constraints.maxHeight - constraints.maxHeight * 0.25) -
@@ -1084,7 +1088,7 @@ class _CreateEditFilterTemplateScreenState
                   );
                 },
                 child: Container(
-                  height: storyBloc.getIsStoryTemplate
+                  height: this.widget.isStory
                       ? math.min(storyBloc.textHeightContainer,
                           constraints.maxHeight * 0.7)
                       : math.min(storyBloc.textHeightContainer,
