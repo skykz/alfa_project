@@ -10,8 +10,10 @@ import 'package:alfa_project/core/data/models/dialog_type.dart';
 import 'package:alfa_project/provider/story_bloc.dart';
 import 'package:alfa_project/screens/search/search_image_text.dart';
 import 'package:alfa_project/utils/common_utils.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_native_image/flutter_native_image.dart';
 import 'package:gallery_saver/gallery_saver.dart';
 import 'package:path_provider/path_provider.dart';
@@ -46,88 +48,127 @@ class _HomeMainScreenState extends State<HomeMainScreen> {
   @override
   Widget build(BuildContext context) {
     final storyBloc = Provider.of<StoryBloc>(context);
-    return Container(
-      color: storyBloc.getBackColor,
-      child: SafeArea(
-        child: Scaffold(
-          body: Container(
-            color: widget.mainColor,
-            child: Stack(
-              fit: StackFit.expand,
-              children: [
-                Center(
-                  child: Align(
-                    alignment: storyBloc.getIsStoryTemplate
-                        ? Alignment.bottomCenter
-                        : Alignment.center,
-                    child: Container(
-                      decoration: BoxDecoration(boxShadow: [
-                        BoxShadow(
-                          color: Colors.black.withOpacity(0.3),
-                          blurRadius: 10,
-                        ),
-                      ]),
-                      child: AspectRatio(
-                        aspectRatio:
-                            storyBloc.getIsStoryTemplate ? (9 / 16) : (4 / 5),
-                        child: RepaintBoundary(
-                          key: globalKey,
-                          child: Scaffold(
-                            backgroundColor: widget.mainColor,
-                            body: Image.asset(
-                              setBackgroundImage(storyBloc.getIsStoryTemplate,
-                                  widget.mainColor),
+    return AnnotatedRegion<SystemUiOverlayStyle>(
+      value: storyBloc.getBackColor == AppStyle.colorRed
+          ? SystemUiOverlayStyle.light
+          : SystemUiOverlayStyle.dark,
+      child: Container(
+        color: storyBloc.getBackColor,
+        child: SafeArea(
+          child: Scaffold(
+            body: Container(
+              color: widget.mainColor,
+              child: Stack(
+                fit: StackFit.expand,
+                children: [
+                  Center(
+                    child: Align(
+                      alignment: storyBloc.getIsStoryTemplate
+                          ? Alignment.bottomCenter
+                          : Alignment.center,
+                      child: Container(
+                        decoration: BoxDecoration(boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withOpacity(0.3),
+                            blurRadius: 10,
+                          ),
+                        ]),
+                        child: AspectRatio(
+                          aspectRatio:
+                              storyBloc.getIsStoryTemplate ? (9 / 16) : (4 / 5),
+                          child: RepaintBoundary(
+                            key: globalKey,
+                            child: Scaffold(
+                              backgroundColor: widget.mainColor,
+                              body: Image.asset(
+                                setBackgroundImage(storyBloc.getIsStoryTemplate,
+                                    widget.mainColor),
+                              ),
                             ),
                           ),
                         ),
                       ),
                     ),
                   ),
-                ),
-                Positioned(
-                  top: 10,
-                  left: 0,
-                  right: 0,
-                  child: Padding(
-                    padding: const EdgeInsets.only(right: 15),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        IconButton(
-                          icon: Icon(
-                            Icons.arrow_back_ios_rounded,
-                            color: AppStyle.colorDark,
+                  Positioned(
+                    top: 10,
+                    left: 0,
+                    right: 0,
+                    child: Padding(
+                      padding: const EdgeInsets.only(right: 15),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          IconButton(
+                            icon: Icon(
+                              Icons.arrow_back_ios_rounded,
+                              color: AppStyle.colorDark,
+                            ),
+                            onPressed: () => Navigator.pop(context),
                           ),
-                          onPressed: () => Navigator.pop(context),
-                        ),
-                        Row(
-                          children: [
-                            Padding(
-                              padding:
-                                  const EdgeInsets.symmetric(horizontal: 25),
-                              child: Column(
+                          Row(
+                            children: [
+                              Padding(
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 25),
+                                child: Column(
+                                  children: [
+                                    SizedBox(
+                                      height: 40,
+                                      width: 40,
+                                      child: BounceButton(
+                                        onPressed: () {
+                                          Navigator.pushReplacement(
+                                            context,
+                                            FadeRouteBuilder(
+                                              page: CreateTextTemplateScreen(),
+                                            ),
+                                          );
+                                        },
+                                        iconImagePath: storyBloc.getBackColor ==
+                                                AppStyle.colorRed
+                                            ? IconsClass.textSelectIcon
+                                            : IconsClass.textSelectIconDark,
+                                      ),
+                                    ),
+                                    Text(
+                                      'Текст',
+                                      style: TextStyle(
+                                        fontSize: 8.0.sp,
+                                        fontWeight: FontWeight.w400,
+                                        color: Color(0xff172A3F),
+                                      ),
+                                    )
+                                  ],
+                                ),
+                              ),
+                              Column(
                                 children: [
                                   SizedBox(
                                     height: 40,
                                     width: 40,
                                     child: BounceButton(
                                       onPressed: () {
-                                        Navigator.pushReplacement(
+                                        Navigator.push(
                                           context,
-                                          FadeRouteBuilder(
-                                            page: CreateTextTemplateScreen(),
+                                          MaterialPageRoute(
+                                            builder: (context) =>
+                                                SearchPickerScreen(
+                                              isText: false,
+                                              isTextToImage: true,
+                                            ),
                                           ),
                                         );
                                       },
                                       iconImagePath: storyBloc.getBackColor ==
                                               AppStyle.colorRed
-                                          ? IconsClass.textSelectIcon
-                                          : IconsClass.textSelectIconDark,
+                                          ? IconsClass.stickerIcon
+                                          : IconsClass.stickerIconDark,
                                     ),
                                   ),
                                   Text(
-                                    'Текст',
+                                    'Стикеры',
                                     style: TextStyle(
                                       fontSize: 8.0.sp,
                                       fontWeight: FontWeight.w400,
@@ -136,103 +177,73 @@ class _HomeMainScreenState extends State<HomeMainScreen> {
                                   )
                                 ],
                               ),
-                            ),
-                            Column(
-                              children: [
-                                SizedBox(
-                                  height: 40,
-                                  width: 40,
-                                  child: BounceButton(
-                                    onPressed: () {
-                                      Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                          builder: (context) =>
-                                              SearchPickerScreen(
-                                            isText: false,
-                                            isTextToImage: true,
-                                          ),
-                                        ),
-                                      );
-                                    },
-                                    iconImagePath: storyBloc.getBackColor ==
-                                            AppStyle.colorRed
-                                        ? IconsClass.stickerIcon
-                                        : IconsClass.stickerIconDark,
-                                  ),
+                            ],
+                          )
+                        ],
+                      ),
+                    ),
+                  ),
+                  Positioned(
+                    bottom: 0,
+                    right: 0,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.symmetric(
+                              vertical: 15, horizontal: 10),
+                          child: Column(
+                            children: [
+                              SizedBox(
+                                height: 45,
+                                width: 45,
+                                child: BounceButton(
+                                  onPressed: _capturePng,
+                                  iconImagePath: storyBloc.getBackColor ==
+                                          AppStyle.colorRed
+                                      ? IconsClass.saveIcon
+                                      : IconsClass.saveIconDark,
                                 ),
-                                Text(
-                                  'Стикеры',
-                                  style: TextStyle(
-                                    fontSize: 8.0.sp,
-                                    fontWeight: FontWeight.w400,
-                                    color: Color(0xff172A3F),
-                                  ),
-                                )
-                              ],
-                            ),
-                          ],
-                        )
+                              ),
+                              Text(
+                                'Сохранить',
+                                style: TextStyle(
+                                  fontSize: 8.0.sp,
+                                  fontWeight: FontWeight.w400,
+                                  color: Color(0xff172A3F),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
                       ],
                     ),
                   ),
-                ),
-                Positioned(
-                  bottom: 0,
-                  right: 0,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.symmetric(
-                            vertical: 15, horizontal: 10),
-                        child: Column(
-                          children: [
-                            SizedBox(
-                              height: 45,
-                              width: 45,
-                              child: BounceButton(
-                                onPressed: _capturePng,
-                                iconImagePath:
-                                    storyBloc.getBackColor == AppStyle.colorRed
-                                        ? IconsClass.saveIcon
-                                        : IconsClass.saveIconDark,
-                              ),
-                            ),
-                            Text(
-                              'Сохранить',
-                              style: TextStyle(
-                                fontSize: 8.0.sp,
-                                fontWeight: FontWeight.w400,
-                                color: Color(0xff172A3F),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                StreamBuilder(
-                  stream: storyBloc.getLoadingStream,
-                  builder: (BuildContext context, AsyncSnapshot snapshot) {
-                    if (snapshot.data == false) return const SizedBox();
-                    return Container(
-                      color: Colors.grey.withOpacity(0.5),
-                      child: const Center(
-                        child: SizedBox(
-                          height: 30,
-                          width: 30,
-                          child: CircularProgressIndicator(
-                            strokeWidth: 2,
-                            backgroundColor: Colors.white,
+                  StreamBuilder(
+                    stream: storyBloc.getLoadingStream,
+                    builder: (BuildContext context, AsyncSnapshot snapshot) {
+                      if (snapshot.data == false) return const SizedBox();
+                      return Container(
+                        color: Colors.grey.withOpacity(0.3),
+                        child: Center(
+                          child: SizedBox(
+                            height: 30,
+                            width: 30,
+                            child: Platform.isAndroid
+                                ? const CircularProgressIndicator(
+                                    strokeWidth: 2,
+                                    backgroundColor: Colors.white,
+                                  )
+                                : const CupertinoActivityIndicator(
+                                    radius: 15,
+                                  ),
                           ),
                         ),
-                      ),
-                    );
-                  },
-                ),
-              ],
+                      );
+                    },
+                  ),
+                ],
+              ),
             ),
           ),
         ),

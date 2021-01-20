@@ -17,6 +17,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_native_image/flutter_native_image.dart';
 import 'package:gallery_saver/gallery_saver.dart';
 import 'package:matrix_gesture_detector/matrix_gesture_detector.dart';
@@ -89,368 +90,351 @@ class _CreateEditTemplateScreenState extends State<CreateTextTemplateScreen> {
   @override
   Widget build(BuildContext context) {
     final storyBloc = Provider.of<StoryBloc>(context);
-    return Container(
-      color: storyBloc.getBackColor,
-      child: SafeArea(
-        child: WillPopScope(
-          onWillPop: () async => displayCustomDialog(
-              context,
-              "Вы точно хотите покинуть эту страницу?\n",
-              DialogType.AlertDialog,
-              true,
-              null,
-              _goBack),
-          child: Scaffold(
-            backgroundColor: storyBloc.getBackColor,
-            resizeToAvoidBottomPadding: false,
-            body: GestureDetector(
-              onTap: () => FocusScope.of(context).unfocus(),
-              child: Stack(
-                children: [
-                  Center(
-                    child: Align(
-                      alignment: storyBloc.getIsStoryTemplate
-                          ? Alignment.bottomCenter
-                          : Alignment.center,
-                      child: Container(
-                        decoration: BoxDecoration(boxShadow: [
-                          BoxShadow(
-                            color: Colors.black.withOpacity(0.3),
-                            blurRadius: 10,
-                          ),
-                        ]),
-                        child: AspectRatio(
-                          aspectRatio:
-                              storyBloc.getIsStoryTemplate ? (9 / 16) : (4 / 5),
-                          child: RepaintBoundary(
-                            key: globalKey,
-                            child: Container(
-                              color: storyBloc.getBackColor,
-                              child: Stack(
-                                fit: StackFit.expand,
-                                children: [
-                                  Image.asset(
-                                    setBackgroundImage(
-                                        storyBloc.getIsStoryTemplate,
-                                        storyBloc.getBackColor),
-                                  ),
-                                  _buildTextWidget(),
-                                  storyBloc.getImageUrl != null
-                                      ? _buildMainImage()
-                                      : const SizedBox(),
-                                  _buildDecoImage(),
-                                ],
+    return AnnotatedRegion<SystemUiOverlayStyle>(
+      value: storyBloc.getBackColor == AppStyle.colorRed
+          ? SystemUiOverlayStyle.light
+          : SystemUiOverlayStyle.dark,
+      child: Container(
+        color: storyBloc.getBackColor,
+        child: SafeArea(
+          child: WillPopScope(
+            onWillPop: () async => displayCustomDialog(
+                context,
+                "Вы точно хотите покинуть эту страницу?\n",
+                DialogType.AlertDialog,
+                true,
+                null,
+                _goBack),
+            child: Scaffold(
+              backgroundColor: storyBloc.getBackColor,
+              resizeToAvoidBottomPadding: false,
+              body: GestureDetector(
+                onTap: () => FocusScope.of(context).unfocus(),
+                child: Stack(
+                  children: [
+                    Center(
+                      child: Align(
+                        alignment: storyBloc.getIsStoryTemplate
+                            ? Alignment.bottomCenter
+                            : Alignment.center,
+                        child: Container(
+                          decoration: BoxDecoration(boxShadow: [
+                            BoxShadow(
+                              color: Colors.black.withOpacity(0.3),
+                              blurRadius: 10,
+                            ),
+                          ]),
+                          child: AspectRatio(
+                            aspectRatio: storyBloc.getIsStoryTemplate
+                                ? (9 / 16)
+                                : (4 / 5),
+                            child: RepaintBoundary(
+                              key: globalKey,
+                              child: Container(
+                                color: storyBloc.getBackColor,
+                                child: Stack(
+                                  fit: StackFit.expand,
+                                  children: [
+                                    Image.asset(
+                                      setBackgroundImage(
+                                          storyBloc.getIsStoryTemplate,
+                                          storyBloc.getBackColor),
+                                    ),
+                                    _buildTextWidget(),
+                                    storyBloc.getImageUrl != null
+                                        ? _buildMainImage()
+                                        : const SizedBox(),
+                                    _buildDecoImage(),
+                                  ],
+                                ),
                               ),
                             ),
                           ),
                         ),
                       ),
                     ),
-                  ),
-                  _buildToolBar(storyBloc),
-                  storyBloc.getTextEnabled
-                      ? const SizedBox()
-                      : !storyBloc.getImagePositionState
-                          ? Positioned(
-                              top: 10,
-                              right: 15,
-                              child: Column(
-                                children: [
-                                  SizedBox(
-                                    height: 40,
-                                    width: 40,
-                                    child: BounceButton(
-                                      onPressed: () => displayCustomDialog(
-                                          context,
-                                          "Вы точно хотите покинуть эту страницу?\n",
-                                          DialogType.AlertDialog,
-                                          true,
-                                          null,
-                                          _goBack),
-                                      iconImagePath: storyBloc.getBackColor ==
-                                              AppStyle.colorRed
-                                          ? IconsClass.closeIcon
-                                          : IconsClass.closeIconDark,
-                                    ),
-                                  ),
-                                  Text(
-                                    'Закрыть',
-                                    style: TextStyle(
-                                      fontSize: 8.0.sp,
-                                      fontWeight: FontWeight.w400,
-                                      color: Color(0xff172A3F),
-                                    ),
-                                  )
-                                ],
-                              ),
-                            )
-                          : Positioned(
-                              top: 10,
-                              right: 15,
-                              child: Row(
-                                children: [
-                                  Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                        horizontal: 5),
-                                    child: Column(
-                                      children: [
-                                        SizedBox(
-                                          height: 40,
-                                          width: 40,
-                                          child: BounceButton(
-                                            onPressed: () {
-                                              storyBloc.setTextEnabled(true);
-                                            },
-                                            iconImagePath: storyBloc
-                                                        .getBackColor ==
-                                                    AppStyle.colorRed
-                                                ? IconsClass.textSizeIcon
-                                                : IconsClass.textSizeIconDark,
-                                          ),
-                                        ),
-                                        Text(
-                                          'Текст',
-                                          style: TextStyle(
-                                            fontSize: 8.0.sp,
-                                            fontWeight: FontWeight.w400,
-                                            color: Color(0xff172A3F),
-                                          ),
-                                        )
-                                      ],
-                                    ),
-                                  ),
-                                  Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                        horizontal: 5),
-                                    child: Column(
-                                      children: [
-                                        SizedBox(
-                                          height: 40,
-                                          width: 40,
-                                          child: BounceButton(
-                                            onPressed: () {
-                                              Navigator.push(
-                                                context,
-                                                MaterialPageRoute(
-                                                  builder: (context) =>
-                                                      StickerTextPicker(
-                                                    isDecoration: true,
-                                                    isTextBase: false,
-                                                    title: "",
-                                                    text: "",
-                                                  ),
-                                                ),
-                                              );
-                                            },
-                                            iconImagePath: storyBloc
-                                                        .getBackColor ==
-                                                    AppStyle.colorRed
-                                                ? IconsClass.stickerIcon
-                                                : IconsClass.stickerIconDark,
-                                          ),
-                                        ),
-                                        Text(
-                                          'Стикеры',
-                                          style: TextStyle(
-                                            fontSize: 8.0.sp,
-                                            fontWeight: FontWeight.w400,
-                                            color: Color(0xff172A3F),
-                                          ),
-                                        )
-                                      ],
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                  Positioned(
-                    bottom: 10,
-                    right: 15,
-                    child: storyBloc.getTextEnabled
-                        ? storyBloc.getImageUrl == null
-                            ? storyBloc.getTextPositionSaved
-                                ? Column(
-                                    children: [
-                                      SizedBox(
-                                        height: 45,
-                                        width: 45,
-                                        child: BounceButton(
-                                          onPressed: _capturePng,
-                                          iconImagePath:
-                                              storyBloc.getBackColor ==
-                                                      AppStyle.colorRed
-                                                  ? IconsClass.saveIcon
-                                                  : IconsClass.saveIconDark,
-                                        ),
+                    _buildToolBar(storyBloc),
+                    storyBloc.getTextEnabled
+                        ? const SizedBox()
+                        : !storyBloc.getImagePositionState
+                            ? Positioned(
+                                top: 10,
+                                right: 15,
+                                child: Column(
+                                  children: [
+                                    SizedBox(
+                                      height: 40,
+                                      width: 40,
+                                      child: BounceButton(
+                                        onPressed: () => displayCustomDialog(
+                                            context,
+                                            "Вы точно хотите покинуть эту страницу?\n",
+                                            DialogType.AlertDialog,
+                                            true,
+                                            null,
+                                            _goBack),
+                                        iconImagePath: storyBloc.getBackColor ==
+                                                AppStyle.colorRed
+                                            ? IconsClass.closeIcon
+                                            : IconsClass.closeIconDark,
                                       ),
-                                      Text(
-                                        'Сохранить',
-                                        style: TextStyle(
-                                          fontSize: 8.0.sp,
-                                          fontWeight: FontWeight.w400,
-                                          color: Color(0xff172A3F),
-                                        ),
-                                      )
-                                    ],
-                                  )
-                                : Column(
-                                    children: [
-                                      SizedBox(
-                                        height: 45,
-                                        width: 45,
-                                        child: BounceButton(
-                                          onPressed: () {
-                                            storyBloc.setTextPosition(true);
-                                            FocusScope.of(context).unfocus();
-                                          },
-                                          iconImagePath:
-                                              storyBloc.getBackColor ==
-                                                      AppStyle.colorRed
-                                                  ? IconsClass.doneIcon
-                                                  : IconsClass.doneIconDark,
-                                        ),
+                                    ),
+                                    Text(
+                                      'Закрыть',
+                                      style: TextStyle(
+                                        fontSize: 8.0.sp,
+                                        fontWeight: FontWeight.w400,
+                                        color: Color(0xff172A3F),
                                       ),
-                                      Text(
-                                        'Готово',
-                                        style: TextStyle(
-                                          fontSize: 8.0.sp,
-                                          fontWeight: FontWeight.w400,
-                                          color: Color(0xff172A3F),
-                                        ),
-                                      )
-                                    ],
-                                  )
-                            : storyBloc.getImagePositionState
-                                ? Column(
-                                    children: [
-                                      SizedBox(
-                                        height: 45,
-                                        width: 45,
-                                        child: BounceButton(
-                                          onPressed: _capturePng,
-                                          iconImagePath:
-                                              storyBloc.getBackColor ==
-                                                      AppStyle.colorRed
-                                                  ? IconsClass.saveIcon
-                                                  : IconsClass.saveIconDark,
-                                        ),
-                                      ),
-                                      Text(
-                                        'Сохранить',
-                                        style: TextStyle(
-                                          fontSize: 8.0.sp,
-                                          fontWeight: FontWeight.w400,
-                                          color: Color(0xff172A3F),
-                                        ),
-                                      )
-                                    ],
-                                  )
-                                : Column(
-                                    children: [
-                                      SizedBox(
-                                        height: 45,
-                                        width: 45,
-                                        child: BounceButton(
-                                          onPressed: () {
-                                            storyBloc
-                                                .setImagePositionState(true);
-                                          },
-                                          iconImagePath:
-                                              storyBloc.getBackColor ==
-                                                      AppStyle.colorRed
-                                                  ? IconsClass.doneIcon
-                                                  : IconsClass.doneIconDark,
-                                        ),
-                                      ),
-                                      Text(
-                                        'Готово',
-                                        style: TextStyle(
-                                          fontSize: 8.0.sp,
-                                          fontWeight: FontWeight.w400,
-                                          color: Color(0xff172A3F),
-                                        ),
-                                      )
-                                    ],
-                                  )
-                        : const SizedBox(),
-                  ),
-                  storyBloc.getTextEnabled
-                      ? Positioned(
-                          bottom: 10,
-                          left: 15,
-                          child: Column(
-                            children: [
-                              SizedBox(
-                                height: 45,
-                                width: 45,
-                                child: BounceButton(
-                                  onPressed: () {
-                                    if (storyBloc.getChildrenStickers.length >
-                                        0) {
-                                      storyBloc.removeLastWidgetChildren();
-                                    } else {
-                                      if (storyBloc.getImagePositionState) {
-                                        storyBloc.setUndoImageState(false);
-                                        storyBloc.setImageSticker(null);
-                                      } else {
-                                        storyBloc.setUndoTextState(false);
-                                        storyBloc.setTextEnabled(true);
-                                        if (storyBloc.getImagePositionState ==
-                                            false) storyBloc.setLoading(false);
-                                      }
-                                    }
-                                  },
-                                  iconImagePath: storyBloc.getBackColor ==
-                                          AppStyle.colorRed
-                                      ? IconsClass.undoIcon
-                                      : IconsClass.undoIconDark,
-                                ),
-                              ),
-                              Text(
-                                'Вернуть',
-                                style: TextStyle(
-                                  fontSize: 8.0.sp,
-                                  fontWeight: FontWeight.w400,
-                                  color: Color(0xff172A3F),
+                                    )
+                                  ],
                                 ),
                               )
-                            ],
-                          ),
-                        )
-                      : const SizedBox(),
-                  storyBloc.getTextEnabled
-                      ? storyBloc.getTextPositionSaved
-                          ? const SizedBox()
-                          : Positioned(
-                              bottom: 70,
-                              left: 55,
-                              right: 55,
-                              child: Column(
-                                children: [
-                                  SliderTheme(
-                                    data: SliderTheme.of(context).copyWith(
-                                      thumbShape: RoundSliderThumbShape(
-                                        elevation: 10,
-                                        enabledThumbRadius: 10,
-                                        pressedElevation: 12,
+                            : Positioned(
+                                top: 10,
+                                right: 15,
+                                child: Row(
+                                  children: [
+                                    Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 5),
+                                      child: Column(
+                                        children: [
+                                          SizedBox(
+                                            height: 40,
+                                            width: 40,
+                                            child: BounceButton(
+                                              onPressed: () {
+                                                storyBloc.setTextEnabled(true);
+                                              },
+                                              iconImagePath: storyBloc
+                                                          .getBackColor ==
+                                                      AppStyle.colorRed
+                                                  ? IconsClass.textSizeIcon
+                                                  : IconsClass.textSizeIconDark,
+                                            ),
+                                          ),
+                                          Text(
+                                            'Текст',
+                                            style: TextStyle(
+                                              fontSize: 8.0.sp,
+                                              fontWeight: FontWeight.w400,
+                                              color: Color(0xff172A3F),
+                                            ),
+                                          )
+                                        ],
                                       ),
                                     ),
-                                    child: Slider(
-                                      value: storyBloc.textWidthContainer,
-                                      activeColor: Colors.white,
-                                      inactiveColor:
-                                          Colors.white.withOpacity(0.5),
-                                      max: _valueWidth * 0.75,
-                                      min: 100,
-                                      onChanged: (newValue) {
-                                        storyBloc
-                                            .setTextWidthContainer(newValue);
-                                      },
+                                    Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 5),
+                                      child: Column(
+                                        children: [
+                                          SizedBox(
+                                            height: 40,
+                                            width: 40,
+                                            child: BounceButton(
+                                              onPressed: () {
+                                                Navigator.push(
+                                                  context,
+                                                  MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        StickerTextPicker(
+                                                      isDecoration: true,
+                                                      isTextBase: false,
+                                                      title: "",
+                                                      text: "",
+                                                    ),
+                                                  ),
+                                                );
+                                              },
+                                              iconImagePath: storyBloc
+                                                          .getBackColor ==
+                                                      AppStyle.colorRed
+                                                  ? IconsClass.stickerIcon
+                                                  : IconsClass.stickerIconDark,
+                                            ),
+                                          ),
+                                          Text(
+                                            'Стикеры',
+                                            style: TextStyle(
+                                              fontSize: 8.0.sp,
+                                              fontWeight: FontWeight.w400,
+                                              color: Color(0xff172A3F),
+                                            ),
+                                          )
+                                        ],
+                                      ),
                                     ),
+                                  ],
+                                ),
+                              ),
+                    Positioned(
+                      bottom: 10,
+                      right: 15,
+                      child: storyBloc.getTextEnabled
+                          ? storyBloc.getImageUrl == null
+                              ? storyBloc.getTextPositionSaved
+                                  ? Column(
+                                      children: [
+                                        SizedBox(
+                                          height: 45,
+                                          width: 45,
+                                          child: BounceButton(
+                                            onPressed: _capturePng,
+                                            iconImagePath:
+                                                storyBloc.getBackColor ==
+                                                        AppStyle.colorRed
+                                                    ? IconsClass.saveIcon
+                                                    : IconsClass.saveIconDark,
+                                          ),
+                                        ),
+                                        Text(
+                                          'Сохранить',
+                                          style: TextStyle(
+                                            fontSize: 8.0.sp,
+                                            fontWeight: FontWeight.w400,
+                                            color: Color(0xff172A3F),
+                                          ),
+                                        )
+                                      ],
+                                    )
+                                  : Column(
+                                      children: [
+                                        SizedBox(
+                                          height: 45,
+                                          width: 45,
+                                          child: BounceButton(
+                                            onPressed: () {
+                                              storyBloc.setTextPosition(true);
+                                              FocusScope.of(context).unfocus();
+                                            },
+                                            iconImagePath:
+                                                storyBloc.getBackColor ==
+                                                        AppStyle.colorRed
+                                                    ? IconsClass.doneIcon
+                                                    : IconsClass.doneIconDark,
+                                          ),
+                                        ),
+                                        Text(
+                                          'Готово',
+                                          style: TextStyle(
+                                            fontSize: 8.0.sp,
+                                            fontWeight: FontWeight.w400,
+                                            color: Color(0xff172A3F),
+                                          ),
+                                        )
+                                      ],
+                                    )
+                              : storyBloc.getImagePositionState
+                                  ? Column(
+                                      children: [
+                                        SizedBox(
+                                          height: 45,
+                                          width: 45,
+                                          child: BounceButton(
+                                            onPressed: _capturePng,
+                                            iconImagePath:
+                                                storyBloc.getBackColor ==
+                                                        AppStyle.colorRed
+                                                    ? IconsClass.saveIcon
+                                                    : IconsClass.saveIconDark,
+                                          ),
+                                        ),
+                                        Text(
+                                          'Сохранить',
+                                          style: TextStyle(
+                                            fontSize: 8.0.sp,
+                                            fontWeight: FontWeight.w400,
+                                            color: Color(0xff172A3F),
+                                          ),
+                                        )
+                                      ],
+                                    )
+                                  : Column(
+                                      children: [
+                                        SizedBox(
+                                          height: 45,
+                                          width: 45,
+                                          child: BounceButton(
+                                            onPressed: () {
+                                              storyBloc
+                                                  .setImagePositionState(true);
+                                            },
+                                            iconImagePath:
+                                                storyBloc.getBackColor ==
+                                                        AppStyle.colorRed
+                                                    ? IconsClass.doneIcon
+                                                    : IconsClass.doneIconDark,
+                                          ),
+                                        ),
+                                        Text(
+                                          'Готово',
+                                          style: TextStyle(
+                                            fontSize: 8.0.sp,
+                                            fontWeight: FontWeight.w400,
+                                            color: Color(0xff172A3F),
+                                          ),
+                                        )
+                                      ],
+                                    )
+                          : const SizedBox(),
+                    ),
+                    storyBloc.getTextEnabled
+                        ? Positioned(
+                            bottom: 10,
+                            left: 15,
+                            child: Column(
+                              children: [
+                                SizedBox(
+                                  height: 45,
+                                  width: 45,
+                                  child: BounceButton(
+                                    onPressed: () {
+                                      if (storyBloc.getChildrenStickers.length >
+                                          0) {
+                                        storyBloc.removeLastWidgetChildren();
+                                      } else {
+                                        if (storyBloc.getImagePositionState) {
+                                          storyBloc.setUndoImageState(false);
+                                          storyBloc.setImageSticker(null);
+                                        } else {
+                                          storyBloc.setUndoTextState(false);
+                                          storyBloc.setTextEnabled(true);
+                                          if (storyBloc.getImagePositionState ==
+                                              false)
+                                            storyBloc.setLoading(false);
+                                        }
+                                      }
+                                    },
+                                    iconImagePath: storyBloc.getBackColor ==
+                                            AppStyle.colorRed
+                                        ? IconsClass.undoIcon
+                                        : IconsClass.undoIconDark,
                                   ),
-                                  SizedBox(
-                                    height: 38,
-                                    child: SliderTheme(
+                                ),
+                                Text(
+                                  'Вернуть',
+                                  style: TextStyle(
+                                    fontSize: 8.0.sp,
+                                    fontWeight: FontWeight.w400,
+                                    color: Color(0xff172A3F),
+                                  ),
+                                )
+                              ],
+                            ),
+                          )
+                        : const SizedBox(),
+                    storyBloc.getTextEnabled
+                        ? storyBloc.getTextPositionSaved
+                            ? const SizedBox()
+                            : Positioned(
+                                bottom: 70,
+                                left: 55,
+                                right: 55,
+                                child: Column(
+                                  children: [
+                                    SliderTheme(
                                       data: SliderTheme.of(context).copyWith(
                                         thumbShape: RoundSliderThumbShape(
                                           elevation: 10,
@@ -459,43 +443,71 @@ class _CreateEditTemplateScreenState extends State<CreateTextTemplateScreen> {
                                         ),
                                       ),
                                       child: Slider(
-                                        value: storyBloc.textHeightContainer,
+                                        value: storyBloc.textWidthContainer,
                                         activeColor: Colors.white,
                                         inactiveColor:
                                             Colors.white.withOpacity(0.5),
-                                        max: _valueHeight * 0.75,
+                                        max: _valueWidth * 0.75,
                                         min: 100,
                                         onChanged: (newValue) {
                                           storyBloc
-                                              .setTextHeightContainer(newValue);
+                                              .setTextWidthContainer(newValue);
                                         },
                                       ),
                                     ),
-                                  ),
-                                ],
-                              ),
-                            )
-                      : const SizedBox(),
-                  StreamBuilder(
-                    stream: storyBloc.getLoadingStream,
-                    builder: (BuildContext context, AsyncSnapshot snapshot) {
-                      if (snapshot.data == false) return const SizedBox();
-                      return Container(
-                        color: Colors.grey.withOpacity(0.5),
-                        child: const Center(
-                          child: SizedBox(
-                            height: 30,
-                            width: 30,
-                            child: CircularProgressIndicator(
-                              strokeWidth: 2,
-                              backgroundColor: Colors.white,
+                                    SizedBox(
+                                      height: 38,
+                                      child: SliderTheme(
+                                        data: SliderTheme.of(context).copyWith(
+                                          thumbShape: RoundSliderThumbShape(
+                                            elevation: 10,
+                                            enabledThumbRadius: 10,
+                                            pressedElevation: 12,
+                                          ),
+                                        ),
+                                        child: Slider(
+                                          value: storyBloc.textHeightContainer,
+                                          activeColor: Colors.white,
+                                          inactiveColor:
+                                              Colors.white.withOpacity(0.5),
+                                          max: _valueHeight * 0.75,
+                                          min: 100,
+                                          onChanged: (newValue) {
+                                            storyBloc.setTextHeightContainer(
+                                                newValue);
+                                          },
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              )
+                        : const SizedBox(),
+                    StreamBuilder(
+                      stream: storyBloc.getLoadingStream,
+                      builder: (BuildContext context, AsyncSnapshot snapshot) {
+                        if (snapshot.data == false) return const SizedBox();
+                        return Container(
+                          color: Colors.grey.withOpacity(0.3),
+                          child: Center(
+                            child: SizedBox(
+                              height: 30,
+                              width: 30,
+                              child: Platform.isAndroid
+                                  ? const CircularProgressIndicator(
+                                      strokeWidth: 2,
+                                      backgroundColor: Colors.white,
+                                    )
+                                  : const CupertinoActivityIndicator(
+                                      radius: 15,
+                                    ),
                             ),
                           ),
-                        ),
-                      );
-                    },
-                  ),
-                ],
+                        );
+                      },
+                    ),
+                  ],
+                ),
               ),
             ),
           ),
@@ -1207,7 +1219,7 @@ class _CreateEditTemplateScreenState extends State<CreateTextTemplateScreen> {
                                 style: TextStyle(
                                   color: storyBloc.getTextColor,
                                   fontSize: storyBloc.getBodyTextBaseFontSize,
-                                  height: 1,
+                                  height: 1.2,
                                   fontFamily: 'Styrene A LC',
                                   fontWeight: FontWeight.normal,
                                 ),

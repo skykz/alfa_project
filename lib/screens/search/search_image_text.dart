@@ -215,6 +215,7 @@ class _SearchPickerScreenState extends State<SearchPickerScreen> {
                                   if (snapshot.data[index]['id'] == 115)
                                     return SizedBox();
                                 }
+
                                 return Column(
                                   children: [
                                     ListTile(
@@ -227,9 +228,7 @@ class _SearchPickerScreenState extends State<SearchPickerScreen> {
                                                 widget.isDecorationCategory,
                                             isTextToImage: widget.isTextToImage,
                                             id: snapshot.data[index]['id'],
-                                            title: widget.isText
-                                                ? snapshot.data[index]['text']
-                                                : snapshot.data[index]['text'],
+                                            title: snapshot.data[index]['text'],
                                             isTextBase:
                                                 widget.isText ? true : false,
                                             text: snapshot.data[index]['text'],

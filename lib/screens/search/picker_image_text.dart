@@ -35,6 +35,7 @@ class StickerTextPicker extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    inspect(this.id);
     final bloc = Provider.of<SearchTextImageBloc>(context, listen: false);
 
     final storyBloc = Provider.of<StoryBloc>(context);
@@ -60,7 +61,7 @@ class StickerTextPicker extends StatelessWidget {
           textAlign: TextAlign.center,
           overflow: TextOverflow.ellipsis,
           style: TextStyle(
-            fontSize: 17.0.sp,
+            fontSize: 16.0.sp,
             fontFamily: 'SF Pro Display',
             color: Colors.white,
             fontWeight: FontWeight.bold,
@@ -118,62 +119,72 @@ class StickerTextPicker extends StatelessWidget {
                               shrinkWrap: true,
                               itemCount: snapshot.data['data'].length,
                               itemBuilder: (BuildContext context, int index) {
-                                return Column(
-                                  children: [
-                                    ListTile(
-                                      onTap: () {
-                                        storyBloc.setTitleBodyString(
+                                return InkWell(
+                                  onTap: () {
+                                    storyBloc.setTitleBodyString(
+                                        snapshot.data['data'][index]['title'],
+                                        snapshot.data['data'][index]['text']);
+                                    final bloc1 =
+                                        Provider.of<SearchTextImageBloc>(
+                                            context,
+                                            listen: false);
+                                    bloc1.setClearData();
+                                    Navigator.pop(context);
+                                    Navigator.pop(context);
+                                  },
+                                  child: Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        vertical: 10, horizontal: 5),
+                                    child: Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 16),
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        mainAxisSize: MainAxisSize.max,
+                                        children: [
+                                          Text(
                                             snapshot.data['data'][index]
-                                                ['title'],
-                                            snapshot.data['data'][index]
-                                                ['text']);
-                                        final bloc1 =
-                                            Provider.of<SearchTextImageBloc>(
-                                                context,
-                                                listen: false);
-                                        bloc1.setClearData();
-                                        Navigator.pop(context);
-                                        Navigator.pop(context);
-                                      },
-                                      title: Text(
-                                        snapshot.data['data'][index]['title']
-                                            .toString(),
-                                        style: TextStyle(
-                                          color: Colors.white,
-                                          fontSize: 18.0.sp,
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                      ),
-                                      subtitle: Padding(
-                                        padding: const EdgeInsets.symmetric(
-                                            vertical: 8),
-                                        child: Text(
-                                          snapshot.data['data'][index]['text']
-                                              .toString(),
-                                          style: TextStyle(
-                                            color: Colors.white,
-                                            fontSize: 11.0.sp,
-                                            fontWeight: FontWeight.w300,
+                                                    ['title']
+                                                .toString(),
+                                            style: TextStyle(
+                                              color: Colors.white,
+                                              fontSize: 18.0.sp,
+                                              fontWeight: FontWeight.bold,
+                                            ),
                                           ),
-                                        ),
+                                          Padding(
+                                            padding: const EdgeInsets.symmetric(
+                                                vertical: 8),
+                                            child: Text(
+                                              snapshot.data['data'][index]
+                                                      ['text']
+                                                  .toString(),
+                                              style: TextStyle(
+                                                color: Colors.white,
+                                                fontSize: 11.0.sp,
+                                                fontWeight: FontWeight.w300,
+                                              ),
+                                            ),
+                                          ),
+                                          Container(
+                                            height: 0.5,
+                                            decoration: BoxDecoration(
+                                              color: Color.fromRGBO(
+                                                  255, 255, 255, 0.1),
+                                            ),
+                                          )
+                                        ],
                                       ),
                                     ),
-                                    const Divider(
-                                      indent: 20,
-                                      endIndent: 20,
-                                      thickness: 0.5,
-                                      color: const Color.fromRGBO(
-                                          255, 255, 255, 0.1),
-                                      height: 1,
-                                    )
-                                  ],
+                                  ),
                                 );
                               },
                             );
                           },
                         )
                       : FutureBuilder(
-                          future: bloc.getImages(id, context),
+                          future: bloc.getImages(this.id, context),
                           builder:
                               (BuildContext context, AsyncSnapshot snapshot) {
                             if (snapshot.data == null)
@@ -274,7 +285,7 @@ class StickerTextPicker extends StatelessWidget {
                           },
                         )
                   : FutureBuilder(
-                      future: bloc.getImages(116, context),
+                      future: bloc.getImages(this.id, context),
                       builder: (BuildContext context, AsyncSnapshot snapshot) {
                         if (snapshot.data == null)
                           return Column(

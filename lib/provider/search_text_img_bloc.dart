@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:alfa_project/core/repository/api_repository.dart';
 import 'package:flutter/material.dart';
 
@@ -25,8 +27,9 @@ class SearchTextImageBloc extends ChangeNotifier {
     return await _alfaApi.getTextId(_id);
   }
 
-  Future getImages(int catId, BuildContext context) async {
-    return await _alfaApi.getImage(catId, context);
+  Future getImages(int _catId, BuildContext context) async {
+    inspect(_catId);
+    return await _alfaApi.getImage(_catId, context);
   }
 
   setSearchedData(dynamic val) {
