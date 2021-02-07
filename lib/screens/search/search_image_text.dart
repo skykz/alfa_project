@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:alfa_project/components/widgets/bounce_button.dart';
 import 'package:alfa_project/provider/search_text_img_bloc.dart';
 import 'package:alfa_project/screens/search/picker_image_text.dart';
@@ -69,6 +71,7 @@ class _SearchPickerScreenState extends State<SearchPickerScreen> {
         appBar: AppBar(
           leadingWidth: 0,
           primary: true,
+          brightness: Platform.isAndroid ? Brightness.light : Brightness.dark,
           elevation: 0,
           centerTitle: false,
           title: Text(
@@ -109,7 +112,7 @@ class _SearchPickerScreenState extends State<SearchPickerScreen> {
                       child: Container(
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(5),
-                          color: Color.fromRGBO(255, 255, 255, 0.1),
+                          color: const Color.fromRGBO(255, 255, 255, 0.1),
                         ),
                         child: TextField(
                             cursorColor: Colors.white,
@@ -124,7 +127,7 @@ class _SearchPickerScreenState extends State<SearchPickerScreen> {
                               border: InputBorder.none,
                               isDense: true,
                               contentPadding:
-                                  EdgeInsets.symmetric(vertical: 12),
+                                  const EdgeInsets.symmetric(vertical: 12),
                               hintText: 'Поиск',
                               prefixIcon: SizedBox(
                                 height: 10,
@@ -182,38 +185,38 @@ class _SearchPickerScreenState extends State<SearchPickerScreen> {
                               itemBuilder: (_, index) {
                                 if (this.widget.isDecorationCategory) {
                                   if (snapshot.data[index]['id'] == 107)
-                                    return SizedBox();
+                                    return const SizedBox();
                                   if (snapshot.data[index]['id'] == 108)
-                                    return SizedBox();
+                                    return const SizedBox();
                                   if (snapshot.data[index]['id'] == 109)
-                                    return SizedBox();
+                                    return const SizedBox();
                                   if (snapshot.data[index]['id'] == 110)
-                                    return SizedBox();
+                                    return const SizedBox();
                                   if (snapshot.data[index]['id'] == 111)
-                                    return SizedBox();
+                                    return const SizedBox();
                                   if (snapshot.data[index]['id'] == 112)
-                                    return SizedBox();
+                                    return const SizedBox();
                                   if (snapshot.data[index]['id'] == 113)
-                                    return SizedBox();
+                                    return const SizedBox();
                                   if (snapshot.data[index]['id'] == 114)
-                                    return SizedBox();
+                                    return const SizedBox();
                                   if (snapshot.data[index]['id'] == 117)
-                                    return SizedBox();
+                                    return const SizedBox();
                                   if (snapshot.data[index]['id'] == 118)
-                                    return SizedBox();
+                                    return const SizedBox();
                                 } else {
                                   if (snapshot.data[index]['id'] == 116)
-                                    return SizedBox();
+                                    return const SizedBox();
                                   if (snapshot.data[index]['id'] == 111)
-                                    return SizedBox();
+                                    return const SizedBox();
                                   if (snapshot.data[index]['id'] == 121)
-                                    return SizedBox();
+                                    return const SizedBox();
                                   if (snapshot.data[index]['id'] == 120)
-                                    return SizedBox();
+                                    return const SizedBox();
                                   if (snapshot.data[index]['id'] == 119)
-                                    return SizedBox();
+                                    return const SizedBox();
                                   if (snapshot.data[index]['id'] == 115)
-                                    return SizedBox();
+                                    return const SizedBox();
                                 }
 
                                 return Column(

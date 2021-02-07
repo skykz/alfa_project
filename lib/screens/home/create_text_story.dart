@@ -92,7 +92,9 @@ class _CreateEditTemplateScreenState extends State<CreateTextTemplateScreen> {
     final storyBloc = Provider.of<StoryBloc>(context);
     return AnnotatedRegion<SystemUiOverlayStyle>(
       value: storyBloc.getBackColor == AppStyle.colorRed
-          ? SystemUiOverlayStyle.light
+          ? Platform.isAndroid
+              ? SystemUiOverlayStyle.dark
+              : SystemUiOverlayStyle.light
           : SystemUiOverlayStyle.dark,
       child: Container(
         color: storyBloc.getBackColor,

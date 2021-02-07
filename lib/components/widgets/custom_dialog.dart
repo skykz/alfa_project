@@ -113,7 +113,7 @@ class CustomActionDialog extends StatelessWidget {
           child: Column(mainAxisSize: MainAxisSize.min, children: [
             Text(
               isSuccess
-                  ? "Картинка успешно сохранена!"
+                  ? "Картинка успешна сохранена!"
                   : "Ошибка при сохранении картинки!",
               textAlign: TextAlign.center,
               style: TextStyle(
@@ -127,8 +127,8 @@ class CustomActionDialog extends StatelessWidget {
                   padding: const EdgeInsets.symmetric(vertical: 10),
                   child: Text(
                     isSuccess
-                        ? "Можете посмотреть в галереи."
-                        : "Повторите попытку еще раз, проверьте еще раз доступ.",
+                        ? "Можете посмотреть в галерее."
+                        : "Повторите еще раз попытку, проверьте доступ.",
                     textAlign: TextAlign.center,
                     style: TextStyle(
                       fontSize: 15,
@@ -208,7 +208,7 @@ class CustomActionDialog extends StatelessWidget {
         return CupertinoAlertDialog(
           title: Text(
             isSuccess
-                ? "Картинка успешно сохранена!"
+                ? "Картинка успешна сохранена!"
                 : "Ошибка при сохранении картинки!",
             style: TextStyle(
               fontFamily: 'SF Pro Display',
@@ -218,8 +218,8 @@ class CustomActionDialog extends StatelessWidget {
             padding: const EdgeInsets.symmetric(vertical: 7),
             child: Text(
               isSuccess
-                  ? "Можете посмотреть в галереи."
-                  : "Повторите попытку еще раз, проверьте еще раз доступ.",
+                  ? "Можете посмотреть в галерее."
+                  : "Повторите попытку еще раз, проверьте доступ.",
               style: TextStyle(
                 letterSpacing: 0.5,
                 fontFamily: 'SF Pro Display',

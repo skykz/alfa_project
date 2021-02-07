@@ -1,11 +1,7 @@
-import 'dart:developer';
-
 import 'package:alfa_project/core/data/consts/app_const.dart';
-import 'package:alfa_project/provider/story_bloc.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:matrix_gesture_detector/matrix_gesture_detector.dart';
-import 'package:provider/provider.dart';
 
 class ImageWidget extends StatefulWidget {
   final String imageUrl;
@@ -41,9 +37,7 @@ class _ImageWidgetState extends State<ImageWidget> {
 
   @override
   Widget build(BuildContext context) {
-    final storyBloc = Provider.of<StoryBloc>(context);
-
-    log('${storyBloc.getRemoveEnabled}');
+    // log('${storyBloc.getRemoveEnabled}');
     return IgnorePointer(
       ignoring: false,
       child: CachedNetworkImage(
@@ -53,7 +47,6 @@ class _ImageWidgetState extends State<ImageWidget> {
             key: UniqueKey(),
             onMatrixUpdate: (m, tm, sm, rm) {
               notifier.value = m;
-              // log("${notifier.value}");
             },
             child: !_isPositionSaved
                 ? AnimatedBuilder(

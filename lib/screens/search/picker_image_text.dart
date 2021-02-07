@@ -46,6 +46,7 @@ class StickerTextPicker extends StatelessWidget {
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
+        brightness: Platform.isAndroid ? Brightness.light : Brightness.dark,
         leading: IconButton(
           color: Colors.transparent,
           padding: const EdgeInsets.all(0),

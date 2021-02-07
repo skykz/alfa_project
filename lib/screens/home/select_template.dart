@@ -151,7 +151,6 @@ class _SelectTemplateScreenState extends State<SelectTemplateScreen> {
 
   _onTapTemplate(int val, BuildContext ctx) {
     final storyBloc = Provider.of<StoryBloc>(context, listen: false);
-
     switch (val) {
       case 1:
         storyBloc.setStoryBackgroundColor(AppStyle.colorRed);
@@ -166,13 +165,13 @@ class _SelectTemplateScreenState extends State<SelectTemplateScreen> {
         break;
       case 2:
         storyBloc.setStoryBackgroundColor(
-          Color.fromRGBO(237, 237, 237, 1),
+          AppStyle.colorWhite,
         );
         Navigator.push(
           context,
           MaterialPageRoute(
             builder: (context) => HomeMainScreen(
-              mainColor: Color.fromRGBO(237, 237, 237, 1),
+              mainColor: const Color.fromRGBO(237, 237, 237, 1),
             ),
           ),
         );

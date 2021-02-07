@@ -17,23 +17,10 @@ class SelectTypeTemplate extends StatefulWidget {
 }
 
 class _SelectTypeTemplateState extends State<SelectTypeTemplate> {
-  bool isGranted = false;
-
   @override
   void initState() {
     super.initState();
   }
-
-  // _permissionFileWrite() async {
-  //   var status = await Permission.storage.status;
-  //   if (!status.isGranted) {
-  //     await Permission.storage.request();
-  //   } else {
-  //     setState(() {
-  //       isGranted = true;
-  //     });
-  //   }
-  // }
 
   @override
   Widget build(BuildContext context) {

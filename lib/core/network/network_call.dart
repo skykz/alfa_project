@@ -132,7 +132,7 @@ void handleError(DioError error, BuildContext context) {
             const Icon(Icons.info_outline, color: Colors.white),
             Expanded(
               child: Padding(
-                padding: EdgeInsets.only(left: 16),
+                padding: const EdgeInsets.only(left: 16),
                 child: Text(
                   errorDescription,
                   style: TextStyle(color: Colors.white),

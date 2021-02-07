@@ -265,6 +265,7 @@ class StoryBloc extends ChangeNotifier {
   setStoryBackgroundColor(Color valueColor) {
     this._backgColor = valueColor;
     if (valueColor == AppStyle.colorRed) {
+      inspect('red type');
       this._colorFirstText = AppStyle.colorDark;
       this._colorSecondText = AppStyle.colorDark;
       this._color = AppStyle.colorDark;
@@ -344,8 +345,6 @@ class StoryBloc extends ChangeNotifier {
 
   setTextColor() {
     log('$_isFirstText');
-    inspect(_colorFirstText);
-    inspect(_backgColor);
 
     if (_backgColor == AppStyle.colorRed) {
       if (_isFirstText) {
@@ -366,7 +365,6 @@ class StoryBloc extends ChangeNotifier {
           _colorFirstText = AppStyle.colorDark;
         } else {
           log("message1");
-
           _colorFirstText = AppStyle.colorRed;
         }
       } else if (!_isFirstText) {
