@@ -147,6 +147,21 @@ class _CreateEditTemplateScreenState extends State<CreateTextTemplateScreen> {
                                         ? _buildMainImage()
                                         : const SizedBox(),
                                     _buildDecoImage(),
+                                    Positioned(
+                                      left: 25,
+                                      bottom: 20,
+                                      right: 50,
+                                      child: Text(
+                                        '№ 1.2.61/237 лицензия. 03.02.2020ж. РҚНРДА берген.\nЛицензия № 1.2.61/237. Выдана АРРФР от 03.02.2020.',
+                                        style: TextStyle(
+                                          fontSize: 6.0.sp,
+                                          color: storyBloc.getBackColor ==
+                                                  AppStyle.colorRed
+                                              ? Colors.white
+                                              : AppStyle.colorDark,
+                                        ),
+                                      ),
+                                    )
                                   ],
                                 ),
                               ),

@@ -9,7 +9,6 @@ void main() {
     systemNavigationBarColor: Colors.white,
     statusBarColor: Colors.white,
   ));
-  // SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.light);
 
   runApp(MyApp());
 }
